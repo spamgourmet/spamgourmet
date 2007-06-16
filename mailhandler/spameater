@@ -1,0 +1,746 @@
+#!/usr/bin/perl
+#################################################################
+# spamgourmet - spameater, dot-foward edition
+# version 0.9.4
+#
+# This program runs as a separate process from sendmail
+# and must installed via the aliases file or
+# .forward file
+# It receives the *entire* email message, parses the header to
+# populate variables for user, number, word, sender, etc.
+# then consults the database for guidance on how to handle
+# the message.  It then either forwards the message (using
+# sendmail) or exits, killing ('eating') the message
+#################################################################
+## Copyright 2000,2001,2002, Josiah Q. Hamilton
+## you may reach the author at info@spamgourmet.com
+#
+# spamgourmet is provided under the Artistic License of the Open Source Initiative
+# A copy of the license should be provided with this distribution
+
+
+use strict;
+#use DBD::mysql;
+#use Digest::MD5 qw(md5_hex);
+use lib "/path/to/modules";
+use Mail::Spamgourmet::Config;
+#use Mail::Spamgourmet::Util;
+#use Mail::Spamgourmet::MessageIdChecker;
+
+####################### path to config file #######################
+
+my $configfile = "/path/to/spamgourmet.config";
+
+##################### try not to edit anything below ##############
+
+use vars qw {$config $util $mailer $checker};
+$config = Mail::Spamgourmet::Config->new(configfile=>$configfile,mode=>0);
+#$util = Mail::Spamgourmet::Util->new(config=>$config);
+#$mailer = $config->getMailer();
+#$checker = Mail::Spamgourmet::MessageIdChecker->new(config=>$config);
+
+#$config->debug('spameater started');
+
+# variables to be used by the main routine (don't change these)
+my (
+ $delimiters,$headers,$inHeaders,$line,$msg,$subjecttext,%headerValues,%headerTokens, 
+ $from,$replyto,$to,$for,$fromdomain,$todomain,$forname,$allRecipients,
+ %deliveryAddresses,$subfrom,$subreplyto,$fromname,$replytoname,$trusted,
+ $disposable,$disposableID,$PublicHash,$PrivateHash,
+ $mprefix,$mword,$musername,$mcount,$mexpiretime,
+ $db,$sql,$st,%attr,$now,$nowcount,@Watchwords,
+ $Prefix,$EmailID,$InitialCount,$Count,$UserID,$ExpireTime,
+ $RealEmail,$SpamEmail,$Sender,$Features,$updatelog,$useXHeader, $Hidden,
+ $connected, $connectTries, $interval,$DefaultNumber,
+ $RecThrottleTime, $RecThrottleCount, $SendThrottleTime, $SendThrottleCount
+ );
+
+my $extradebug = 0;
+
+$useXHeader = 0; # set this up later, based on features
+
+use constant EX_TEMPFAIL    => 75; # temp failure; user is invited to retry
+
+
+# snarf the message line by line
+# get 'From' data (first occurrence)
+# get 'for' data (first occurence)
+# get 'To' data (first occurence)
+# get 'Reply-To' (first occurence)
+# if message is to $otherdomainemail
+#  then it was forwarded from another domain,
+#  so look at 'Delivered-To' instead
+$inHeaders = 1;  # flag that will be set to 0 after headers have been parsed
+my $currHeader;
+
+$headerTokens{'from'} = 'From';
+$headerTokens{'to'} = 'To';
+$headerTokens{'cc'} = 'CC';
+$headerTokens{'replyto'} = 'Reply-To';
+$headerTokens{'messageid'} = 'Message-ID';
+
+while (defined($line = <STDIN>)) {
+  $msg .= $line;  # accumulate message line by line into $msg variable
+  if ($inHeaders) {
+    # the $headers var is used for debugging, so this line should normally be commented out:
+ #   $headers .= $line;
+    foreach my $key (keys %headerTokens) {
+      if (!$headerValues{$key} || $currHeader eq $key) {
+        if ($currHeader ne $key) {
+          if ($line =~ /^$headerTokens{$key}:\s*(.+$)/i) {
+            $headerValues{$key} = $1;
+            $currHeader = $key;
+          }
+        } elsif ($line =~ /^\s/) {
+          chomp($line);
+          $line =~ s/^\s//;
+          $headerValues{$key} .= $line;
+        } elsif ($currHeader eq $key) {
+          $currHeader = '';
+        }
+      }
+    }
+
+    if (!$for || $for eq $config->getOtherDomainEmail()) {
+      $line =~ /^.*for <(.+)>/;
+      $for = $1;
+      if (!$for || $for eq $config->getOtherDomainEmail()) {
+        $line =~ /^Delivered\-To\:\s+\w+\-\w{3}\-(.*)/;
+        $for = $1;
+      }
+    }
+    if (!substr($line,0,-1)) {
+      $inHeaders=0;
+    }
+  }
+}
+
+my ($bcc,$prior);
+my $saferecips = ($headerValues{'to'} . $headerValues{'cc'});
+my $safefor = $for;
+$safefor =~ s/\W//g;
+$saferecips =~ s/\W//g;
+if ($saferecips !~ /$safefor/) {
+  $bcc = $for;
+}
+
+$checker = Mail::Spamgourmet::MessageIdChecker->new(config=>$config);
+
+if ($checker->checkMessageId($headerValues{'messageid'} . $bcc)) {
+  $config->debug("exiting because I already handled $headerValues{'messageid'} and $for");
+  $config->die() if $config;
+  exit;  # adios -- we've already handled this one.
+}
+if ($bcc) {
+  $prior = $checker->checkMessageId($headerValues{'messageid'});
+}
+
+$now = time();
+
+use DBD::mysql;
+use Digest::MD5 qw(md5_hex);
+use Mail::Spamgourmet::Util;
+use Mail::Spamgourmet::MessageIdChecker;
+
+
+$util = Mail::Spamgourmet::Util->new(config=>$config);
+$mailer = $config->getMailer();
+
+
+#$config->debug($msg);
+
+## clean up the from, to, and for chunks, hopefully leaving just the addresses
+($from, $fromname) = $util->getAddressAndDisplay($headerValues{'from'}, 1);
+($replyto, $replytoname) = $util->getAddressAndDisplay($headerValues{'replyto'}, 1);
+    
+$allRecipients = $for . ',' . $headerValues{'to'} . ',' . $headerValues{'cc'};
+
+unless ($allRecipients.$bcc =~ /[\.|~].*@/) {
+  $config->debug("exiting on invalid addrs: $allRecipients$bcc");
+  $config->die();
+  exit 0;
+}
+
+$config->debug("allrecips is $allRecipients") if $extradebug;
+$deliveryAddresses{$bcc} = 1 if $bcc && $config->hasLocalDomain($bcc);
+if (!$prior) {
+  my @to = split(',', $allRecipients);
+  foreach $to (@to) {
+    ($to, undef) = $util->getAddressAndDisplay($to,0);
+    if ($to && $config->hasLocalDomain($to)) {
+      $deliveryAddresses{$to} = 1;
+    } elsif ($to) {$config->debug("$to does not have a local domain") if $extradebug;}
+  }
+}
+
+
+
+## get the domain from the from address
+$from =~ /\@(.*)/;
+$fromdomain = $1;
+
+#check for fake admin messages
+if ($config->isLocalDomain($fromdomain)) {
+  if ($from =~ /^info@/i
+   || $from =~ /^abuse@/i
+   || $from =~ /^privacy@/i
+   || $from =~ /^admin@/i
+   || $from =~ /^administrator@/i
+   || $from =~ /^root@/i
+   || $from =~ /^register@/i
+   || $from =~ /^support@/i
+   || $from =~ /^webmaster@/i
+   ) {
+    # insert validation code here:
+    if ($fromname !~ /josh/) {
+      $config->debug("attempt at forged admin message from $from (fromname: $fromname");
+      #$config->debug($msg);
+      $config->die() if $config;
+      exit;
+    }
+  }
+}
+
+$config->debug($msg) if $extradebug;
+
+foreach $for (keys %deliveryAddresses) {
+  $config->debug("handling $for") if $extradebug;
+
+  # initialize the vars:
+  ($UserID,$RealEmail,$SpamEmail,$Prefix,$Features,
+   $RecThrottleTime,$RecThrottleCount,$DefaultNumber,
+   $EmailID,$InitialCount,$Count,$Sender,$PrivateHash,$Hidden,
+   $ExpireTime,$trusted,@Watchwords) =
+   (0,'','','',0,0,0,0,0,0,0,'','',0,'',0,());
+
+  ($mprefix,$mword,$mcount,$musername,$mexpiretime) = ('','','','','');
+
+  ## check to see if this is *from* a user first (the *new* way):
+  if ($for =~ /^\+(.+)\+(.+)\+(\w+)\.(.+)\@/) {
+    $mword = $1;
+    $musername = $2;
+    my $checkTo = $3;
+    $subfrom = $4;
+    $sql = "SELECT UserID, Features, RealEmail, SendThrottleTime, SendThrottleCount FROM Users where UserName = ?";
+    $st = $config->db->prepare($sql);
+    $st->execute($musername);
+    $st->bind_columns(\%attr,\$UserID,\$Features,\$RealEmail, \$SendThrottleTime,\$SendThrottleCount);
+    $st->fetch();
+
+    if (!$util->hasFeature('ACCOUNTDISABLED', $Features)) {
+
+      $sql = "SELECT PrivateHash, Address FROM Emails WHERE UserID = ? AND Word = ?";
+      $st = $config->db->prepare($sql);
+      $st->execute($UserID, $mword);
+      $st->bind_columns(\%attr,\$PrivateHash,\$disposable);
+      $st->fetch();
+
+      my $checkFrom = $util->getShortHash($subfrom,$PrivateHash);
+
+      my $checkFrom1 = substr(md5_hex("$PrivateHash$subfrom"),22,32);
+      if ($disposable
+       && ($SendThrottleCount < $config->getMaxSendCount()
+        || ($SendThrottleTime < $now - $config->getSendThrottleInterval()))
+       && ($checkTo eq $checkFrom || $checkTo eq $checkFrom1) ) {
+        $subfrom =~ s/\#/\@/;
+        $msg =~ s/\Q$for//gm;
+        $msg =~ s/\Q$from/$disposable/gmi;
+        $msg =~ s/\Q$RealEmail/$disposable/gmi;
+        $msg =~ s/(^To\: ).*$/$1 $subfrom/mi;
+        $msg =~ s/(Subject: .*)\s\(.*\n/$1\n/mgi;
+        if ($subfrom && $config->hasLocalDomain($subfrom)) {
+          # this message is coming right back to us, so we need to clear the id
+          $checker->clearMessageId($headerValues{'messageid'});
+        }
+        &sendMail($config,$useXHeader,$subfrom,\$msg,'',$disposable,$disposable);
+
+        if ($SendThrottleTime < $now - $config->getSendThrottleInterval()) {
+          $SendThrottleTime = $now;
+          $SendThrottleCount = 1;
+        } else {
+          $SendThrottleCount ++;
+        }
+        $sql = "UPDATE Users SET SendThrottleTime = ?, SendThrottleCount = ? WHERE UserID = ?";
+        $st = $config->db->prepare($sql);
+        $st->execute($SendThrottleTime, $SendThrottleCount, $UserID);
+      } else {
+        $config->debug("skipping an attempted send: stt: $SendThrottleTime, stc: $SendThrottleCount, userID: $UserID");
+      }
+    } else {
+      $config->debug("skipping an attempted send for disabled user: $UserID");
+    }
+    next; # move on to the next recipient 
+  }
+
+  ## get the stuff in front of the @ from the for address
+  $for =~ /(.*)\@(.*)/;
+  ($musername,$todomain) = ($1,$2);  # still needs more processing at this point
+
+  ## parse the address info:
+  ## determine whether it contains a prefix, and split it into its constituent parts
+  ## (that is, prefix,word,count,username)
+  my $delimiters = $config->getDelimiters();
+  if ($musername =~ /(.+)[$delimiters](.+)[$delimiters](.+)[$delimiters](.+)/) {
+    ($mprefix,$mword,$mcount,$musername) = ($1,$2,$3,$4);
+  } elsif ($musername =~ /(.+)[$delimiters](.+)[$delimiters](.+)/) {
+    ($mprefix,$mword,$mcount,$musername) = ('',$1,$2,$3);
+  } elsif ($musername =~ /(.+)[$delimiters](.+)/) {
+    ($mprefix,$mword,$mcount,$musername) = ('',$1,'',$2);
+  }
+  if ($mcount =~ /(\d{4}\-\d{2}\-\d{2})/) {
+    $mexpiretime = $1;  
+  } else {
+    $mexpiretime = '';
+  }
+
+  # quick fix for padded space bug
+  $mword =~ s/^\s*//;
+  $mprefix =~ s/^\s*//;
+
+  ## some usernames, like postmaster and abuse, should be reserved for admin use
+  ## The db table AdminEmail stores these usernames, and the user signup code should
+  ## consult this table and prevent new users from selecting these usernames.
+  ## If the message is to an admin address, here we send it and exit.
+  ## If exiting is not an option (eg if running persistent), we set $skip
+  ## to be 1 so the rest of the main routine won't do much
+
+  #  $sql = "SELECT AdminEmailID FROM AdminEmail WHERE AdminUser = ?;";
+  #  $st = $config->db->prepare($sql);
+  #  $st->execute($musername);
+  #  $st->bind_columns(\%attr,\$adminID);
+  #  if ($st->fetch()) {
+  if ($musername =~ /^info$/i
+   || $musername =~ /^abuse$/i
+   || $musername =~ /^privacy$/i
+   || $musername =~ /^admin$/i
+   || $musername =~ /^administrator$/i
+   || $musername =~ /^root$/i
+   ) {
+    my $admdmn = $config->getAdminDomain();
+    if ($todomain =~ /$admdmn/i) {
+      # don't advance counter -- this is administrative mail...
+      &sendMail($config,$useXHeader,$config->getAdminEmail(),\$msg,''); 
+    }
+    next;
+  }
+
+  ## must reject non-word addys - 
+  next unless $mword;
+#  if (!$mword) {
+#    my $dbt = $config->{'db'} || 'not connected';
+#    $config->debug("skipping no-word addy - $for -- from is $from db is: $dbt"  );# . $msg);
+#    next;
+#  }
+
+  ## here, we do a little more prep on the address parts
+  ## and try to fetch the relevant user info out of the db using the $musername to match
+  ## the database username.  If there's no match, $UserID is set to 0, and the message is
+  ## on its way to the bit bucket
+
+
+  # now, get the user info, if it's there
+  if (!$config->useUnixAccounts()) {
+    $sql = "SELECT UserID, RealEmail, SpamEmail, Prefix, Features, 
+     RecThrottleTime, RecThrottleCount, DefaultNumber
+     FROM Users
+     WHERE UserName = ?";
+    $st = $config->db->prepare($sql);
+    $st->execute($musername);
+    $st->bind_columns(\%attr,\$UserID,\$RealEmail,\$SpamEmail,\$Prefix,\$Features,
+     \$RecThrottleTime,\$RecThrottleCount,\$DefaultNumber);
+    $st->fetch();
+    # only update log if user has feature and address has "word"
+    $updatelog = $mword && $util->hasFeature('EATENMESSAGELOG',
+                                 $Features); 
+    $useXHeader = $util->hasFeature('DISABLETAGLINE', $Features);
+  } else {
+    $UserID = getpwnam($musername); # get the unix userID
+    $RealEmail = $musername; # we'll be forwarding the message to a local account if at all...
+    # optionally deliver to valid unqualified base addresses
+    if ($UserID && $config->useUnixAccounts() == 2) {  
+      $for =~ /(.*)\@/;
+      # if there was no special syntax (i.e., this is just a plain address)
+      if ($musername eq $1) {
+        &sendMail($config,$useXHeader,$RealEmail,\$msg,'');  # just deliver the message
+        next;                      # and skip the rest of the loop 
+      }
+    }
+  }
+  $UserID = 0 if !$UserID || $util->hasFeature('ACCOUNTDISABLED',$Features);
+
+  $mword = substr($mword,0,20); # truncate word to 20 characters..
+
+  unless ($mcount eq '+' || $mcount =~ /sender/i || $mcount eq '*' || $mcount =~ /domain/) {
+    # make sure the count is a number, unless it's one of the domain/sender flags
+    $mcount = $util->getNumberFromString($mcount,$DefaultNumber);
+  }
+  # check rec throttle
+  if ($UserID 
+   && ($RecThrottleCount > $config->getMaxRecCount() 
+   && ($RecThrottleTime > $now - $config->getRecThrottleInterval()))) {
+  #  $config->debug("skipping...   rec throttle exceeded for username $musername (ID: $UserID)");
+  #  $config->debug("subject: $subject");
+    next; # skip this one
+  }
+  # proceed only if a) it's for a real user, b) the user at least might have
+  # a valid forwarding address, and c) the user's forwarding address isn't 
+  # a local address (which would cause
+  # a ferocious spam loop!)
+
+  if ($UserID && $RealEmail 
+   && !$config->hasLocalDomain($RealEmail) 
+   && !$config->hasLocalDomain($SpamEmail)) {
+
+    # check to see if the message is from a trusted sender.
+    if ($from && $fromdomain) {
+      my @parts = split(/\./,$fromdomain);
+      my $i = 0;
+      my $j = 0;
+      for ($i = 0; $i < @parts; $i++) {
+        for ($j = $i+1; $j < @parts; $j++) {
+          $parts[$i] .= ".$parts[$j]";
+        }
+      }
+      if (@parts < 10) { # we're doing an "in" clause, so we need to protect ourselves from a DOS
+        my $placeholders = join ', ', ('?') x @parts;
+        $sql = "SELECT Sender FROM Permitted 
+         WHERE UserID = ? AND (Sender = ? OR Sender IN ($placeholders));";
+        $st = $config->db->prepare($sql);
+        $st->execute($UserID,$from,@parts);
+        $st->bind_columns(\%attr,\$trusted);
+        $st->fetch();
+      }
+    }
+
+    if ($trusted || ($mword && $mcount)) {
+      $sql = "SELECT EmailID, InitialCount, Count, Sender, PrivateHash, Hidden, ExpireTime 
+       FROM Emails WHERE UserID = ? AND Word = ?;";
+      $st = $config->db->prepare($sql);
+      $st->execute($UserID,$mword);
+      $st->bind_columns(\%attr,\$EmailID,\$InitialCount,\$Count, \$Sender, 
+       \$PrivateHash, \$Hidden, \$ExpireTime);
+      $st->fetch();
+
+      $updatelog = !$Hidden || !$util->hasFeature('DONOTLOGHIDDEN',$Features);
+
+      if ($EmailID 
+       && (!$Count || $Count >=0) 
+       && (!$util->hasFeature('LEGACYPREFIX',$Features) 
+        || (!$Prefix || $mprefix eq $Prefix)) 
+       ) {
+
+        # if the user has the address masking feature enabled,get that ready
+        if ($util->hasFeature('MASKFORWARD',$Features)) {
+          $subfrom = $util->getRedirectedAddress($from,$mword,$musername,
+           $PrivateHash,$fromname);
+          if ($replyto) {
+            $subreplyto = $util->getRedirectedAddress($replyto,
+             $mword,$musername,$PrivateHash,$replytoname);
+          }
+        }
+
+        if ($trusted) {
+          $subjecttext= " (trusted: $trusted)"; 
+          &sendMail($config,$useXHeader,$RealEmail,\$msg,$subjecttext,$subfrom,$subreplyto);
+          &setCount($util,$UserID,$EmailID,1,$RecThrottleTime,$RecThrottleCount);
+
+        } elsif ($Sender && (eval{$from =~ /$Sender/i} 
+         || (!$util->hasFeature('DONOTMATCHRECIP',$Features) && eval{$allRecipients =~ /$Sender/i}))) {
+          $subjecttext = " ($mword: ";
+          if (eval{$from =~ /$Sender/i}) {
+            $subjecttext .= $from;
+          } elsif (".$fromdomain" =~ /\.$Sender/i) {
+            $subjecttext .= $fromdomain;
+          } else {
+            $subjecttext .= 'to';
+          }
+          $subjecttext .= " exclusive)";
+          &sendMail($config,$useXHeader,$RealEmail,\$msg,$subjecttext,$subfrom,$subreplyto);
+          &setCount($util,$UserID,$EmailID,1,$RecThrottleTime,$RecThrottleCount);
+        } elsif ($ExpireTime && $ExpireTime > $now) {
+
+          my $displayDate = $util->formatNumDate($ExpireTime, 1);
+          $subjecttext = " ($mword: expires $displayDate)";
+          &sendMail($config,$useXHeader,$RealEmail,\$msg,$subjecttext,$subfrom,$subreplyto);
+          &setCount($util,$UserID,$EmailID,1,$RecThrottleTime,$RecThrottleCount);
+
+        } elsif (!$ExpireTime && $Count > 0) {
+          $sql = "UPDATE Emails SET Count = (Count-1) WHERE EmailID = ?";
+          $st = $config->db->prepare($sql);
+          $st->execute($EmailID);
+          $nowcount = $InitialCount - ($Count-1);
+          $subjecttext = " ($mword: message $nowcount of $InitialCount";
+          $subjecttext .= " -last one!-" if $nowcount == $InitialCount;
+          $subjecttext .= ")";
+          &sendMail($config,$useXHeader,$RealEmail,\$msg,$subjecttext,$subfrom,$subreplyto);
+          &setCount($util,$UserID,$EmailID,1,$RecThrottleTime,$RecThrottleCount);
+
+        } else {
+          &sendMail($config,$useXHeader,$SpamEmail,\$msg,
+           " ($mword - EATEN by spamgourmet: count exceeded)",
+           $subfrom,$subreplyto) if $SpamEmail;
+          &setCount($util,$UserID,$EmailID,0,
+           $RecThrottleTime,$RecThrottleCount,$from,$mword,$updatelog);
+        }
+      } elsif ((!$Count || $Count >=0 || $mexpiretime) 
+       && (!$Prefix || $mprefix eq $Prefix)) {  ## new address for the user
+
+        if ($util->hasFeature('WATCHWORDS',$Features)) {
+          my $watchword;
+          $sql = "SELECT Watchword FROM Watchwords WHERE UserID = ?;";
+          $st = $config->db->prepare($sql);
+          $st->execute($UserID);
+          $st->bind_columns(\%attr,\$watchword);
+          while ($st->fetch()) {
+            push @Watchwords, $watchword;
+          }
+        }
+
+        if (!@Watchwords || $util->containsOne($mword,@Watchwords)) {
+          $Sender = '';
+          my $icount = 0;
+          if ($trusted) {
+            if (!$mexpiretime) {
+              $mcount = 20 if $mcount > 20;
+              if ($mcount eq '+' || $mcount eq '*' 
+               || $mcount =~ /sender/i || $mcount =~ /domain/i) {
+                $mcount = 0;
+              }
+              $icount = $mcount;
+            } else {
+              $mcount = 0;
+              $ExpireTime = $util->getExpireTime($mexpiretime, $now);
+            }
+            $subjecttext= " (trusted: $trusted)";
+          } elsif ($mcount eq '+' || $mcount =~ /sender/i) {
+            $mcount = 0;
+            $Sender = $from;
+            $subjecttext = " ($mword exclusive: $from)";
+          } elsif ($mcount eq '*' || $mcount =~ /domain/i) {
+            $mcount = 0;
+            $Sender = $fromdomain;
+            $subjecttext = 
+             " ($mword exclusive: $fromdomain)";
+          } elsif ($mexpiretime) {
+            $ExpireTime = $util->getExpireTime($mexpiretime, $now);
+            if ($ExpireTime) {
+              my $displayDate = $util->formatNumDate($ExpireTime, 1);
+              $subjecttext = " ($mword: expires $displayDate)";
+            } else {
+              $subjecttext = " ($mword: invalid date $mcount)";
+            } 
+          } else {
+            $mcount = 20 if $mcount > 20;
+            $subjecttext = " ($mword: message 1 of $mcount";
+            $subjecttext .= " -last one!-" if $mcount == 1;
+            $subjecttext .= ")";
+            $icount = $mcount;
+            $mcount --;
+          }
+    
+          $PrivateHash = md5_hex($UserID . rand() . $now . $config->getSecretPhrase());
+
+          if ($config->isLocalDomain($todomain)) {
+            $for =~ s/\@.*/\@$todomain/;
+          }
+          $sql = "INSERT INTO Emails 
+           (UserID,Prefix,Word,InitialCount,Count,TimeAdded,
+            Sender,Address,PrivateHash,NumForwarded,ExpireTime) 
+            VALUES (?,?,?,?,?,?,?,?,?,?,?)";
+          $st = $config->db->prepare($sql);
+          $st->execute($UserID,$mprefix,$mword,$icount,
+           $mcount,$now,$Sender,$for,$PrivateHash,1,$ExpireTime);
+
+          if ($util->hasFeature('MASKFORWARD', $Features)) {
+            $subfrom = $util->getRedirectedAddress($from,
+                                                   $mword,
+                                                   $musername,
+                                                   $PrivateHash,
+                                                   $fromname);
+            if ($replyto) {
+              $subreplyto = $util->getRedirectedAddress($replyto,
+                                                        $mword,
+                                                        $musername,
+                                                        $PrivateHash,
+                                                        $replytoname);
+            }
+          }
+          &sendMail($config,$useXHeader,$RealEmail,\$msg,$subjecttext,$subfrom,$subreplyto);
+          &setCount($util,$UserID,$EmailID,1,$RecThrottleTime,$RecThrottleCount);
+        } else {
+          &sendMail($config,$useXHeader,$SpamEmail,\$msg,
+           " ($mword - EATEN by spamgourmet: word does not match watchwords)",
+           $subfrom,$subreplyto) if $SpamEmail;
+          &setCount($util,$UserID,$EmailID,0,$RecThrottleTime,$RecThrottleCount,
+           $from,$mword,$updatelog);  
+        }
+      } else {
+        my $reason = 'missing or invalid prefix';
+        $reason = 'address disabled' if $Count < 0;
+        &sendMail($config,$useXHeader,$SpamEmail,\$msg,
+         " ($mword - EATEN by spamgourmet: $reason)",$subfrom,$subreplyto) if $SpamEmail;
+        &setCount($util,$UserID,$EmailID,0,$RecThrottleTime,$RecThrottleCount,
+         $from,$mword,$updatelog);
+      }
+    } else {
+      if ($config->useUnixAccounts() && !$mprefix && !$mword && !$mcount) {
+        # if the message came in for an unadorned unix account...
+        # business as usual - let it through...
+        &sendMail($config,$useXHeader,$RealEmail,\$msg,$subjecttext,'',''); 
+      } else {
+        &sendMail($config,$useXHeader,$SpamEmail,\$msg,
+         " ($mword - EATEN BY spamgourmet: improper format)") if $SpamEmail;
+        &setCount($util,$UserID,$EmailID,0,$RecThrottleTime,$RecThrottleCount,
+         $from,$mword,$updatelog);
+      }
+    }
+  }
+}
+
+if (!%deliveryAddresses && $connected) {
+  &setCount($util,$UserID,$EmailID,0);
+}
+
+if ($st) {
+  $st->finish();  # flush the statement handler
+}
+$config->debug("spameater exiting") if $extradebug;
+$config->die();
+
+exit; # adios
+
+
+### setCount updates the various counters for statistics gathering
+sub setCount {  # (databasehandle,UserID,messagetype)
+  my $util = shift;  # util, with database handle
+  my $config = $util->getConfig();
+  my $UserID = shift;  # user at issue, 0 if none
+  my $EmailID = shift; # Disposable address at issue, 0 if none
+  my $messagetype = shift;  # 0 if spam, non0 if not spam, converted to field name to update
+  my $throttleTime = shift;
+  my $throttleCount = shift;
+
+    # if it was spam, we'll upate the "eaten message log"
+  my $from = shift;
+  my $for = shift;
+  my $updatelog = shift; # whether we should update the EML or not 
+
+  my $sql = '';
+  my $st = '';
+
+  my $oldLog = '';
+  if ($updatelog) {
+    $sql = "SELECT EatenMessageLog FROM Users WHERE UserID = ?";
+    $st = $config->db->prepare($sql);
+    $st->execute($UserID);
+    $st->bind_columns(\%attr,\$oldLog);
+    $st->fetch();
+  }
+
+
+  if (!$messagetype) {
+    $messagetype = 'NumDeleted';
+  } else {
+    $messagetype = 'NumForwarded';
+  }
+
+# get the current time, put it into a nice date format -- $wday will be used, too
+  my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime(time);
+  $mon++;
+  $year = int($year);
+  $year += 1900 if $year < 1900;
+  my $day = "$year-$mon-$mday";
+# end get time
+
+# update the global counters, both by day and running total
+  $sql = "UPDATE Counter SET $messagetype = ($messagetype + 1) WHERE CountDate = '0000-00-00'";
+  if ($config->db->do($sql) < 1) {  # try to add the running total row, if it's not there
+    $sql = "INSERT INTO Counter (WeekDay,CountDate) VALUES (-1,'0000-00-00');";
+    $config->db->do($sql);
+    $sql = "UPDATE Counter SET $messagetype = ($messagetype + 1) WHERE CountDate = '0000-00-00'";
+    $config->db->do($sql);
+  }
+
+  $sql = "SELECT CounterID FROM Counter WHERE CountDate = '$day';";
+  if ($config->db->selectrow_array($sql)) {
+    $sql = "UPDATE Counter SET $messagetype = ($messagetype + 1) WHERE CountDate = '$day';";
+  } else {
+    $sql = "INSERT INTO Counter (CountDate,$messagetype,WeekDay) VALUES ('$day',1,$wday);";
+  }
+  $config->db->do($sql);
+
+# and the User & Email counter, if appropriate
+  if ($UserID) {
+    my $now = time();
+    if ($throttleTime < $now - $config->getRecThrottleInterval()) {
+      $throttleTime = $now;
+      $throttleCount = 1;
+    } else {
+      $throttleCount++;
+    }
+    if ($messagetype eq 'NumForwarded') {
+      $sql = "UPDATE Users SET $messagetype = ($messagetype + 1), RecThrottleTime = ?,
+       RecThrottleCount = ? WHERE UserID = ?";
+      $st = $config->db->prepare($sql);
+      $st->execute($throttleTime, $throttleCount, $UserID);
+    } else {
+      if ($updatelog) {
+        my $newLog = ''; 
+        $newLog = $util->getEatenMessageLog($config->getNumberOfEatenMessagesToLog(),
+         $from,$for,$oldLog);
+        $sql = "UPDATE Users SET $messagetype = ($messagetype + 1), EatenMessageLog = ?, 
+         RecThrottleTime = ?, RecThrottleCount = ? WHERE UserID = ?";
+        $st = $config->db->prepare($sql);
+        $st->execute($newLog, $throttleTime, $throttleCount, $UserID);
+      } else {
+        $sql = "UPDATE Users SET $messagetype = ($messagetype + 1), 
+         RecThrottleTime = ?, RecThrottleCount = ? WHERE UserID = ?";
+        $st = $config->db->prepare($sql);
+        $st->execute($throttleTime, $throttleCount, $UserID);
+      }
+    }
+    if ($EmailID) {
+      $sql = "UPDATE Emails SET $messagetype = ($messagetype + 1) WHERE EmailID = ?;";
+      $st = $config->db->prepare($sql);
+      $st->execute($EmailID);      
+    }
+  }
+}
+
+sub sendMail {
+  my $config = shift;
+  my $useXHeader = shift;
+  my $rcpt = shift;
+  my $msgref = shift;
+  my $subjecttext = shift;
+  my $sender = shift;
+  my $replyto = shift;
+
+  return if !$rcpt;
+  $config->debug("sending...") if $extradebug;
+  if (!$useXHeader && $subjecttext) {
+    my $check = $$msgref =~ s/(^Subject\:.*$)/$1$subjecttext/mi;
+    if (!$check) {
+      $$msgref =~ s/(Date: )/Subject: $subjecttext\n$1/;
+    }
+  } else {
+    $$msgref =~ s/\n\n/\nX-Spamgourmet: $subjecttext\n\n/;
+  }
+  if ($sender) {
+    $$msgref =~ s/(^Return-Path\: ).*$/$1 $sender/mi;
+    $$msgref =~ s/(^From\: ).*$/$1 $sender/mi;
+    $$msgref =~ s/(^Sender\: ).*$/$1 $sender/mi;
+    $$msgref =~ s/(^X-Sender\:).*$/$1 $sender/mi;
+    $$msgref =~ s/(^X-Sent-From\:).*$/$1 $sender/mi;
+    $$msgref =~ s/(^Disposition-Notification-To:).*$/$1 $sender/mi;
+  }
+  if ($replyto) {
+    $$msgref =~ s/(^Reply-To\: ).*$/$1 $replyto/mi;
+  }
+  $sender =~ s/.*\<//;
+  $sender =~ s/\>.*//;
+
+  $config->debug($$msgref) if $extradebug;
+
+  $config->getMailer()->sendMail($msgref,$rcpt,$sender);
+}
