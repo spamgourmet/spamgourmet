@@ -1,0 +1,43 @@
+##
+## $Id: install.txt,v 1.2 2004/05/18 01:55:31 maratheamit Exp $
+##
+
+INSTALLATION NOTES
+------------------
+
+- Pre-requisites
+	Linux
+	sendmail
+	apache
+	mysql
+	perl
+
+- MySQL
+	mysql_install_db
+	/etc/init.d/mysqld start
+	mysqladmin -uroot -p<pass>
+
+	the following commands should be entered at the mysql prompt
+		create database <sguser>
+		grant all privileges on <sguser>.* to <sguser>
+			identified by '<sgpass>' with grant option
+
+	mysql -u<sguser> -p<sgpass> <db.sql
+	mysql -u<sguser> -p<sgpass> <dialogs.sql
+
+- Apache
+
+- Sendmail
+	soft link from spameater.pl to /etc/smrsh
+	specify the soft link name in .forward
+
+- Spamgourmet
+	cd conf
+	cp spamgourmet.config.default spamgourmet.config
+	# make appropriate changes to spamgourmet.config
+	cp .forward.default ~/.forward
+	# make appropriate changes to ~/.forward
+	# edit index.pl and spameater.pl and set the configfile parameter to
+	# the full path the spamgourmet.config
+
+

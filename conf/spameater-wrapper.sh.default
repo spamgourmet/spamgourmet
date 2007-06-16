@@ -1,0 +1,7 @@
+#!/bin/bash
+
+export SG_DIR=/path/to/spamgourmet/dir
+export SG_CONF_FILE=/path/to/spamgourmet.config
+
+$SG_DIR/mailhandler/spameater.pl
+

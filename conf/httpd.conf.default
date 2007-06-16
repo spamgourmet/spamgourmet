@@ -1,0 +1,18 @@
+<VirtualHost amit.xoxy.net>
+	ServerAdmin webmaster@domain.name
+	DocumentRoot /path/to/document/root
+	ServerName domain.name
+	ErrorLog /path/to/error/log
+	AddHandler cgi-script .pl
+	DirectoryIndex index.pl
+	SetEnv SG_DIR /path/to/spamgourmet/dir
+	SetEnv SG_CONF_FILE /path/to/spamgourmet.config
+</VirtualHost>
+
+<Directory /path/to/document/root>
+	AllowOverride None
+	Order allow,deny
+	Allow from all
+	Options +ExecCGI
+</Directory>
+
