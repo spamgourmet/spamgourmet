@@ -1,0 +1,33 @@
+<font face="verdana,arial,helvetica" size=3 color="#000000">
+<p> </p>
+<div align="center">Werk uw weggooibare adressen bij:<br><b><%message%></b><br>
+<form action="<%action%>" method="post">
+<input type="hidden" name="randomnumber" value=<%randomnumber%>>
+<input type="hidden" name="myemails" value=1>
+<input type="hidden" name="updateemail" value=<%emailid%>>
+
+<input type="hidden" name="showHidden" value="<%showhidden%>">
+
+<table border=0 cellspacing=0 cellpadding=2>
+<tr><td>Overgebleven berichten <input type="text" name="count" value="<%count%>" onFocus="this.select();" size=2 maxlength=2></td></tr>
+<tr><td>Exclusieve zender <input type="text" name="sender" value="<%sender%>" onFocus="this.select();"></tr>
+
+<tr><td colspan=2 align="center"><input type="radio" name="hidden" value=0 <%isnothidden%>>niet
+    verborgen <input type="radio" name="hidden" value=1 <%ishidden%>>verborgen</td></tr>
+<tr><td colspan=2 align="center" valign="middle">notitie <textarea cols=40 rows=2 maxlength=254 name="note"><%note%></textarea></td></tr>
+<tr><td colspan=2 align="center"><input type="submit" value="update address"> </td></tr>
+</table>
+</div>
+Gebruik dit formulier om uw overblijvende berichten te bewerken (0-20).  Als u wilt kunt u een exclusieve zender specifieren (door Email adres of domein) deze zullen worden toegestaan om oneindig door het geselecteerde adres te sturen.  Naast je vertrouwde zenders, alleen de exclusieve zenders zullen door het adres kunnen mailen nadat het is verlopen.
+<br>
+<input type="hidden" name="searchterms" value="<%searchterms%>">
+</form>
+
+<p align="center"><a href="<%action%>?myemails=1&showHidden=<%showhidden%>&searchterms=<%searchterms%>"><%returnwithoutsaving%></a>
+</p>
+
+</font>
+
+</textarea>
+</div>
+  </font>

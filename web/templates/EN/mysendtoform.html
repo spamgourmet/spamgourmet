@@ -1,0 +1,73 @@
+<script language="JavaScript">
+
+function checkChooser(theform) {
+  if (theform.recipient.value == null || theform.recipient.value == '') {
+    alert('<%recipientrequired%>');
+    theform.recipient.focus();
+    return false;
+  }
+  if (theform.word.value != '' && theform.word.value != null) {
+    if (theform.domain.value == null || theform.domain.value == '') {
+      alert('<%domainisrequired%>');
+      theform.domain.focus();
+      return false;
+    }
+    var match = false;
+    var i = 0;
+    var domain = theform.domain.value;
+    for (i = 0; i < theform.domainlist.length && match == false; i++) {
+      if (domain == theform.domainlist[i].value) {
+        match = true;
+      }
+     }
+    if (match == false) {
+      return confirm('<%domainnotinlist%>');
+    }
+  }
+  return true;
+}
+</script>
+<p align="center"><a href="<%action%>?advanced=1"><%returntoadvancedmode%></a></p>
+<p><%msg%> </p>
+<form name="chooser" id="chooser" onsubmit="return checkChooser(this);">
+<table border="0" cellspacing="0" cellpadding="3">
+<tr>
+  <td>
+     <%enterrecipient%> 
+  </td>
+  <td>
+     <input type="text" size="30" name="recipient" value="<%recipient%>"> 
+  </td>
+</tr>
+<tr>
+  <td>
+    <%choosedisposable%> 
+  </td>
+  <td>
+    <select name="disposable">
+      <%addressoptions%>
+    </select>
+  </td>
+</tr>
+<tr>
+  <td colspan="2"><br><%makenewdisposable%></td>
+</tr>
+<tr>
+  <td colspan="2" align="center"><%prefix%> <%word%> <input type="text" name="word" id="word" maxlength="20" value=""> . <%number%> <input type="text" size="6" name="number" id="number" maxlength="20" value=""> . <%username%> @ <input type="text" name="domain" value="<%domain%>">
+<br>
+<br><select name="domainlist" onChange="this.form.domain.value=this.form.domainlist[this.form.domainlist.selectedIndex].value;">
+      <%domainoptions%>
+    </select>
+  </td>
+</tr>
+<tr>
+  <td colspan="2" align="center">
+    <input type="submit" value="<%go%>">
+  </td>
+</tr>
+</table>
+<input type="hidden" name="myemails" value="1">
+</form>
+
+
+<p><%sendfromdescription%></p>

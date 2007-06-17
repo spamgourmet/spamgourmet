@@ -1,0 +1,3 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE DisposableAddresses PUBLIC "-//spamgourmet//disposable address DTD//EN" "http://spamgourmet.com/sgDisposableAddresses.dtd">
+<DisposableAddresses username="<%username%>" prefix="<%prefix%>">

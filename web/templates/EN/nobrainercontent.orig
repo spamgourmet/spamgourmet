@@ -1,0 +1,28 @@
+<center>
+<form action="<%action%>" method="post">
+<p>
+
+email address where you'll receive messages<br>
+
+<%forwardingaddress%> <input type="text" name="realemail" value="<%realemail%>">
+<input type="hidden" name="saverealemail" value=1>
+<input type="<%button%>" value="<%save%>" onClick="<%onclick%>">
+</form>
+<p><font face="verdana,arial,helvetica"><i><%pendingmsg%></i></font></p>
+
+</center>
+
+After you save and confirm the email address where you'd like to receive messages, you can give out self-destructing disposable email addresses whenever you want as follows:
+
+<p align="center"><i>someword.x.user</i>@spamgourmet.com</p>
+
+where <i>someword</i> is a word you haven't used before, <i>x</i> is the number of email messages you want to receive at the address (up to 20), and <i>user</i> is your username.  For example, if your username is 'spamcowboy', and you give this address to somebody
+(or, more probably, some thing):
+
+<p align="center">spamelope.2.spamcowboy@spamgourmet.com</p>
+
+the address will be created here the first time it is <i>used</i>, and you'll receive at most two messages (forwarded to the email address you specify above) on the address.  The rest will be indelicately consumed.<br><br>
+That's it.  You won't ever have to come back here.
+
+</font>
+

@@ -1,0 +1,28 @@
+<br>
+<div align="center"><%updateaddress%><br><b><%message%></b><br>
+<form action="<%action%>" method="post">
+<input type="hidden" name="randomnumber" value=<%randomnumber%>>
+<input type="hidden" name="myemails" value=1>
+<input type="hidden" name="updateemail" value=<%emailid%>>
+
+<input type="hidden" name="showHidden" value="<%showhidden%>">
+
+<table border=0 cellspacing=0 cellpadding=2>
+<tr><td><%remainingmessages%> <input type="text" name="count" value="<%count%>" onFocus="this.select();" size=2 maxlength=2></td></tr>
+<tr><td><%exclusivesender%> <input type="text" name="sender" value="<%sender%>" onFocus="this.select();"></tr>
+
+<tr><td colspan=2 align="center"><input type="radio" name="hidden" value=0 <%isnothidden%>><%nothidden%>    
+  <input type="radio" name="hidden" value=1 <%ishidden%>><%hidden%></td></tr>
+<tr><td colspan=2 align="center" valign="middle"><%thenote%> <textarea cols=40 rows=2 maxlength=254 name="note"><%note%></textarea></td></tr>
+<tr><td colspan=2 align="center"><input type="submit" value="<%updateaddress%>"> </td></tr>
+</table>
+</div>
+<%updatedescription%>
+<br>
+<input type="hidden" name="searchterms" value="<%searchterms%>">
+</form>
+
+<p align="center"><a href="<%action%>?myemails=1&mysendtoform=1&disposable=<%emailid%>"><%sendfromaddress%><a/></p>
+
+<p align="center"><a href="<%action%>?myemails=1&showHidden=<%showhidden%>&searchterms=<%searchterms%>"><%returnwithoutsaving%></a>
+</p>

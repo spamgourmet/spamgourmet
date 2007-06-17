@@ -1,0 +1,42 @@
+<div align="center">
+<img src="http://images.spamgourmet.net/<%imagefilename%>" width="620" height="180" border="0">
+<p><%loginmsg%></p>
+</div>
+
+<form name="newuserform" action="<%action%>" method="post" onSubmit="return checkNewUserForm(this);">
+
+<%typeimageword%>   
+
+<input type=text name="imageword" size=30 maxlength=30>
+
+
+<input type="hidden" name="newuser" value="<%newuser%>">
+<input type="hidden" name="imagehash" value="<%imagehash%>">
+<input type="hidden" name="realemail" value="<%realemail%>">
+<input type="hidden" name="saverealemail" value=1>
+
+<div align="center">
+<table>
+
+<tr><td colspan=2>
+<%providepassword%>
+</td></tr>
+<tr><td>
+
+<%newpass%>
+
+</td><td><input type=password name="newpass" size=10 onFocus="this.select();"></td></tr>
+<tr><td>
+
+<%confirm%>
+
+</td><td><input type=password name="confirm" size=10 onFocus="this.select();"></td></tr>
+
+<tr><td colspan=2 align="center"><input type="submit" value="<%go%>"></td></tr>
+</table>
+<p>
+<%cannotreadimage%>
+</p>
+
+</div>
+</form>

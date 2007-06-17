@@ -1,0 +1,86 @@
+<center>
+<form action="<%action%>" method="post"><input type="hidden" name="advanced" value="1">
+<table border=0 cellspacing=0 cellpadding=3>
+<tr><td align="right">
+
+<br>
+<%forwardingaddress%> <input type="text" name="realemail" value="<%realemail%>" onFocus="saveButton.disabled=false">
+<input type="hidden" name="saverealemail" value=1>
+  <input name="saveButton" id="saveButton" type="<%button%>" value="<%save%>" onClick="<%onclick%>" disabled>
+</td>
+</tr>
+
+</table></form>
+<p><i><%pendingmsg%></i></p>
+
+<div align="center"><form name="searchform" action="<%myemailslink%>"><input type="hidden" name="myemails" value=1>
+<input type="text" size=20 name="searchterms" value="<%searchterms%>" onFocus="this.select()"> <input type="submit" value="<%search%>"> (<input type="checkbox" name="showHidden" value=1><%showhiddenaddresses%>)
+</form>
+
+
+<p><%eml%></p>
+</div>
+
+<table width="90%" border=0>
+<tr><td valign="top">
+<%senders%>
+</td><td valign="top">
+<%watchwords%>
+</td></tr><tr>
+
+<td><form action="<%action%>" method="post">
+<input name="newsender" type="text"><br><input type="<%button%>" value="<%addtrustedsender%>" onClick="<%onclick%>"></form></td>
+
+<td><form action="<%action%>" method="post">
+<input name="newwatchword" type="text"><br><input type="<%button%>" value="<%addwatchword%>"
+ onClick="<%onclick%>"></form></td>
+</tr>
+<tr>
+<td colspan="2" align="center"><form action="">
+<table border="0" cellpadding="2" cellspacing="0">
+<tr><td align="right">
+<%watchwordenforcement%>:
+</td><td>
+<input type="radio" name="watchword" value=0 <%watchwordson%> onClick="location='<%action%>?advanced=1&addFeature=3'"> <%enabled%>   
+<input type="radio" name="watchword" value=0 <%watchwordsoff%> onClick="location='<%action%>?advanced=1&clearFeature=3'"> <%disabled%>
+</td></tr>
+<tr><td align="right">
+<%replyaddressmasking%>: 
+</td><td>
+<input type="radio" name="maskforwarding" value=0 <%maskforwardon%> onClick="location='<%action%>?advanced=1&addFeature=2'"> <%enabled%>    
+<input type="radio" name="maskforwarding" value=0 <%maskforwardoff%> onClick="location='<%action%>?advanced=1&clearFeature=2'"> <%disabled%>
+</td></tr>
+<tr><td align="right">
+<%eatenmessagelog%>: 
+</td><td>
+<input type="radio" name="eml" value=0 <%emlon%> onClick="location='<%action%>?advanced=1&addFeature=7'"> <%enabled%>    
+<input type="radio" name="eml" value=0 <%emloff%> onClick="location='<%action%>?advanced=1&clearFeature=7'"> <%disabled%>
+</td></tr>
+<tr><td align="right">
+<%dontloghiddenaddresses%>: 
+</td><td>
+<input type="radio" name="dlh" value=0 <%dlhmon%> onClick="location='<%action%>?advanced=1&addFeature=11'"> <%enabled%> 
+<input type="radio" name="dlh" value=0 <%dlhmoff%> onClick="location='<%action%>?advanced=1&clearFeature=11'"> <%disabled%> 
+<tr><td align="right">
+<%hidesubjecttagline%>: 
+</td><td>
+<input type="radio" name="hst" value=0 <%hston%> onClick="location='<%action%>?advanced=1&addFeature=17'"> <%enabled%> 
+<input type="radio" name="hst" value=0 <%hstoff%> onClick="location='<%action%>?advanced=1&clearFeature=17'"> <%disabled%> 
+</td></tr>
+</table>
+</form>
+</td>
+</tr>
+</table>
+
+
+<p align="center"><a href="<%sendtolink%>"><%sendfromanaddress%></a></p>
+
+<p align="center">
+<form action="<%action%>" method="post"><input type="hidden" name="advanced" value="1">
+<%defaultnumber%> <input type="text" size="2" name="defaultnumber" value="<%mydefaultnumber%>" onFocus="this.select();">
+<input name="saveDFButton" id="saveDFButton" type="<%button%>" value="<%save%>" onClick="<%onclick%>">
+</form>
+</p>
+
+</center>

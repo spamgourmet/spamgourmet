@@ -1,0 +1,73 @@
+Avansert modus er helt lik idiot-sikkert modus, bortsett fra at kan også spesifisere betrodde avsendere, vaktord og et prefiks. Do kan også skru av og på svar-adresse maskering og se på/endre dine bruk-og-kast adresser.
+Når du har betrodde avsendere, vaktord eller ett prefiks vil dette være siden være standardside når du logger på.
+
+<p>
+<p>
+
+<b>Betrodde avsendere</b>: Du kan legge til eller fjerne "betrodde avsendere" ved å spesifisere enten et domene eller en epost adresse. Btrodde avsendere vil få lov til å sende epost til alle dine bruk-og-kast adresser uten at meldingstelleren øker.
+
+<p>
+På denne måten kan du bli med i en liste du ikke stoler på ved å bruke en bruk-og-kast adresse. Senere, dersom du liker listen, kan du komme tilbake hit og legge til epost adressen til listen som en betrodd avsender.
+
+Når du legger til et domene blir alle adresser i domenet regnet som betrodde. Når du legger til en epost adrresse vil kun den ene adressen bli betrodd.
+</p>
+<p>
+<b>Vaktord</b>: Vaktord hjelper deg å kontrollere opprettingen av bruk-og-kast adresser. Hvis du har vaktord funksjonen skrudd på <i>og</i> minst ett vakt ord, vil systemet ikke <i>lage</i> en ny adresse uten at vaktordet er inkludert i "ordet" i adressen. For eksempel: Dersom brukernavnet var "spamcowboy" og vaktord liten inneholder "sal" og "tau", vil disse adressene kunne lage nye adresser:
+</p><p align="center">
+saltaske.3.spamcowboy@spamgourmet.com<br>
+langttynttau.2.spamcowboy@spamgourmet.com<br>
+tilbakeisalen.6.spamcowboy@spamgourmet.com<br>
+</p>
+og disse vil ikke være tillatt:
+<p align="center">
+vannhull.20.spamcowboy@spamgourmet.com<br>
+eternalspamnation.*.spamcowboy@spamgourmet.com 
+</p>
+
+<p align="center">
+</p>
+<b>Svar adresse maskering</b>: Med svar adresse maskering skrudd på vil systemet endre hver enkelt videresent melding slik at, om du svarer, svaret går til spamgourmet istedet for å gå rett til avsenderen. Systemet vil bytte ut din ekte adresse med den bruk-og-kast adressen som du opprinnelig brukte. Dette gjør at din ekte adresse skjules.
+<p>
+
+
+<b>Vis adresser</b>: Du kan se på en stor tabell med alle dine bruk-og-kast adresser ved å klikke på knappen hvor det sttår "vis meg mine bruk-og-kast adresser". I tabellen kan du klikke på en adresse (på "ordet") og endre følgende:
+
+<br>
+
+a) antall meldinger som gjenstår, og
+
+<br>
+
+b) dersom du vil, spesifisere en "eksklusiv avsender" for adressen. Du kan lese mer om eksklusive avsendere i FAQ - det likner mye på å ha en btrodd avsender koblet til en konkret adresse.
+
+<p>
+
+eller, om du vil, du kan få <a href="<%xmllink%>">hele listen i XML ved å klikke her</a>.
+
+<p> 
+
+<p>
+
+<b>Prefiks:</b> Om du er <i>virkelig</i> paranoid kan du spesifisere et "prefiks" som dermed kreves i alle <i>nye</i> bruk-og-kast adresser fra en ubetrodd avsender. Tenk på det som et passord for å lage nye bruk-og-kast adresser, et passord du kan endre i ny og ne.
+
+</p>
+
+<form action="<%action%>" method="post" onSubmit="return checkPrefixForm(this);"><p align="center">
+
+ditt prefiks:
+
+<input type="text" name="prefix" value="<%prefix%>" maxlength=20> <input type="<%button%>" value="save prefix" onClick="<%onClick%>">
+</p></form>
+
+Dersom du spesiiserer et prefiks vil systemet nekte å lage nye adresser uten prefikset. Dette vil beskytte deg dersom du tror noen andre lager nye adresser med ditt brukernavn.
+Formatet for en bruk-og-kast adresse med prefik er
+
+<p align="center">  <i>prefiks.ettord.x.brukernavn</i>@spamgourmet.com</p>
+
+<p>
+
+Altså, om prefikset ditt er "furulegg" kan du lage en bruk-og-kast adresse slik:
+
+<p align="center">  furulegg.spamelope.2.spamcowboy@spamgourmet.com</p>
+
+Og om du senere endre prefikset til "lekebil", vil prefikset "furulegg" ikke lenger virke når du skal lage nye adresser. Gamle adresser vil fungere som før. Dersom du slette prefikset ditt vil bruk-og-kast adresser bli laget, med eller uten et prefiks.

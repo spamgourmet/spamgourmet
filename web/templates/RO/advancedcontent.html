@@ -1,0 +1,76 @@
+Modul Avansat este asemenea modului SIMPLU , cu exceptia că puteti specifica expeditori de încredere, cuvinte de gardă si un prefix. Puteti de asemenea să validati sau să invalidati mascarea adresei de răspuns. 
+Dacă aveti expeditori de încredere, vreti să folositi cuvinte de gardă sau un prefix, veti vedea acest ecran ca implicit cand vă logati.
+
+<p>
+<p>
+
+<b>Expeditori de Încredere </b>: Puteti adăuga sau elimina „expeditori de încredere” aici prin specificarea numelui de domeniu sau a unei adrese de e-mail.
+Expeditorii de încredere vor avea permisiunea să vă trimită e-mailuri pe oricare din adresele volatile fără a face să avanseze contorul de mesaje. 
+
+<p>
+În acest fel, vă puteti abona la o listă de discutii în care nu aveti încredere, folosindu-vă de o adresă volatilă. Apoi, dacă lista vă place, puteti reveni aici si să adăugati lista respectivă la „expeditori de încredere”.
+
+Daca adăugati un domeniu, orice utilizator de la acel domeniu va fi de încredere. Dacă adăugati numai o adresă de e-mail, numai acea adresă va fi considerată de încredere.
+</p>
+<p>
+<b>Cuvinte de Gardă</b>: Cuvintele de gardă vă ajută să controlati crearea adreselor volatile. Dacă ati activat „Întărirea cu cuvinte de gardă” <i>si</i> aveti cel putin un cuvânt de gardă, atunci sistemul nu va <i>crea</i> o nouă adresă până când cel putin unul din cuvintele Dv. de gardă  nu este introdus în locatia „cuvânt” a adresei. De exemplu, dacă ati avea numele de utilizator 'spamcowboy', iar lista cuvintelor de gardă ar include 'cal' si 'funie', atunci urmatoarele forme vor fi valide la crearea unei noi adrese volatile: 
+</p><p align="center">
+calsapun.3.spamcowboy@spamgourmet.com<br>
+HopaFunieArde.2.spamcowboy@spamgourmet.com<br>
+Inapoipecal.6.spamcowboy@spamgourmet.com<br>
+</p>
+în vreme ce acestea nu vor funciona: 
+<p align="center">
+coyote.20.spamcowboy@spamgourmet.com<br>
+spamnatieeterna.*.spamcowboy@spamgourmet.com 
+</p>
+
+
+<p align="center">
+</p>
+<b>Mascarea Adresei de Răspuns </b>: Când este activată mascarea adresei de răspuns, sistemul modifică fiecare mesaj re-expediat astfel încât dacă răspundeti, raspunsul Dvs va reveni la spamgourmet 
+în loc să meargă direct spre destinatar. Sistemul va substitui adresa volatilă respectivă folosită initial de expeditor în adresa Dvs. reală de răspuns, pentru a ascunde adresa Dv. reală. 
+<p>
+
+<b>Arată Adresa</b>: Puteti vedea un tablou mare cu toate adresele volatile prin click pe butonul "Arată adresele mele volatile ".  
+În tabel putei face click pe o adresă (în functie de „cuvântul” ei şi să o editaţi în felul următor: 
+
+<br>
+
+a) Schimbarea numărului de mesaje rămase şi
+
+<br>
+
+b) dacă doriti puteti specifica un „expeditor exclusiv” pentru adresă. Puteti afla mai multe in rubrica FAQ – Întrebări frecvente – este adesea de preferat să aveti un expeditor de încredere pentru o anumită adresă.
+
+<p>
+
+Sau dacă preferati, puteti <a href="<%xmllink%>">trece întreaga listă in  XML făcând click aici </a>.
+
+<p> 
+
+<p>
+
+<b>Prefixe:</b> Dacă sunteti <i>de-a dreptul</i> paranoic, puteti specifica un 'prefix' care va fi solicitat la fiecare <i>nouă</i> adresă volatilă pentru un expeditor de neîncredere.  Este ca o parolă pentru crearea de noi adrese volatile, pe care o puteti schimba din când în când.
+
+</p>
+
+<form action="<%action%>" method="post" onSubmit="return checkPrefixForm(this);"><p align="center">
+
+prefixul Dvs:
+
+<input type="text" name="prefix" value="<%prefix%>" maxlength=20> <input type="<%button%>" value="save prefix" onClick="<%onClick%>">
+</p></form>
+
+Dacă specificati un prefix, sistemul nu va crea o nouă adresă volatilă fără acesta. Aceasta vă va proteja dacă credeti că cineva altul decât Dvs. crează noi adrese volatile folosindu-vă numele de utilizator.
+Formatul unei adrese volatile cu prefix este:
+
+<p align="center">  <i>prefix.cevacuvânt.x.user</i>@spamgourmet.com</p>
+
+<p>
+
+Deci, dacă aveti ca prefix 'purice', ar trebui să specificati o adresă volatilă de forma:
+
+<p align="center">  purice.spamelope.2.spamcowboy@spamgourmet.com</p>
+
+Si dacă va schimbati vreodată  prefixul in 'coyot', prefixul 'purice' nu va mai functiona la crearea unei noi adrese, dar adresele create initial vor continua să functioneze. Dacă vă stergeti prefixul , adresele volatile vor putea fi create cu sau fără prefixe.

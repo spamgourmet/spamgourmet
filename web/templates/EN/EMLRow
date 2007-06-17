@@ -1,0 +1,1 @@
+<tr><td><%date%>&nbsp;</td><td><%from%>&nbsp;</td><td><a href="<%action%>?myemails=1&myupdateform=1&EmailID=<%EmailID%>"><%for%></a>&nbsp;</td></tr>

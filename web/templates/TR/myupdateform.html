@@ -1,0 +1,31 @@
+<font face="verdana,arial,helvetica" size=3 color="#000000">
+<p> </p>
+<div align="center">Atılabilir adres güncelleme:<br><b><%message%></b><br>
+<form action="<%action%>" method="post">
+<input type="hidden" name="randomnumber" value=<%randomnumber%>>
+<input type="hidden" name="myemails" value=1>
+<input type="hidden" name="updateemail" value=<%emailid%>>
+
+<input type="hidden" name="showHidden" value="<%showhidden%>">
+
+<table border=0 cellspacing=0 cellpadding=2>
+<tr><td>Kalan İleti Hakkı <input type="text" name="count" value="<%count%>" onFocus="this.select();" size=2 maxlength=2></td></tr>
+<tr><td>Özgül Gönderen <input type="text" name="sender" value="<%sender%>" onFocus="this.select();"></tr>
+
+<tr><td colspan=2 align="center"><input type="radio" name="hidden" value=0 <%isnothidden%>>açık    
+  <input type="radio" name="hidden" value=1 <%ishidden%>>gizli</td></tr>
+<tr><td colspan=2 align="center" valign="middle">not <textarea cols=40 rows=2 maxlength=254 name="note"><%note%></textarea></td></tr>
+<tr><td colspan=2 align="center"><input type="submit" value="adresi güncelle"> </td></tr>
+</table>
+</div>
+Bu formu kullanarak bu adresin kalan ileti sayısını değiştirebilirsiniz (0 ilâ 20). İsterseniz bu adresten sınırsızca ileti göndermesini uygun bulduğunuz bir özgül gönderen belirleyebilirsiniz (e-posta adresine ya da etki alanına (domain) göre). Adresinizin kullanım sınırı aşıldıktan sonra bu adresi güvenilir gönderenlerin yanı sıra özgül gönderenler de kullanabilecektir.
+<br>
+<input type="hidden" name="searchterms" value="<%searchterms%>">
+</form>
+
+<p align="center"><a href="<%action%>?myemails=1&showHidden=<%showhidden%>&searchterms=<%searchterms%>"><%returnwithoutsaving%></a>
+</p>
+
+</font>
+
+

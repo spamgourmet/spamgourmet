@@ -1,0 +1,75 @@
+<table border="1" cellspacing="0" cellpadding="2">
+       <tr>
+        <td colspan="9">
+         <table border="0" cellspacing="0">
+          <tr>
+           <td>
+            <img src="<%imageshost%>stuff/mom2.png" border="0" alt="mom">
+           </td>
+           <td> 
+            <%yourdisposableaddresses%>   <br><a href="<%action%>?advanced=1"><%returntoadvancedmode%></a> <br><br>
+            <form name="searchform" action="<%action%>"><input type="hidden" name="myemails" value=1>         
+            <input type="hidden" name="randomnumber" value="<%randomnumber%>">
+            <input type="text" size=20 name="searchterms" value="<%searchterms%>" onFocus="this.select()"> 
+            <input type="submit" value="<%search%>">
+            <br><input type="checkbox" name="showHidden" value=1 <%showhidden%>><%showhiddenaddresses%>
+            </form>   
+           </td>
+          </tr>
+        </table>
+       </td></tr>
+       <tr>
+       <td valign="bottom"><%word%><br><%clicktoedit%><br>
+        <a href="<%action%>?myemails=1&amp;orderby=2&amp;searchterms=<%urlsearchterms%>&amp;showHidden=<%showhidden%>"><img
+        src="<%imageshost%>stuff/sortasc.png" width=16 height=16 border=0 alt="sort ascending"></a>
+        <a href="<%action%>?myemails=1&amp;orderby=2&amp;desc=1&amp;searchterms=<%urlsearchterms%>&amp;showHidden=<%showhidden%>"><img
+        src="<%imageshost%>stuff/sortdesc.png" width=16 height=16 border=0 alt="sort decending"></a>
+       </td>
+       <td valign="bottom"><%maxcount%><br>
+        <a href="<%action%>?myemails=1&amp;orderby=3&amp;searchterms=<%urlsearchterms%>&amp;showHidden=<%showhidden%>"><img
+        src="<%imageshost%>stuff/sortasc.png" width=16 height=16 border=0 alt="sort ascending"></a>
+        <a href="<%action%>?myemails=1&amp;orderby=3&amp;desc=1&amp;searchterms=<%urlsearchterms%>&amp;showHidden=<%showhidden%>"><img
+        src="<%imageshost%>stuff/sortdesc.png" width=16 height=16 border=0 alt="sort decending"></a>
+       </td>
+       <td valign="bottom"><%remaining%><br>
+        <a href="<%action%>?myemails=1&amp;orderby=4&amp;searchterms=<%urlsearchterms%>&amp;showHidden=<%showhidden%>"><img
+        src="<%imageshost%>stuff/sortasc.png" width=16 height=16 border=0 alt="sort ascending"></a>
+        <a href="<%action%>?myemails=1&amp;orderby=4&amp;desc=1&amp;searchterms=<%urlsearchterms%>&amp;showHidden=<%showhidden%>"><img
+        src="<%imageshost%>stuff/sortdesc.png" width=16 height=16 border=0 alt="sort decending"></a>
+       </td>
+       <td valign="bottom"><%forwarded%><br>
+        <a href="<%action%>?myemails=1&amp;orderby=8&amp;searchterms=<%urlsearchterms%>&amp;showHidden=<%showhidden%>"><img
+        src="<%imageshost%>stuff/sortasc.png" width=16 height=16 border=0 alt="sort ascending"></a>
+        <a href="<%action%>?myemails=1&amp;orderby=8&amp;desc=1&amp;searchterms=<%urlsearchterms%>&amp;showHidden=<%showhidden%>"><img
+        src="<%imageshost%>stuff/sortdesc.png" width=16 height=16 border=0 alt="sort decending"></a>
+       </td>
+       <td valign="bottom"><%deleted%><br>
+        <a href="<%action%>?myemails=1&amp;orderby=9&amp;searchterms=<%urlsearchterms%>&amp;showHidden=<%showhidden%>"><img
+        src="<%imageshost%>stuff/sortasc.png" width=16 height=16 border=0 alt="sort ascending"></a>
+        <a href="<%action%>?myemails=1&amp;orderby=9&amp;desc=1&amp;searchterms=<%urlsearchterms%>&amp;showHidden=<%showhidden%>"><img
+        src="<%imageshost%>stuff/sortdesc.png" width=16 height=16 border=0 alt="sort decending"></a>
+       </td>
+       <td valign="bottom"><%created%> (PST)<br>
+        <a href="<%action%>?myemails=1&amp;orderby=5&amp;searchterms=<%urlsearchterms%>&amp;showHidden=<%showhidden%>"><img
+        src="<%imageshost%>stuff/sortasc.png" width=16 height=16 border=0 alt="sort ascending"></a>
+        <a href="<%action%>?myemails=1&amp;orderby=5&amp;desc=1&amp;searchterms=<%urlsearchterms%>&amp;showHidden=<%showhidden%>"><img
+        src="<%imageshost%>stuff/sortdesc.png" width=16 height=16 border=0 alt="sort decending"></a>
+       </td>
+       <td valign="bottom"><%fulladdress%><br>
+        <a href="<%action%>?myemails=1&amp;orderby=6&amp;searchterms=<%urlsearchterms%>&amp;showHidden=<%showhidden%>"><img
+        src="<%imageshost%>stuff/sortasc.png" width=16 height=16 border=0 alt="sort ascending"></a>
+        <a href="<%action%>?myemails=1&amp;orderby=6&amp;desc=1&amp;searchterms=<%urlsearchterms%>&amp;showHidden=<%showhidden%>"><img
+        src="<%imageshost%>stuff/sortdesc.png" width=16 height=16 border=0 alt="sort decending"></a>
+       </td>
+       <td valign="bottom"><%exclusivesender%><br>
+        <a href="<%action%>?myemails=1&amp;orderby=7&amp;searchterms=<%urlsearchterms%>&amp;showHidden=<%showhidden%>"><img
+        src="<%imageshost%>stuff/sortasc.png" width=16 height=16 border=0 alt="sort ascending"></a>
+        <a href="<%action%>?myemails=1&amp;orderby=7&amp;desc=1&amp;searchterms=<%urlsearchterms%>&amp;showHidden=<%showhidden%>"><img
+        src="<%imageshost%>stuff/sortdesc.png" width=16 height=16 border=0 alt="sort decending"></a>
+       </td>
+       <td valign="bottom"><%note%></td>
+       </tr>
+
+<%data%>
+</table>
+

@@ -1,0 +1,9 @@
+<%url%>
+
+Um die Adresse <%newaddress%> zur Benutzung bei spamgourmet.com zu
+bestaetigen, besuchen Sie obige URL. (Klicken Sie sie an oder kopieren Sie sie in
+Adresszeile Ihres Browser). Wenn Sie die Adresse nicht besuchen koennen, antworten Sie
+einfach auf diese E-Mail und lassen die URL in Ihrer Antwort bestehen.
+
+Wenn diese Mail nicht fuer Sie bestimmt ist, loeschen Sie sie und besuchen
+die URL nicht.

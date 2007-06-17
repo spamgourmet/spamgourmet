@@ -1,0 +1,11 @@
+ <tr>
+  <td><a href="<%action%>?myemails=1&myupdateform=1&EmailID=<%emailid%>&showHidden=<%showhidden%>&searchterms=<%searchterms%>"><font color="#666666"><%word%></font></a></td>
+  <td><font color="#666666"><%maxcount%></font></td>
+  <td><font color="#666666"><%count%></font></td>
+  <td><font color="#666666"><%numforwarded%></font></td>
+  <td><font color="#666666"><%numdeleted%></font></td>
+  <td><font color="#666666"><%timeadded%></font></td>
+  <td><font color="#666666"><%address%></font>&nbsp;</td>
+  <td><font color="#666666"><%sender%></font>&nbsp;</td>
+  <td><font color="#666666"><%note%></font>&nbsp;</td>
+ </tr>

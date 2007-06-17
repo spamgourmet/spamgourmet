@@ -1,0 +1,85 @@
+Advanced mode is just like no-brainer mode, except that you can also specify trusted senders, watchwords, and a prefix.  You can also turn on and off reply address masking, and view/edit your disposable addresses.  
+If you have trusted senders, watchwords, or a prefix, you'll see this screen by 
+default when you log in.
+
+<p>
+<p>
+
+<b>Trusted Senders</b>: You can add and remove 'trusted senders' here by specifying either a domain or an email address.  Trusted senders will be allowed to send you email on any of your disposables, without advancing the message count.  
+
+<p>
+This way, you can sign up for a list that you don't trust using a disposable address.  Then, if you like the list, you can come back here and add the email address of the list as a trusted sender.
+
+If you add a domain, any user at that domain will be trusted.  If you add an email address, only that address will be trusted.
+</p>
+<p>
+<b>Watchwords</b>: Watchwords help you control the creation of disposable addresses.  If you have watchword enforcement turned on <i>and</i> at least one watchword, then the system will not <i>create</i> a new address unless one of your watchwords is included in the "word" of the address.  For example, if your username was 'spamcowboy', and your watchword list includes 'saddle' and 'rope', then these forms will work to create new addresses: 
+</p><p align="center">
+saddlesoap.3.spamcowboy@spamgourmet.com<br>
+OuchRopeBurn.2.spamcowboy@spamgourmet.com<br>
+backinthesaddle.6.spamcowboy@spamgourmet.com<br>
+</p>
+and these will not: 
+<p align="center">
+coyote.20.spamcowboy@spamgourmet.com<br>
+eternalspamnation.*.spamcowboy@spamgourmet.com 
+</p>
+
+
+<p align="center">
+</p>
+<b>Reply Address Masking</b>: With reply address masking enabled, the system modifies each forwarded message so that, if you reply, your reply 
+will return to spamgourmet 
+instead of going straight to the sender. The system will then substitute the particular disposable address 
+that was originally used by the sender for your real return address in order to hide your real
+return address. 
+<p>
+
+
+<b>Search Addresses</b>: You can view a big table with all your disposables by clicking the button that says "search addresses".  If you do not enter any search terms, all your addresses will be displayed.   
+On the table, you click on an address (by its 'word') and edit it to: 
+
+<br>
+
+a) change the number of remaining messages, and 
+
+<br>
+
+b) if you like, specify an 'exclusive sender' for the address.  You can read more about exclusive senders in the FAQ -- it's pretty much like having a trusted sender for a particular address.
+
+<p>
+
+Or, if you like, you can <a href="<%xmllink%>">get the whole list in XML by clicking here</a>.
+
+<p> 
+
+<p>
+
+<b>Prefix:</b> If you're <i>really</i> paranoid, you can specify a 'prefix' that will be required on every <i>new</i> disposable from an untrusted sender.  Think of it as a password for creating new disposables that you can change from time to time.  By the way, the prefix does pretty much the same thing as watchwords (keeps people from creating new disposable addresses against your will), and generally, watchwords are a better choice.  Read on if you like...
+
+</p>
+
+<form action="<%action%>" method="post" onSubmit="return checkPrefixForm(this);"><p align="center">
+
+your prefix:
+
+<input type="text" name="prefix" value="<%prefix%>" maxlength=20> <input type="<%button%>" value="save prefix" onClick="<%onClick%>">
+</p></form>
+
+If you specify a prefix, the system will not create a new disposable address without it.  This will protect you if you believe someone other than you is making up new addresses with your username.
+The format of a prefixed disposable email address is:
+
+<p align="center">  <i>prefix.someword.x.user</i>@spamgourmet.com</p>
+
+<p>
+
+So, if your prefix is 'cowpoke', you would specify a disposable address like so:
+
+<p align="center">  cowpoke.spamelope.2.spamcowboy@spamgourmet.com</p>
+
+And if you later change your prefix to 'coyote', the prefix 'cowpoke' will no longer work to create new addresses, but exisiting addresses will continue to function. If you delete your prefix, disposable addresses may be created with or without prefixes.
+
+
+<p>
+<b>Default Number</b>: Set this to be the number of messages you want to use for a new disposable address when spamgourmet can't figure out what you intended from looking at the address itself (for instance, if you left the number out).
+</p>

@@ -1,0 +1,94 @@
+İleri kip basit kipe benzer, ancak size güvenilir gönderenler, şart sözcükler ve bir önek belirleme olanağı tanır. Ayrıca yanıtta adres gizleme özelliğini de açıp kapayabilirsiniz. Güvenilir gönderenleriniz, şart 
+
+sözcükleriniz ya da önekiniz varsa oturum açtığınızda karşınıza bu ekran kendiliğinden çıkacak.
+
+<p>
+<p>
+
+<b>Güvenilir Gönderenler</b>: Bu ekranda etki alanını (domain) ya da e-posta adresini belirterek 'güvenilir gönderenler' belirleyebilir ya da kaldırabilirsiniz. Güvenilır gönderenler atılabilir adreslerinizden 
+
+herhangi birine kalan ileti hakkını azaltmadan (istediği kadar) e-posta göndermede yetkili olacak.
+
+<p>
+Böylece güvenmediğiniz bir listeye atılabilir bir adresinizi vererek kaydolabilirsiniz. Listeyi beğenirseniz gerekince listenin adresini güvenilir gönderenler arasına eklersiniz.
+
+Bir etki alanı eklerseniz bu alandaki tüm kullanıcılar güvenilir sayılacaktır. Bir e-posta adresi eklerseniz yalnızca o adresten gönderene güvenilir.
+</p>
+<p>
+<b>Şart sözcükler</b>: Şart sözcükler atılabilir adres oluşturulmasını istediğiniz gibi sınırlamanızı sağlar. Eğer şart sözcük zorunluluğunu devreye sokarsanız <i>ve</i> en az bir şart sözcüğünüz varsa size 
+
+gönderilen bir iletinin yeni bir adres oluşturabilmesi için bu adresin "sözcük" adlı bölümünde şart sözcüklerinizden birini içermesi gerekir. Örneğin, eğer kullanıcı adınız 'spamcowboy' ise ve şart sözcüklerinizin 
+
+arasında 'saddle' ve 'rope' bulunuyorsa aşağıdaki örneklere uygun adreslere gönderilen e-postalar adı geçen adresin oluşmasını sağlayacaktır:
+</p><p align="center">
+saddlesoap.3.spamcowboy@spamgourmet.com<br>
+OuchRopeBurn.2.spamcowboy@spamgourmet.com<br>
+backinthesaddle.6.spamcowboy@spamgourmet.com<br>
+</p>
+ama şunlar olmaz:
+<p align="center">
+coyote.20.spamcowboy@spamgourmet.com<br>
+eternalspamnation.*.spamcowboy@spamgourmet.com 
+</p>
+
+
+<p align="center">
+</p>
+<b>Yanıtta Adres Gizleme</b>: Bu özelliği devreye sokarsanız size spamgourmet aracılığıyla iletilecek her e-posta, yanıtladığınız takdirde doğrudan gönderene gideceğine önce spamgourmet'e uğrayacak 
+
+biçimde değiştirilir. O zaman sistem sizin gerçek adresinizi gizleyerek yerine gönderenin size yazarken hedeflediği adresi koyar.
+<p>
+
+
+<b>Adresleri Göster</b>: Atılabilir adreslerinizin tümünü içeren bir tablo görmek için "atılabilir adreslerimi göster" düğmesine tıklayın. Orada istediğiniz adresin 'sözcük' bölümüne tıklayarak
+
+<br>
+
+a) kalan ileti hakkını değiştirebilir,
+
+<br>
+
+b) ve isterseniz o adresin 'özgül gönderen'ini belirleyebilirsiniz. Özgül gönderenlerle ilgili bilgi almak için SSS (sık sorulan sorular) belgesini okuyabilirsiniz -- özgül gönderenler kısaca belirli bir adresle sınırlı güvenilir 
+
+gönderenlerdir denebilir.
+
+<p>
+
+İsterseniz <a href="<%xmllink%>"> bütün listeyi XML biçeminde alın</a>.
+
+<p> 
+
+<p>
+
+<b>Önek:</b> Spam paranoyanız ileri düzeydeyse, güvenilir gönderenler dışındaki kaynaklardan gelecek iletilerin <i>oluşturmaya</i> çalışacağı her <i>yeni</i> adresin önünde bulunması gereken bir önek 
+
+belirleyebilirsiniz. Önekler, yeni atılabilir adresler oluşturmak için gereken ve zaman zaman değiştirilebilecek bir parola gibi düşünülebilir.
+
+</p>
+
+<form action="<%action%>" method="post" onSubmit="return checkPrefixForm(this);"><p align="center">
+
+istediğiniz önek:
+
+<input type="text" name="prefix" value="<%prefix%>" maxlength=20> <input type="<%button%>" value="kaydet önek" onClick="<%onClick%>">
+</p></form>
+
+Eğer önek belirlerseniz, sistem bu önekle başlamayan atılabilir adres oluşturmaz. Eğer sizin dışınızda birinin sizin kullanıcı adınıza ait adresler uydurup oluşturmaya kalkarsa bu özellik sizi bu durumdan korur. Önek 
+
+içeren atılabilir adresler şu biçimdedir:
+
+<p align="center">  <i>onek.sozcuk.x.kullaniciadi</i>@spamgourmet.com</p>
+
+<p>
+
+Örneğin önekiniz 'cowpoke' şöyle bir atılabilir adres oluşturabilirsiniz:
+
+<p align="center">  cowpoke.spamelope.2.spamcowboy@spamgourmet.com</p>
+
+Sonradan önekinizi 'coyote' yapacak olursanız artık 'cowpoke' öneki yeni adresler oluşturmada kullanılamaz, ama önceden oluşturduğunuz adresler çalışmayı sürdürür. Önekinizi silerseniz yeni atılabilir adresler 
+
+önek içersin içermesin oluşturulabilir.
+
+
+</font>
+

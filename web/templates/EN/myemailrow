@@ -1,0 +1,11 @@
+ <tr>
+  <td><a href="<%action%>?myemails=1&myupdateform=1&EmailID=<%emailid%>&showHidden=<%showhidden%>&searchterms=<%searchterms%>"><%word%></a></td>
+  <td><%maxcount%></td>
+  <td><%count%></td>
+  <td><%numforwarded%></td>
+  <td><%numdeleted%></td>
+  <td><%timeadded%></td>
+  <td><%address%>&nbsp;</td>
+  <td><%sender%>&nbsp;</td>
+  <td><%note%>&nbsp;</td>
+ </tr>

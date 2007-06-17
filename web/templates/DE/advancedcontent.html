@@ -1,0 +1,70 @@
+Der Profimodus ähnelt dem Anfängermodus, aber Sie können zuverlässige Absender hinzufügen
+und einen Präfix festlegen. Wenn Sie zuverlässige Absender oder einen Präfix definiert haben, werden Sie beim Anmelden gleich in diesen Modus geleitet.
+<p>
+
+<b>Zuverlässige Absender</b> können Sie per Domain oder Absenderadresse festlegen. Diese Absender können Ihnen jederzeit Nachrichten an eine Ihrer Wegwerfadressen schicken, ohne dass die Zahl der verbleibenden Mails reduziert wird. 
+</p>
+
+<p>
+Daher können Sie sich mit einer Wegwerfadresse bei einer Mailingliste anmelden und -- falls Sie die Mails von dort regelmäßig bekommen möchten -- die Absenderadresse der Liste als zuverlässigen Absender hinzufügen. Wenn Sie eine Domain als zuverlässig einstufen, kann Ihnen von dort jeder Benutzer eine E-Mail schicken. Geben Sie hingegen eine einzige E-Mail-Adresse als zuverlässig an, eben nur dieser eine Absender.
+</p>
+
+
+<p>
+<b>Kennwörter</b> geben Ihnen Kontrolle über das Erstellen von Wegwerfadressen. Falls Sie Kennwortzwang eingeschaltet haben und mindestens ein Kennwort definiert ist, wird das System keine Wegwerfadressen anlegen ohne dass eines Ihrer Kennwörter in der Wegwerfadresse vorkommt. Beispiel: Falls Ihr Username 'spamcowboy' ist und Ihre Kennwortliste 'saddle' und 'rope' enthält, dann werden diese Formen funktionieren, um Wegwerfadressen zu erzeugen:
+<p align="center">
+saddlesoap.3.spamcowboy@spamgourmet.com
+OuchRopeBurn.2.spamcowboy@spamgourmet.com
+backinthesaddle.6.spamcowboy@spamgourmet.com
+</p>
+diese aber nicht:
+<p align="center">
+coyote.20.spamcowboy@spamgourmet.com
+eternalspamnation.*.spamcowboy@spamgourmet.com
+</p>
+
+
+<p>
+<b>Antwortmaskierung</b>: Mit eingeschalteter Antwortmaskierung modifiziert das System jede weitergeleitete E-Mail so, dass bei Ihrer Antwort darauf diese zuerst an Spamgourmet geschickt wird. Spamgourmet ersetzt dann Ihre Originaladresse wieder mit Ihrer Wegwerfadresse um Ihre Originaladresse zu verstecken. Erst dann wird die Mail an den Empfänger
+weitergeleitet.
+</p>
+
+<p>
+<b>Adressen zeigen</b>: Sie können sich die Liste Ihrer Wegwerfadressen ansehen, indem Sie auf den Button "Wegwerfadressen anzeigen" klicken. In der Tabelle können Sie durch einen Klick auf ein "Wort" bearbeiten:
+<br>
+
+<ul>
+<li>die Zahl der noch möglichen Nachrichten, die an Ihre "echte" E-Mail-Adresse weitergeleitet werden</li>
+<li>ausschließliche Absender für diese Adresse. Weitere Informationen dazu finden Sie in den FAQs.</li>
+</ul>
+
+<p> 
+Wenn Sie möchten, können Sie auch eine Liste all Ihrer Wegwerfadressen im <a href="<%xmllink%>">XML-Format</a> herunterladen.
+
+<p>
+<b>Präfix</b>: Wenn Sie <i>wirklich</i> paranoid sind, können Sie ein "Präfix" anlegen, das für jede <i>neue</i> Mail von einem nicht als vertrauensvoll definierten Absender benötigt wird. Stellen Sie es sich als ein Passwort für neu erstellte Wegwerfadressen vor, das Sie von Zeit zu Zeit ändern können.
+</p>
+
+<form action="<%action%>" method="post" onSubmit="return checkPrefixForm(this);"><p align="center">
+
+Ihr Präfix:
+
+<input type="text" name="prefix" value="<%prefix%>" maxlength=20> <input type="<%button%>" value="Präfix speichern" onClick="<%onClick%>">
+</p></form>
+
+Ein Präfix anzulegen gibt Ihnen mehr Kontrolle über die Wegwerfadressen. Es bewirkt, dass das Präfix vorhanden sein muss, bevor wir eine Wegwerfadresse anlegen. Dies wird Sie z. B. schützen, wenn Sie glauben, dass jemand Spamgourmet kennt und Wegwerfadressen mit Ihrem Usernamen erzeugt.
+
+
+<p align="center"><i>praefix.irgendwas.x.benutzername</i>@spamgourmet.com</p>
+
+<p>
+
+Lautet Ihr Präfix also "kuhstall", müssten E-Mails an Ihre Wegwerfadressen so aussehen:
+
+<p align="center">kuhstall.ausgedacht.2.spamcowboy@spamgourmet.com</p>
+
+Wenn Sie Ihren Präfix später in "kojote" ändern, wird das Präfix "kuhstall" zum Anlegen neuer Wegwerfadressen nicht mehr funktionieren. Existierende Adressen bleiben jedoch erhalten. Wenn Sie Ihr Präfix löschen, können Ihre Wegwerfadressen wieder ohne Präfix angelegt werden.
+
+</div>
+
+</font>

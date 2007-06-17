@@ -1,0 +1,15 @@
+<%url%>
+Du har bedt Spamgourmet om å videresende dine eposter til denne adressen: 
+ <%newaddress%>
+Dette må du bekrefte. For å bekrefte, vennligst: 
+
+* Klikk på dene URL
+<%url%>
+(eller lim den inn i nettleseren din sitt adressefelt og trykk ENTER)
+
+* Hvis det ikke virker, svar på denne eposten -- pass på at du 
+  lar URLen være en del av svaret
+
+Hvis du mottok denne meldingen uten å ha bedt om den, kan det 
+begrunnes med at noen har skrevet inn din adresse i Spamgourmet ved 
+en feil - du kan da trygt slette denne meldingen.

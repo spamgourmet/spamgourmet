@@ -1,0 +1,21 @@
+<html><head><title>spamgourmet - confirm email address change</title>
+</head>
+<body topmargin=0 leftmargin=0 rightmargin=0 bottommargin=0 bgcolor="#FFFFCC">
+<p> </p>
+<p> </p>
+<p> </p>
+<p> </p>
+<div align="center"><font face="arial,helvetica">
+<%msg%>
+<br>If you like, you can log into spamgourmet below:<br>
+<form name="loginform" action="<%action%>" method="post" onSubmit="return checkLoginForm(this);">
+<table border=0 cellspacing=0 cellpadding=0>
+<tr><td colspan=2><font face="arial,helvetica">log in:</font></td></tr>
+<tr><td><font face="arial,helvetica">user: </font></td><td><input type=text name="user" size=10></td></tr>
+<tr><td><font face="arial,helvetica">pass: </font></td><td><input type=password name="pass" size=10 onFocus="this.select();"></td></tr>
+<tr><td> </td><td></td></tr>
+<tr><td colspan=2 align="center"><input type="submit" value="go"></td></tr>
+</form>
+</table>
+</font></div>
+</body></html>

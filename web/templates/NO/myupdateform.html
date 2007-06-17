@@ -1,0 +1,26 @@
+<br>
+<div align="center">Oppdater din bruk-og-kast adresse:<br><b><%message%></b><br>
+<form action="<%action%>" method="post">
+<input type="hidden" name="randomnumber" value=<%randomnumber%>>
+<input type="hidden" name="myemails" value=1>
+<input type="hidden" name="updateemail" value=<%emailid%>>
+
+<input type="hidden" name="showHidden" value="<%showhidden%>">
+
+<table border=0 cellspacing=0 cellpadding=2>
+<tr><td>Gjennværende meldinger <input type="text" name="count" value="<%count%>" onFocus="this.select();" size=2 maxlength=2></td></tr>
+<tr><td>Eksklusiv avsender <input type="text" name="sender" value="<%sender%>" onFocus="this.select();"></tr>
+
+<tr><td colspan=2 align="center"><input type="radio" name="hidden" value=0 <%isnothidden%>>not hidden    
+  <input type="radio" name="hidden" value=1 <%ishidden%>>hidden</td></tr>
+<tr><td colspan=2 align="center" valign="middle">notat <textarea cols=40 rows=2 maxlength=254 name="note"><%note%></textarea></td></tr>
+<tr><td colspan=2 align="center"><input type="submit" value="update address"> </td></tr>
+</table>
+</div>
+Bruk dette skjemaet for å oppdatere antall gjennværende meldinger på din adresse (0 til 20). Du kan også spesifisere en eksklusiv adresse (epost adresse eller domene) som får lov til å videresene gjennom adressen uten begrensninger. For uten dine betrodde avsendere vil kun den eksklusive adressen få lov til å bruke adressen når den går ut.
+<br>
+<input type="hidden" name="searchterms" value="<%searchterms%>">
+</form>
+
+<p align="center"><a href="<%action%>?myemails=1&showHidden=<%showhidden%>&searchterms=<%searchterms%>"><%returnwithoutsaving%></a>
+</p>

@@ -1,0 +1,41 @@
+<table border=0 cellspacing=0 cellpadding=0>
+   <form name="loginform" action="<%action%>" method="post" onSubmit="return checkPassForm(this);">
+ <tr>
+  <td colspan=2><br>
+<font color="#FFFFFF" ><%changepassword%></font>
+  </td>
+ </tr>
+ <tr>
+  <td>
+<font color="#FFFFFF"><%currpass%> </font>
+  </td>
+  <td>
+<input type=password name="currentpassword" size=10 onFocus="this.select();">
+  </td>
+ </tr>
+ <tr>
+  <td>
+<font color="#FFFFFF"><%newpass%> </font>
+  </td>
+  <td>
+<input type=password name="newpassword" size=10 onFocus="this.select();">
+  </td>
+ </tr>
+ <tr>
+  <td>
+<font color="#FFFFFF"><%confirm%> </font>
+  </td>
+  <td>
+<input type=password name="newpasswordconfirm" size=10 onFocus="this.select();">
+  </td>
+ </tr>
+ <tr>
+  <td colspan=2 align="center">
+<br><input type="submit" value="<%go%>">
+</form>
+<form action="<%action%>" name="logoutform"><br><input type="submit" name="logout" value="<%logout%>"></form>
+  </td>
+ </tr>
+</table>
+
+

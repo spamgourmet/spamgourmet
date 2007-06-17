@@ -1,0 +1,12 @@
+<%url%>
+You asked Spamgourmet to forward your emails to the address <%newaddress%>
+You must confirm. To confirm, please:
+
+* Click on the URL
+<%url%>
+(or paste it into your browser address bar and press Enter)
+
+* If that doesn't work for you, reply to this email -- make sure you leave the URL in the reply.
+
+If you received this message unexpectedly, it's because someone entered your
+address in Spamgourmet by mistake - you can simply delete this message.

@@ -1,0 +1,9 @@
+<%url%>
+
+För att bekräfta adressen <%newaddress%> för användning på spamgourmet.com,
+besök länken. (klicka på den eller klistra in den i din webbläsares adressfält
+och tryck Enter)
+
+Om du inte kan besöka länken, svara på detta meddelande och lämna adressen 
+till länken i ditt svar. Om du inte förväntade dig detta meddelande, radera
+det utan att besöka länken.

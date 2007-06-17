@@ -1,0 +1,13 @@
+ <DisposableAddress>
+  <ID><%ID%></ID>
+  <Word><%word%></Word>
+  <MaxCount><%maxcount%></MaxCount>
+  <CountRemaining><%count%></CountRemaining>
+  <NumForwarded><%numforwarded%></NumForwarded>
+  <NumDeleted><%numdeleted%></NumDeleted>
+  <Created><%timeadded%></Created>
+  <FullAddress><%address%></FullAddress>
+  <ExclusiveSender><%sender%></ExclusiveSender>
+  <Hidden><%hidden%></Hidden>
+  <Note><%notes%></Note>
+ </DisposableAddress>

@@ -1,0 +1,85 @@
+De geavanceerde modus is hetzelfde als de hersenloze modus, behalve dat u ook
+geaccepteerde zenders, een prefix en filterwoorden kunt toevoegen. U kunt ook
+het Terugstuuradres aan en uitzetten. Indien u geaccepteerde zenders,
+filterwoorden, of een voorzetsel heeft, ziet u dit scherm standaard als u inlogt.
+
+<p>
+<p><b>Geaccepteerde Zenders</b>: U kunt 'geaccepteerde zenders' hier toevoegen
+door of een domein te specifieren of een emailadres. Geaccepteerde zenders
+kunnen u email sturen op elke Weggooibare email zonder dat deze wordt meegeteld.<p>Op
+deze manier, kunt u aanmelden voor een email lijst die u niet vertrouwd door
+middel van een weggooibaar adres. Als u alsnog de lijst vertrouwd kunt u hier
+terug komen en hem toevoegen aan de lijst geaccepteerd. als u een domein
+toevoegd . Indien u een emailadres toevoegd, Wordt alleen dat adres vertrouwd.
+</p>
+<p><b>Filterworden</b>: filterwoorden helpen u het creëren van een weggooibaar
+adres .Als u filterwoorden <i>aan </i>heeft staan en minstens 1 filterwoord, dan
+zal het systeem geen nieuw adres maken tenzij er tenminste één filterwoord in
+het adres zit. Bijvoorbeeld, als u account 'spamcowboy' is, en uw filterwoorden
+'Saddle' en 'rope', dan werken deze adressen om een nieuw adres te maken: 
+</p><p align="center">
+saddlesoap.3.spamcowboy@spamgourmet.com<br>
+OuchRopeBurn.2.spamcowboy@spamgourmet.com<br>
+backinthesaddle.6.spamcowboy@spamgourmet.com<br>
+</p>
+en deze niet: 
+<p align="center">
+coyote.20.spamcowboy@spamgourmet.com<br>
+eternalspamnation.*.spamcowboy@spamgourmet.com 
+</p>
+
+
+<p align="center">
+</p>
+<b>Terugstuuradres Verbergen</b>: met Terugstuuradres Verbergen aangezet, zal
+het systeem elk doorgestuurde adres veranderen, als u antwoord, uw antwoord zal
+dan teruggaan naar spamgourmet ipv rechtstreeks naar de zender. Thet systeem zal
+dan uw adres veranderen met het weggooibare adres waar de zender origineel naar
+heeft gestuurd.<p><b>Laat adressen zien</b>: U kan een grote tabel zien met alle
+weggooibare adressen die u heeft door te klikken op de button met "Laat
+mijn weggooibare adressen zien". In de tabel kunt u op een weggooibaaradres
+klikken (op het  'woord') om de volgende opties te wijzigen: 
+
+<br>
+
+a) de resterende berichten, en 
+
+<br>
+
+b) ials u wilt een specifieke zender voor dat adres. U kunt meer over specifieke
+zenders lezen in de FAQ --het is ongeveer hetzelfde als een geaccepteerde zender
+voor een adres hebben.<p>Of, als u wilt,<a href="<%xmllink%>"> kunt u de hele
+lijst in XML krijgen door hier te klikken.</a>
+
+<p> 
+
+<p>
+
+<b>Prefix:</b> Wanneer u zwaar paranoïde bent, kunt u een 'prefix' specificeren
+welk vereist wordt voor elk nieuw bericht van een niet vertrouwde zender. Denk
+hierbij aan een soort wachtwoord systeem wat u van tijd tot tijd verandert.
+
+</p>
+
+<form action="<%action%>" method="post" onSubmit="return checkPrefixForm(this);"><p align="center">
+
+Uw prefix:
+
+<input type="text" name="prefix" value="<%prefix%>" maxlength=20> <input type="<%button%>" value="save prefix" onClick="<%onClick%>">
+</p></form>
+
+indien u een nieuwe prefix specificieert zal het systeem geen nieuwe adressen
+creeren zonder dat de prefix er in voor komt. dit zal uw beschermen als u denkt
+dat iemand anders adressen aanmaakt met uw gebruikersnaam. De samenstelling van
+een prefix in een woord is:
+
+<p align="center">  <i>prefix.someword.x.user</i>@spamgourmet.com</p>
+
+<p>Dus, als u prefix 'cowpoke' is, dan wordt uw adresbijvoorbeeld:
+
+<p align="center">  cowpoke.spamelope.2.spamcowboy@spamgourmet.com</p>
+
+En als u later uw prefix verandert naar 'coyote', dan zal de prefix 'cowpoke'
+niet meer werken om een adres aan te maken, maar bestaande adressen zullen
+blijven werken. Indien u uw prefix verwijdert, zullen weggooibare adressen
+gemaakt kunnen worden met of zonder prefix.

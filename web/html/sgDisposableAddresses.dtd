@@ -1,0 +1,22 @@
+<!-- root element -->
+<!ELEMENT DisposableAddresses (DisposableAddress*, TrustedSender*, Watchword*) >
+<!-- <!ATTLIST DisposableAddresses username; prefix;> -->
+
+ <!ELEMENT TrustedSender (#PCDATA)>
+ <!ELEMENT Watchword (#PCDATA)>
+
+ <!ELEMENT DisposableAddress (ID, Word, MaxCount, CountRemaining, NumForwarded, NumDeleted, Created, FullAddress, ExclusiveSender)>
+
+  <!ELEMENT ID (#PCDATA)>
+  <!ELEMENT Word (#PCDATA)>
+  <!ELEMENT MaxCount (#PCDATA)>
+  <!ELEMENT CountRemaining (#PCDATA)>
+  <!ELEMENT NumForwarded (#PCDATA)>
+  <!ELEMENT NumDeleted (#PCDATA)>
+  <!ELEMENT Created (#PCDATA)>
+  <!ELEMENT FullAddress (#PCDATA)>
+  <!ELEMENT ExclusiveSender (#PCDATA)>
+  <!ELEMENT Hidden (#PCDATA)>
+  <!ELEMENT Note (#PCDATA)>
+
+

@@ -1,0 +1,9 @@
+<%url%>
+
+<%newaddress%> adresini spamgourmet ile kullanilabilmesi icin onaylamak istiyorsaniz
+yukaridaki URL'ye (adrese) girin (ustune tiklayin ya da gezgininizin adres cubuguna
+kopyalayip Enter'a basin).
+
+Eger URL'ye (adrese) giremiyorsaniz bu iletiyi yanitlayin - yanitlarken adres oldugu gibi kalsin,
+silmeyin. Bu mesaj size isteginiz disinda ulastiysa birsey yapmaniza gerek yok, adrese girmeden
+mesaji silmeniz yeterli.

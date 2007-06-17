@@ -1,0 +1,45 @@
+<form name="loginform" action="<%action%>" method="post" onSubmit="return checkLoginForm(this);">
+<table border="0" cellspacing="0" cellpadding="2">
+<tr><td colspan=2 align="center"><font color="#FFFFFF">
+
+<%login%>
+
+</font></td></tr>
+<tr><td align="right"><font color="#FFFFFF">
+
+<%user%> 
+
+ </font></td><td><input type=text name="user" size=10 onFocus="hastyped=true"></td></tr>
+<tr><td align="right"><font color="#FFFFFF">
+
+<%pass%>  
+
+</font></td><td><input type=password name="pass" size=10 onFocus="hastyped=true;this.select();"></td></tr>
+<tr><td colspan="2" align="center"><br><input type="submit" value="<%go%>"> <%remembermecheck%> <%rememberme%>
+<br><a href="<%action%>?sendpasswordreset=1"><font color="#000000"><%forgotpassword%></font></a>
+</td></tr>
+</table>
+</form> 
+<form name="signupform" action="<%action%>" method="post" onSubmit="return checkSignUpForm(this);">
+<table border="0" cellspacing="0" cellpadding="2">
+<tr><td><br></td></tr>
+<tr><td colspan=2 align="center"><font color="#FFFFFF">
+
+<%createaccount%>
+
+</font></td></tr>
+<tr><td align="right"><font color="#FFFFFF">
+
+<%newuser%> 
+
+</font></td><td><input type=text name="newuser" size=10 maxlength=20></td></tr>
+<tr><td align="right"><font color="#FFFFFF">
+
+<%email%> 
+
+</font></td><td><input type=text name="realemail" value="<%realemail%>" size=10 onFocus="this.select();"></td></tr>
+<tr><td colspan="2" align="center"><br><input type="submit" value="<%go%>"></td></tr>
+</table>
+<input type="hidden" name="saverealemail" value=1>
+</form>
+

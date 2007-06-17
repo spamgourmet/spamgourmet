@@ -1,0 +1,72 @@
+<html>
+<head>
+<meta http-equiv="pragma" content="no-cache">
+<title>spamgourmet - graphs</title>
+<style><!--
+body,td,div,a{font-family:verdana,arial,helvetica,sans-serif; font-size:10pt }
+-->
+</style>
+</head>
+<body bgcolor="#FFFFCC" onLoad='window.focus()'>
+<table border=0 cellspacing=0>
+ <tr><td>
+<center>
+<!--
+<font face="verdana,arial,helvetica">
+<%spameatenthisweek%>
+<br>
+<br><br>
+-->
+<%graphsshowsixmonthdata%>
+<p>
+
+
+<table border=0 cellpadding=0 cellspacing=2>
+ <tr>
+
+  <td rowspan="2" align="center"><img width=300 height=200 border=0 src="<%weekdaychart%>"></td>
+  <td valign="top">
+    <%userstats%>
+  </td>
+ </tr>
+ <tr>
+  <td>
+<br>
+  </td>
+ </tr>
+ <tr>
+  <td><p><%weekdayspam%></p>
+  <img width=600 height=200 border=0 src="<%usersandspamchart%>">
+
+
+<p align="center">
+ <a href="<%action%>?dayoftheweek=0"><%weekday1%></a>
+ <a href="<%action%>?dayoftheweek=1"><%weekday2%></a>
+ <a href="<%action%>?dayoftheweek=2"><%weekday3%></a>
+ <a href="<%action%>?dayoftheweek=3"><%weekday4%></a>
+ <a href="<%action%>?dayoftheweek=4"><%weekday5%></a>
+ <a href="<%action%>?dayoftheweek=5"><%weekday6%></a>
+ <a href="<%action%>?dayoftheweek=6"><%weekday7%></a>
+</p>
+
+  </td>
+  <td align="center">
+    <%langtable%>
+  </td>
+
+ </tr>
+</table>
+
+
+
+
+<%data%>
+
+<p align="center"><a href="javascript:close()"><font face="verdana,arial,helvetica"><%closewindow%></font></a></p>
+
+<p align="center"><font face="verdana,arial,helvetica">graphs generated with Apache::GD::Graph</font></p>
+</center>
+</td></tr></table>
+
+</body>
+</html>

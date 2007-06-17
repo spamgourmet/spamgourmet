@@ -1,0 +1,79 @@
+Avancerat läge är precis som enkelt läge, fast du kan även specificera anförtrodda avsändare, kontrollord samt ett prefix. Du kan även slå på eller av svarsadress-maskering.
+Om du har anförtrodda avsändare, kontrollord eller ett prefix kommer du att få denna sida som standardsida när du loggar in.
+
+<p>
+<p>
+<b>Anförtrodda avsändare</b>:Du kan lägga till och ta bort 'anförtrodda avsändare' här genom att antingen ange en domän eller en e-postadress.  Anförtrodda avsändare kommer att tillåtas skicka e-post till samtliga dina disponibla adresser utan att meddelanderäknaren räknas ner.
+
+<p>
+På detta sätt kan du prenumerera på en e-poslista som du inte litar på genom att använda en disponibel adress.  Sen, om du tycker om listan, kan du komma tillbaka hit och lägga till avsändarens e-postadress som en anförtrodd avsändare.
+
+Om du lägger till en domän kommer alla användare i den domänen att vara anfördtodda. Om du lägger till en e-postadress kommer bara den adressen att vara anförtrodd.
+</p>
+<p>
+<b>Kontrollord</b>: Kontrollord hjälper dig att kontrollera skapandet av disponibla adresser.  Om du har kontrollordstvång påslaget <i>och</i> minst ett kontrollord, kommer systemet inte att <i>skapa</i> någon ny adress såvida inte något av dina kontrollord finns i "ord-delen" av en disponibel adress.  Till exempel, om ditt användarnamn är 'spamcowboy', och din kontrollordslista innehåller 'saddle' och 'rope' kommer följande exempel att skapa en ny adress:
+</p><p align="center">
+saddlesoap.3.spamcowboy@spamgourmet.com<br>
+OuchRopeBurn.2.spamcowboy@spamgourmet.com<br>
+backinthesaddle.6.spamcowboy@spamgourmet.com<br>
+</p>
+medan följande inte kommer att skapa en ny adress:
+<p align="center">
+coyote.20.spamcowboy@spamgourmet.com<br>
+eternalspamnation.*.spamcowboy@spamgourmet.com 
+</p>
+
+
+<p align="center">
+</p>
+<b>Svarsadressmaskering</b>: Med svarsadressmaskering påslaget kommer systemet att modifiera varje vidarebefordrat e-postmeddelande så att, om du svarar på det, så kommer svaret att gå igenom spamgourmet istället för direkt till avsändaren. Systemet kommer då att byta ut din riktiga e-postadress mot den disponibla adressen så att din riktiga e-postadress förblir dold.
+<p>
+
+
+<b>Visa adresser</b>: Du kan visa en stor tabell med alla dina disponibla adresser genom att klicka på knappen som heter "visa mina disponibla adresser".
+I tabellen kan du klicka på en adress (på dess "ord-del") och ändra:
+
+<br>
+
+a) antalet återstående meddelanden kvar, och 
+
+<br>
+
+b) om du vill, specificera en 'exklusiv avsändare' för adressen. 
+
+<br>
+
+Du kan läsa mer om exklusiva avsändare i FAQ:n --  det är ungefär som att ha endast en anförtrodd avsändare för en disponibel adress.
+
+<p>
+
+Eller, om du vill, så kan du <a href="<%xmllink%>">få hela listan i XML-format genom att klicka här</a>.
+
+<p> 
+
+<p>
+
+<b>Prefix:</b> Om du är <i>riktigt</i> paranoid, kan du specificera ett 'prefix' som kommer att behövas på varje <i>ny</i> disponibel adress från en icke anförtrodd avsändare.  Se det som ett lösenord för att skapa nya disponibla adresser som du kan ändra lite då och då.
+
+</p>
+
+<form action="<%action%>" method="post" onSubmit="return checkPrefixForm(this);"><p align="center">
+
+ditt prefix:
+
+<input type="text" name="prefix" value="<%prefix%>" maxlength=20> <input type="<%button%>" value="spara prefix" onClick="<%onClick%>">
+</p></form>
+
+Att ange ett prefix ger dig mer kontroll över dina disponibla adresser genom att kräva att ditt nuvarande prefix finns i "ord-delen" innan vi skapar en ny disponibel adress.  Detta kommer att skydda dig mot att någon annan än du hittar på nya adresser med ditt användarnamn.
+
+Formatet på en prefix:ad disponibel e-postadress är:
+
+<p align="center">  <i>prefix.någotord.x.användarnamn</i>@spamgourmet.com</p>
+
+<p>
+
+Så, om ditt prefix är 'cowpoke', kan du t.ex. skapa en ny adress i stil med:
+
+<p align="center">  cowpoke.spamelope.2.spamcowboy@spamgourmet.com</p>
+
+Och om du senare ändrar ditt prefix till 'coyote' kommer inte prefixet 'cowpoke' att fungera för att skapa <i>nya</i> adresser, men existerande adresser kommer att fortsätta att fungera. Om du tar bort ditt prefix helt kan du därefter skapa nya adresser med eller utan prefix.

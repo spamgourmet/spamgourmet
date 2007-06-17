@@ -1,0 +1,30 @@
+<font face="arial,helvetica" size=3 color="#000000">
+<p> </p>
+<div align="center">Updatera din disponibla address:<br><b><%message%></b><br>
+<form action="<%action%>" method="post">
+<input type="hidden" name="randomnumber" value=<%randomnumber%>>
+<input type="hidden" name="myemails" value=1>
+<input type="hidden" name="updateemail" value=<%emailid%>>
+
+<input type="hidden" name="showHidden" value="<%showhidden%>">
+
+<table border=0 cellspacing=0 cellpadding=2>
+<tr><td>Återstående meddelanden <input type="text" name="count" value="<%count%>" onFocus="this.select();" size=2 maxlength=2></td></tr>
+<tr><td>Exklusiv avsändare <input type="text" name="sender" value="<%sender%>" onFocus="this.select();"></tr>
+
+<tr><td colspan=2 align="center"><input type="radio" name="hidden" value=0 <%isnothidden%>>inte dold    
+  <input type="radio" name="hidden" value=1 <%ishidden%>>dold</td></tr>
+<tr><td colspan=2 align="center" valign="middle">notering <textarea cols=40 rows=2 maxlength=254 name="note"><%note%></textarea></td></tr>
+<tr><td colspan=2 align="center"><input type="submit" value="uppdatera adress"> </td></tr>
+</table>
+</div>
+Använd detta formulär för att uppdatera antalet återstående meddelanden för din adress (0 till 20).  Om du vill kan du ange en exklusiv avsändare (med e-postadress eller e-postdomän) som kommer att ha tillstånd att skicka genom denna adress för evigt.  Förutom dina anförtrodda avsändare är det bara den exklusiva avsändaren som får använda adressen efter att den har gått ut.
+<br>
+<input type="hidden" name="searchterms" value="<%searchterms%>">
+</form>
+
+<p align="center"><a href="<%action%>?myemails=1&showHidden=<%showhidden%>&searchterms=<%searchterms%>"><%returnwithoutsaving%></a>
+</p>
+
+</font>
+

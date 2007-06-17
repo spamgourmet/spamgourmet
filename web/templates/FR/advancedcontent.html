@@ -1,0 +1,102 @@
+Le mode avancé est comme le mode facile, sauf que vous pouvez également spécifier des options avancées : des expéditeurs autorisés, des mots-clés et un préfixe. Vous pouvez aussi activer le masquage d'adresse de réponse, et éditer vos adresses jetables. Si vous avez spécifié des options avancées, vous verrez cette page par défaut en vous connectant.
+
+<p>     
+<p>
+
+<b>Expéditeurs autorisés</b>: Vous pouvez ajouter et supprimer des « expéditeurs autorisés » ici. Un expéditeur autorisé est soit une adresse complète (jojo@exemple.com) ou un domaine (jojo.com). Les expéditeurs autorisés peuvent envoyer des messages à n'importe laquelle de vos adresses jetables, sans faire avancer le compteur de messages.</p>
+
+<p>
+Ainsi, vous pouvez vous inscrire à une liste de diffusion dont vous vous méfiez en donnant une adresse jetable. Puis, si vous aimez cette liste, vous pouvez revenir ici et ajouter l'adresse de cette liste dans vos expéditeurs autorisés. Si vous spécifiez un domaine dans vos expéditeurs autorisés, toutes les adresses de ce domaine seront autorisées. Si vous spécifiez une adresse complète, seule cette adresse sera autorisée.
+</p>
+
+<p>
+<b>Mots-clés</b>:
+Les mots-clés vous aident à contrôler la création de vos adresses
+jetable. Si vous activez l'option « protection par mot-clé » et que
+vous avez entré au moins un mot-clé, le système ne laissera personne
+créer une adresse jetable sur votre compte sauf si un de vos mots-clés
+est dans le premier mot de cette adresse. Exemple : supposons que votre nom
+d'utilisateur est  « spamcowboy » et que vos mots-clés sont  «
+corde » et  « selle ». Le système autorisera la création des adresses
+jetables suivantes:
+</p>
+
+<p align="center">
+SangleDeSelle.3.spamcowboy@spamgourmet.com<br>
+longuecorde.2.spamcowboy@spamgourmet.com<br>
+remonteenselle.6.spamcowboy@spamgourmet.com<br>
+</p>
+mais pas de celles-ci: 
+<p align="center">
+coyote.20.spamcowboy@spamgourmet.com<br>
+pollueurspammeur.*.spamcowboy@spamgourmet.com 
+</p>
+
+
+<p> <b>Masquer l'adresse de réponse</b>: Quand le masquage de
+l'adresse de réponse est activé, le système modifie chaque message
+transféré pour que, si vous y répondez, la réponse repasse par
+spamgourmet au lieu d'aller directement à votre
+correspondant. Spamgourmet modifiera et réacheminera le message pour que votre
+correspondant voit un message provenant de l'adresse jetable à
+laquelle il vous a écrit, et non de votre adresse protégée. Votre
+adresse protégée reste ainsi dissimulée.
+</p>
+
+<p>
+<b>Rechercher jetables</b>: Pour voir ou modifier une adresse jetable,
+entrez l'adresse (indiquée par son 1er mot) et cliquez sur le bouton «
+rechercher jetables ». Si vous le cliquez sans rien entrer, vous
+affichez un grand tableau
+avec toutes vos adresses jetables.</p>
+
+<p>
+Dans ce tableau, vous pouvez cliquer sur une adresse
+jetable (indiquée par son premier mot) et vous pouvez la modifier pour:
+<br>
+a) changer le nombre de messages restants, et
+<br>
+b) si vous le souhaitez, spécifier un expéditeur exclusif pour cette
+adresse. Un expédieur exclusif peut vous envoyer des messages à cette
+adresse sans changer le nombre de messages restants. Voir la FAQ pour
+plus de détails.
+</p>
+
+
+<p>
+Ou, si vous préférez, vous pouvez <a href="<%xmllink%>">obtenir le
+tableau entier au formant XML en cliquant ici</a>.</p>
+
+
+<p>
+<b>Préfixe</b>: Si vous êtes vraiment paranoïaque, vous pouvez
+indiquer un préfixe qui sera exigé sur chaque nouveau jetable créé par
+un expéditeur non autorisé.  C'est en quelque sorte un mot de passe
+pour créer de nouvelles adresses jetables que vous pouvez changer de temps en temps.
+
+</p>
+
+<form action="<%action%>" method="post" onSubmit="return checkPrefixForm(this);"><p align="center">
+
+votre préfixe:
+
+<input type="text" name="prefix" value="<%prefix%>" maxlength=20> <input type="<%button%>" value="sauver préfixe" onClick="<%onClick%>">
+</p></form>
+
+Si vous indiquez un préfixe, le système ne créera pas de nouvelle
+adresse jetable sans le préfixe. Cela vous protège si vous craignez
+que quelqu'un invente de nouvelles adresses pour votre utilisateur.
+Le format d'une adresse jetable avec préfixe est:
+
+
+<p align="center">  <i>préfixe.UnMot.x.utilisateur</i>@spamgourmet.com</p>
+
+<p>
+
+Ainsi, si votre préfixe est "cowpoke", vous indiqueriez une adresse jetable ainsi:
+
+<p align="center">  cowpoke.spamelope.2.spamcowboy@spamgourmet.com</p>
+
+Et si vous changez plus tard votre préfixe en "coyote", le préfixe
+"cowpoke" ne marchera plus pour créer de nouvelles adresses. Mais
+les adresses existantes continueront à fonctionner. Si vous supprimez votre préfixe, des adresses jetables peuvent être créées avec ou sans préfixe.

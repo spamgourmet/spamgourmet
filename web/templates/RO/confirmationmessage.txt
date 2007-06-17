@@ -1,0 +1,11 @@
+<%url%>
+Aţi cerut ca Spamgourmet să vă re-expedieze corespondenţa la adresa <%newaddress%>
+Trebuie sa confirmaţi. Pentru a confrima, vă rugăm:
+
+* Să faceţi Click pe URL
+<%url%>
+(sau copiaţi-l în bara de adrese a browser-ului Dvs. şi apăsaţi Enter)
+
+* Dacă nu vă reuşeşte, daţi un reply la acest mail -- asiguraţi-vă că aţi trecut şi URL-ul in mesaj.
+
+În cazul că aţi primit acest mesaj în mod neaşteptat, este din cauză că cineva v-a introdus adresa Dvs. în Spamgourmet din greseală - puteţi pur si simplu şterge acest mesaj.

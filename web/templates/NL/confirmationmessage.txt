@@ -1,0 +1,14 @@
+<%url%>
+U heeft spamgourmet gevraagd uw emails voortaan door te sturen naar: 
+<%newaddress%>
+
+U moet dit door middel van onderstaande link bevestigen:
+
+<%url%>
+(of kopieer en plak bovenstaande URL in uw browser)
+
+* Indien dit niet werkt kunt u ook op deze email reply-en (laat de URL ongewijzigd).
+
+Indien u deze email onverwachts heeft ontvangen, komt dat doordat iemand u emailadres 
+bij spamgourmet heeft aangemeld - u kunt in dit geval deze email negeren en 
+verwijderen.
