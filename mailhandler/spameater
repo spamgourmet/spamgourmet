@@ -127,7 +127,7 @@ if ($saferecips !~ /$safefor/) {
 $checker = Mail::Spamgourmet::MessageIdChecker->new(config=>$config);
 
 if ($checker->checkMessageId($headerValues{'messageid'} . $bcc)) {
-  $config->debug("exiting because I already handled $headerValues{'messageid'} and $for");
+  $config->debug("exiting because I already handled $headerValues{'messageid'} and $for") if $extradebug;
   $config->die() if $config;
   exit;  # adios -- we've already handled this one.
 }
@@ -162,13 +162,13 @@ unless ($allRecipients.$bcc =~ /[\.|~].*@/) {
 }
 
 $config->debug("allrecips is $allRecipients") if $extradebug;
-$deliveryAddresses{$bcc} = 1 if $bcc && $config->hasLocalDomain($bcc);
+$deliveryAddresses{lc($bcc)} = 1 if $bcc && $config->hasLocalDomain($bcc);
 if (!$prior) {
   my @to = split(',', $allRecipients);
   foreach $to (@to) {
     ($to, undef) = $util->getAddressAndDisplay($to,0);
     if ($to && $config->hasLocalDomain($to)) {
-      $deliveryAddresses{$to} = 1;
+      $deliveryAddresses{lc($to)} = 1;
     } elsif ($to) {$config->debug("$to does not have a local domain") if $extradebug;}
   }
 }
@@ -202,6 +202,10 @@ if ($config->isLocalDomain($fromdomain)) {
 }
 
 $config->debug($msg) if $extradebug;
+if (keys %deliveryAddresses > 1) {
+  $config->debug("handling multiple delivery addresses - turning on extradebug");
+  $extradebug = 1;
+}
 
 foreach $for (keys %deliveryAddresses) {
   $config->debug("handling $for") if $extradebug;
@@ -741,6 +745,6 @@ sub sendMail {
   $sender =~ s/\>.*//;
 
   $config->debug($$msgref) if $extradebug;
-
   $config->getMailer()->sendMail($msgref,$rcpt,$sender);
+  $$msgref =~ s/$subjecttext//mi if $subjecttext; #now get rid of the subject text for the next iteration
 }
