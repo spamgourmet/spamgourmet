@@ -1,0 +1,92 @@
+<html><head>
+
+<!--
+addressScramblerHelper.html version 0.2.2
+copyright 2001, Josiah Q. Hamilton
+
+This software is provided under the Artistic license of the Open 
+ Source Initiative, as it exists on 2001-12-19, including the optional
+ provision regarding aggregation with a commercial distribution.
+This notice must be included with any distribution.
+-->
+
+
+
+<title>addressScrambler Helper Page</title>
+<script language="JavaScript" src="AddressScrambler.js">
+</script>
+<script language="JavaScript">
+
+function writeTheScrambledAddressStuff (addr,mailToText) {
+  if (addr == null || addr == "") {
+    alert('Please enter an email address to be scrambled.');
+    document.theForm.theAddress.focus();
+    return;
+  }
+  var scr = scrambleText(addr);
+  var mailToCode;
+  var oldMailTo = "<i>instead of</i>  &lt;a href=&quot;mailto:" + addr + "&quot;&gt;";
+  var mailToSample;
+
+  if (mailToText != null && mailToText != "") {
+    oldMailTo += mailToText + "&lt;/a&gt;   <i>use</i>:";
+    mailToCode = getEscapedMailToCodeWithClearDisplayText(scr,mailToText);
+    mailToSample = getMailToWithClearDisplayText(scr,mailToText);
+  } else {
+    oldMailTo += addr + "&lt;/a&gt;   <i>use</i>:";
+    mailToCode = getEscapedMailToCode(scr);
+    mailToSample = getMailTo(scr);
+  }
+
+  document.getElementById('block1').style.visibility = 'visible';
+  document.getElementById('scrAddr').innerHTML = scr;
+
+  document.getElementById('block2').style.visibility = 'visible';
+  document.getElementById('oldMailTo').innerHTML = oldMailTo;
+  document.getElementById('mailToCode').innerHTML = mailToCode;
+
+  document.getElementById('block3').style.visibility = 'visible';
+  document.getElementById('mailToSample').innerHTML = mailToSample;
+}
+
+</script>
+</head>
+
+<body>
+<font face="tahoma,arial,helvetica">
+<b><i>addressScrambler Helper</i></b><br>
+This page will help you generate the code necessary to use the address
+scrambler on your static web pages.  <p>
+
+<form name="theForm" action="javascript:putScrambledAddressStuff(this.form.theAddress.value,this.form.mailToText.value);">
+Put the email address to be scrambled here: <input type="text" name="theAddress" value=""
+size=40 onFocus="this.select()"><br>
+If desired, put the mailto display text here: <input type="text" name="mailToText" value=""
+size=40 onFocus="this.select()"><br><br>
+ <input type="button" value="then click here" onClick="writeTheScrambledAddressStuff(this.form.theAddress.value,this.form.mailToText.value)">
+</form>
+
+<div name="block1" id="block1" style="visibility:hidden">The scrambled address is:</div><br>
+<b><div align="center" name="scrAddr" id="scrAddr">&nbsp;</div></b>
+
+<br><br>
+<div name="block2" id="block2" style="visibility:hidden">The script to generate a mailto tag :</div><br>
+<div align="center" name="oldMailTo" id="oldMailTo">&nbsp;</div>
+<br>
+<b><div align="center" name="mailToCode" id="mailToCode">&nbsp;</div></b>
+
+
+<br><br>
+<div name="block3" id="block3" style="visibility:hidden">And here's a sample of the mailto tag (click to make sure it works):</div><br>
+<b><div align="center" name="mailToSample" id="mailToSample">&nbsp;</div></b>
+
+
+<br><br>Remember that, to use the addressScrambler on a web page, you must include the js file like so, making sure the webroot path to the js file is correct:<br><br>
+
+<div align="center"><b>&lt;script language=&quot;JavaScript&quot; src=&quot;/addressScrambler.js&quot;&gt;&lt;/script&gt;</b></div>
+<p>
+
+</font>
+</body>
+</html>
+

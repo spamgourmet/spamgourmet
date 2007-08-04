@@ -1,0 +1,162 @@
+# Project spamgourmet 
+# $Id: captchasrv.README.txt,v 1.1.1.1 2004/01/27 20:06:04 syskoll Exp $
+# Copyright (C) 2003 Frederic Mora -
+# The address is sg.rocks.syskoll
+# The host is spamgourmet.com
+# This program is placed under the GPL. See http://www.gnu.org/licenses/gpl.txt
+# or the accompanying GPL_LICENSE.txt
+
+captchasrv, a CAPTCHA generator serving HTTP image requests
+============================================================
+
+The captchasrv program generates a CAPTCHA, i.e., a picture containing a word
+that a human being can easily read but that a spammer's OCR program
+could not. 
+
+The captchasrv program is meant to be started as a daemon. It doesn't
+need root privileges.  It requires access to the convert exec (from
+ImageMagick) and space in a temp file directory.
+| It also requires an HTTP server to be running on the local
+| machine. The temp directory should be browsable (an external browser
+| should be able to read a file in that directory).
+
+Start the program in the background, eg:
+captchasrv.pl &
+
+The program waits on a port for a browser to send URLs requests of the form
+http://host:port/q=someword
+where:
+  - host is the host on which the program runs
+  - port is the port on which it listens (either default, see constant
+    LocalPortDef, or specify port number with option -p)
+  - someword is a string, called the quizword, to be embedded in the CAPTCHA image.
+
+For each HTTP request of the form above, the  program  generates a CAPTCHA image
+containing the quizword "someword" 
+
+| and saves it to a captcha image file with a random name. The file is
+| created in the browsable temp directory. Then the program sends the
+| name of this file (just the name, not the full path) to the browser,
+| e.g. capR7KFbA2L.jpg.
+
+| Then the captcha image can be visualized by a browser using an HTML
+| IMG tag such as:
+| <IMG SRC="http://host/path/to/image/dir/capR7KFbA2L.jpg" ALT="CAPTCHA image">
+
+The idea is that the calling program show the CAPTCHA on a web page,
+query a human user and check that the human user enters the chosen
+word by reading the CAPTCHA. This will eliminate scripts and robots.
+
+To select a suitable quizword, you can use the routines enclosed in
+file mkquizword.pl.
+
+
+Installing the program
+========================
+
+Just decompress the archive into some install dir, e.g.:
+cd /some/dir
+tar -xvf captchasrv-x.x.tar.gz
+
+This create a captchasrv-x.x subdir. Go to that subdir. In
+captchasrv.pl, look for "Constant section" .There are several
+constants you should customize for your system:
+
+  - InstallDir should point to the install directory, that is, the
+ captchasrv-x.x you just created.
+
+  - ConvertExec should be the path of the convert program (part of
+  ImageMagick).
+
+  - Make a note of the LocalPortDef constant. It's the default value
+  of the port on which the program will listen for HTTP connections
+
+| - TmpDir should be the name of the browsable image directory where
+| the captcha images are stored. The local HTTP server should provide
+| access to images in this dir.
+
+
+The other constants can be left alone.
+
+
+Testing the program
+====================
+
+If the LocalPortDef constant is a port number that is not used on your
+system, you can just run the program with:
+captchasrv.pl &
+
+If LocalPortDef is a port number that your system is already using,
+you can either change it or use the -p option, e.g.:
+captchasrv.pl -p 17254&
+
+| Then, using a browser, hit the corresponding URL and provide a quizword, e.g.
+| http://host:port/q=eatspam42
+| The browser should get, as an answer, the name of the generated
+| captcha, e.g. capG9BLcA7Z.jpg.
+
+| You can now browse the captcha image at
+| http://host/path/to/image/dir/capG9BLcA7Z.jpg.
+
+Integrating captchasrv on a signon page
+=======================================
+
+The goal of this program is to be called from a web site when a new
+user registers. To use captchasrv on a signon page, there are several
+steps involved:
+
+1. Generate a quizword. You can use the routines in the accompanying mkquizword.pl file.
+
+| 2. Generate the image by sending to the server a URL such as 
+| http://host:port/q=quizword
+| 
+| 3. Save the resulting image name (e.g. capR7KFbA2L) and display the
+| captcha image on a user's browser with a URL such as
+| http://host/path/to/image/dir/capG9BLcA7Z.jpg
+
+4. Get user input. You can put an input field on the page
+
+5. Check that user input. Make sure the input and the quizword are the
+same.
+
+File list:
+=========
+
+- captchasrv.pl: the Perl server.
+
+- captchasrv.README.txt: This file.
+
+- GPL_LICENSE.txt: The license under which the captchagen code is
+placed.
+
+- LGPL-1.2.txt: The license under which the sgutils.pl code is
+placed.
+
+- large.png: This is a 1000x1000 file created from the included
+large.xcf GIMP file. It contains a pastel gradient background with a
+stain layer generated with the Stain filter, then a layer made of
+spirals. The whole image is not used as such. Instead, a smaller
+rectangle is cut from a randomized position in this large.png
+image. This rectangle is used as the background for the CAPTCHA. Used
+by captchasrv.pl.
+
+- large.xcf: The GIMP file that was used to create large.png.
+
+- URW-Palladio-L-bold-r-normal.pfb: One of the free fonts delivered
+in the urw-fonts-2.0 package. Its actual name is p052004l.pfb. Used by
+captchasrv.pl.
+
+- mkquizword.pl: file containing optional routines for generating
+quizwords. See this file for details.
+
+- dictionary: word list file used by mkquizword.pl, 1 word per
+line. All the words are 5 to 7 letter English words created with the
+command:
+grep -E '^[a-z]{5,7}$' /usr/share/dict/words > dictionary
+
+I manually edited it to remove a few mildly offensive words such as
+"cretin", "devil", "idiot", "sadist", "sexes", "screwed", "ugliest" , "whore"
+and "tort lawyer". OK, I made up the last one. :-) I don't want anyone
+to feel like the program is trying to insult him, although we might
+want a disclaimer in case someone think that "illicit" or "mocked" is
+an insult directed maliciously against him. This gives about 14000 words.

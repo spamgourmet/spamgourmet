@@ -1,0 +1,125 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" 
+"http://www.w3.org/TR/html4/strict.dtd">
+<html>
+
+<head>
+  <!--
+  addressScramblerHelper.html version 0.2.2+
+  copyright 2001, Josiah Q. Hamilton
+  Rewritten to work in Mozilla by Max Spicer
+
+  This software is provided under the Artistic license of the Open
+   Source Initiative, as it exists on 2001-12-19, including the optional
+   provision regarding aggregation with a commercial distribution.
+  This notice must be included with any distribution.
+  -->
+
+  <title>addressScrambler Helper Page</title>
+  <script type="text/javascript" src="AddressScrambler.js"></script>
+  <script type="text/javascript">
+    function writeTheScrambledAddressStuff(addr, mailToText) {
+      var scr = scrambleText(addr);
+      var mailToCode;
+      var mailToSample;
+
+      if (addr == "") {
+        alert('Please enter an email address to be scrambled.');
+        document.getElementById('theAddress').focus();
+        return;
+      }
+
+      if (mailToText != "") {
+        mailToCode = getEscapedMailToCodeWithClearDisplayText(scr, 
+mailToText);
+        mailToSample = getMailToWithClearDisplayText(scr, mailToText);
+      } else {
+        mailToText = addr;
+        mailToCode = getEscapedMailToCode(scr);
+        mailToSample = getMailTo(scr);
+      }
+
+      document.getElementById('results').style.display = 'block';
+
+      document.getElementById('scrAddrContainer').innerHTML = scr;
+      document.getElementById('oldMailToContainer').innerHTML = addr;
+      document.getElementById('mailToTextContainer').innerHTML = mailToText;
+      document.getElementById('mailToCodeContainer').innerHTML = mailToCode;
+      document.getElementById('mailToSampleContainer').innerHTML = 
+mailToSample;
+    }
+  </script>
+</head>
+
+<body>
+
+<h1 style="font-weight: bold; font-style: italic; font-family: 'Tahoma, 
+Arial, Helvetica, sans-serif'">
+  addressScrambler Helper
+</h1>
+
+<p>This page will help you generate the code necessary to use the address
+scrambler on your static web pages.</p>
+
+<form action="" onsubmit="return false">
+  <p>
+    <label>
+      Put the email address to be scrambled here:
+      <input type="text" name="theAddress" id="theAddress" size="40" 
+onFocus="this.select()">
+    </label>
+  </p>
+  <p>
+    <label>
+      If desired, put the mailto display text here:
+      <input type="text" name="mailToText" size="40" 
+onFocus="this.select()">
+    </label>
+  </p>
+
+  <p>
+    <input type="submit" value="then click here"
+           onClick="writeTheScrambledAddressStuff(form.theAddress.value, 
+form.mailToText.value)">
+  </p>
+</form>
+
+<div id="results" style="display: none">
+  <p>The scrambled address is:</p>
+
+  <p style="text-align: center"><strong id="scrAddrContainer"></strong></p>
+
+  <p>The script to generate a mailto tag:</p>
+
+  <p style="text-align: center">
+    <em>Instead of</em>
+    &lt;a href="mailto:<span id="oldMailToContainer"></span>"&gt;<span 
+id="mailToTextContainer"></span>&lt;/a&gt;
+    <em>use:</em>
+  </p>
+
+  <p style="text-align: center;"><strong 
+id="mailToCodeContainer"></strong></p>
+
+
+  <p>And here's a sample of the mailto tag (click to make sure it 
+works):</p>
+
+  <p style="text-align: center;"><strong 
+id="mailToSampleContainer"></strong></p>
+
+  <p>Remember that, to use the addressScrambler on a web page, you must 
+include the js file like so,
+  making sure the path to the js file is correct:</p>
+
+  <p style="text-align: center;">
+    <strong>
+      &lt;script type="text/javascript" 
+src="/library/AddressScrambler.js"&gt;&lt;/script&gt;
+    </strong>
+  </p>
+</div>
+
+</body>
+</html>
+
+

@@ -1,0 +1,97 @@
+<html>
+<title>Test Address Scrambler</title>
+<script language="JavaScript" src="AddressScrambler.js">
+</script>
+<script language="JavaScript">
+var addr = 'foo@bar.com';
+var mailToText = '';
+
+var scr = scrambleText(addr);
+var mailToCode;
+var oldMailTo = "<i>instead of</i>  &lt;a href=&quot;mailto:" + addr + "&quot;&gt;";
+var mailToSample;
+
+if (mailToText != null && mailToText != "") {
+	oldMailTo += mailToText + "&lt;/a&gt;   <i>use</i>:";
+	mailToCode = getEscapedMailToCodeWithClearDisplayText(scr,mailToText);
+	mailToSample = getMailToWithClearDisplayText(scr,mailToText);
+} else {
+	oldMailTo += addr + "&lt;/a&gt;   <i>use</i>:";
+	mailToCode = getEscapedMailToCode(scr);
+	mailToSample = getMailTo(scr);
+}
+
+function writeAddr() {
+	document.write(addr);
+}
+
+function writeMailToText() {
+	document.write(mailToText);
+}
+
+function writeScrAddr() {
+	document.write(scr);
+}
+
+function writeOldMailTo() {
+	document.write(oldMailTo);
+}
+
+function writeMailToCode() {
+	document.write(mailToCode);
+}
+
+function writeMailToSample() {
+	document.write(mailToSample);
+}
+
+</script>
+
+<font face="tahoma,arial,helvetica">
+<body>
+
+<b><i>addressScrambler Helper</i></b><br>
+This page will help you generate the code necessary to use the address
+scrambler on your static web pages.
+
+<p>The original address is:
+<b>
+<script language="Javascript"> writeAddr() </script>
+</b>
+
+<p>The original mailTo is:
+<b>
+<script language="Javascript"> writeMailToText() </script>
+</b>
+
+<p>The scrambled address is:
+<b>
+<script language="Javascript"> writeScrAddr() </script></div>
+</b>
+
+<br><br>
+<div name="block2" id="block2" >The script to generate a mailto tag :</div><br>
+<div align="center" >
+<script language="Javascript"> writeOldMailTo() </script></div>
+<br>
+<b><div align="center" name="mailToCode" id="mailToCode">
+<script language="Javascript"> writeMailToCode() </script></div>
+</div></b>
+
+
+<br><br>
+<div name="block3" id="block3" >And here's a sample of the mailto tag (click to make sure it works):</div><br>
+<b><div align="center" name="mailToSample" id="mailToSample">
+<script language="Javascript"> writeMailToSample() </script></div>
+</div></b>
+
+
+<br><br>Remember that, to use the addressScrambler on a web page, you must include the js file like so, making sure the webroot path to the js file is correct:<br><br>
+
+<div align="center"><b>&lt;script language=&quot;JavaScript&quot; src=&quot;/addressScrambler.js&quot;&gt;&lt;/script&gt;</b></div>
+<p>
+
+</font>
+</body>
+</html>
+
