@@ -1,7 +1,6 @@
 #!/usr/bin/perl
 #################################################################
 # spamgourmet - spameater, dot-foward edition
-# version 0.9.4
 #
 # This program runs as a separate process from sendmail
 # and must installed via the aliases file or
@@ -18,12 +17,13 @@
 # spamgourmet is provided under the Artistic License of the Open Source Initiative
 # A copy of the license should be provided with this distribution
 
-
 use strict;
-#use DBD::mysql;
-#use Digest::MD5 qw(md5_hex);
 use lib "/path/to/modules";
 use Mail::Spamgourmet::Config;
+
+# these dependencies are listed here for reference -- they're loaded later on an as-needed basis:
+#use DBD::mysql;
+#use Digest::MD5 qw(md5_hex);
 #use Mail::Spamgourmet::Util;
 #use Mail::Spamgourmet::MessageIdChecker;
 
@@ -35,9 +35,6 @@ my $configfile = "/path/to/spamgourmet.config";
 
 use vars qw {$config $util $mailer $checker};
 $config = Mail::Spamgourmet::Config->new(configfile=>$configfile,mode=>0);
-#$util = Mail::Spamgourmet::Util->new(config=>$config);
-#$mailer = $config->getMailer();
-#$checker = Mail::Spamgourmet::MessageIdChecker->new(config=>$config);
 
 #$config->debug('spameater started');
 
@@ -60,7 +57,6 @@ my $extradebug = 0;
 $useXHeader = 0; # set this up later, based on features
 
 use constant EX_TEMPFAIL    => 75; # temp failure; user is invited to retry
-
 
 # snarf the message line by line
 # get 'From' data (first occurrence)
@@ -202,10 +198,10 @@ if ($config->isLocalDomain($fromdomain)) {
 }
 
 $config->debug($msg) if $extradebug;
-if (keys %deliveryAddresses > 1) {
-  $config->debug("handling multiple delivery addresses - turning on extradebug");
-  $extradebug = 1;
-}
+#if (keys %deliveryAddresses > 1) {
+#  $config->debug("handling multiple delivery addresses - turning on extradebug");
+#  $extradebug = 1;
+#}
 
 foreach $for (keys %deliveryAddresses) {
   $config->debug("handling $for") if $extradebug;
@@ -232,43 +228,44 @@ foreach $for (keys %deliveryAddresses) {
     $st->fetch();
 
     if (!$util->hasFeature('ACCOUNTDISABLED', $Features)) {
-
       $sql = "SELECT PrivateHash, Address FROM Emails WHERE UserID = ? AND Word = ?";
       $st = $config->db->prepare($sql);
       $st->execute($UserID, $mword);
       $st->bind_columns(\%attr,\$PrivateHash,\$disposable);
       $st->fetch();
-
       my $checkFrom = $util->getShortHash($subfrom,$PrivateHash);
 
       my $checkFrom1 = substr(md5_hex("$PrivateHash$subfrom"),22,32);
-      if ($disposable
-       && ($SendThrottleCount < $config->getMaxSendCount()
-        || ($SendThrottleTime < $now - $config->getSendThrottleInterval()))
-       && ($checkTo eq $checkFrom || $checkTo eq $checkFrom1) ) {
-        $subfrom =~ s/\#/\@/;
-        $msg =~ s/\Q$for//gm;
-        $msg =~ s/\Q$from/$disposable/gmi;
-        $msg =~ s/\Q$RealEmail/$disposable/gmi;
-        $msg =~ s/(^To\: ).*$/$1 $subfrom/mi;
-        $msg =~ s/(Subject: .*)\s\(.*\n/$1\n/mgi;
-        if ($subfrom && $config->hasLocalDomain($subfrom)) {
-          # this message is coming right back to us, so we need to clear the id
-          $checker->clearMessageId($headerValues{'messageid'});
-        }
-        &sendMail($config,$useXHeader,$subfrom,\$msg,'',$disposable,$disposable);
+      if ($disposable && ($checkTo eq $checkFrom || $checkTo eq $checkFrom1) ) {
+        if ($SendThrottleCount < $config->getMaxSendCount()
+         || $SendThrottleTime < $now - $config->getSendThrottleInterval()) {
 
-        if ($SendThrottleTime < $now - $config->getSendThrottleInterval()) {
-          $SendThrottleTime = $now;
-          $SendThrottleCount = 1;
+          $subfrom =~ s/\#/\@/;
+          $msg =~ s/\Q$for//gm;
+          $msg =~ s/\Q$from/$disposable/gmi;
+          $msg =~ s/\Q$RealEmail/$disposable/gmi;
+          $msg =~ s/(^To\: ).*$/$1 $subfrom/mi;
+          $msg =~ s/(Subject: .*)\s\(.*\n/$1\n/mgi;
+          if ($subfrom && $config->hasLocalDomain($subfrom)) {
+            # this message is coming right back to us, so we need to clear the id
+            $checker->clearMessageId($headerValues{'messageid'});
+          }
+          &sendMail($config,$useXHeader,$subfrom,\$msg,'',$disposable,$disposable);
+
+          if ($SendThrottleTime < $now - $config->getSendThrottleInterval()) {
+            $SendThrottleTime = $now;
+            $SendThrottleCount = 1;
+          } else {
+            $SendThrottleCount ++;
+          }
+          $sql = "UPDATE Users SET SendThrottleTime = ?, SendThrottleCount = ? WHERE UserID = ?";
+          $st = $config->db->prepare($sql);
+          $st->execute($SendThrottleTime, $SendThrottleCount, $UserID);
         } else {
-          $SendThrottleCount ++;
+          $config->debug("send throttle is in effect: stt: $SendThrottleTime, stc: $SendThrottleCount, userID: $UserID");
         }
-        $sql = "UPDATE Users SET SendThrottleTime = ?, SendThrottleCount = ? WHERE UserID = ?";
-        $st = $config->db->prepare($sql);
-        $st->execute($SendThrottleTime, $SendThrottleCount, $UserID);
       } else {
-        $config->debug("skipping an attempted send: stt: $SendThrottleTime, stc: $SendThrottleCount, userID: $UserID");
+        $config->debug("skipping an attempted send: checkTo: $checkTo, checkFrom: $checkFrom, checkFrom1: $checkFrom1, userID: $UserID");
       }
     } else {
       $config->debug("skipping an attempted send for disabled user: $UserID");
