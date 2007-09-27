@@ -1,6 +1,7 @@
 #!/usr/bin/perl
 #################################################################
 # spamgourmet - spameater, dot-foward edition
+# version 0.9.4
 #
 # This program runs as a separate process from sendmail
 # and must installed via the aliases file or
@@ -228,11 +229,13 @@ foreach $for (keys %deliveryAddresses) {
     $st->fetch();
 
     if (!$util->hasFeature('ACCOUNTDISABLED', $Features)) {
+
       $sql = "SELECT PrivateHash, Address FROM Emails WHERE UserID = ? AND Word = ?";
       $st = $config->db->prepare($sql);
       $st->execute($UserID, $mword);
       $st->bind_columns(\%attr,\$PrivateHash,\$disposable);
       $st->fetch();
+
       my $checkFrom = $util->getShortHash($subfrom,$PrivateHash);
 
       my $checkFrom1 = substr(md5_hex("$PrivateHash$subfrom"),22,32);
@@ -327,6 +330,7 @@ foreach $for (keys %deliveryAddresses) {
 
   ## must reject non-word addys - 
   next unless $mword;
+  next if $mword =~ /^\|/;
 #  if (!$mword) {
 #    my $dbt = $config->{'db'} || 'not connected';
 #    $config->debug("skipping no-word addy - $for -- from is $from db is: $dbt"  );# . $msg);
@@ -354,6 +358,7 @@ foreach $for (keys %deliveryAddresses) {
     $updatelog = $mword && $util->hasFeature('EATENMESSAGELOG',
                                  $Features); 
     $useXHeader = $util->hasFeature('DISABLETAGLINE', $Features);
+    $useXHeader ++ if ($useXHeader && $util->hasFeature('DISABLETAGLINETRUSTEDEXCLUSIVE',$Features));
   } else {
     $UserID = getpwnam($musername); # get the unix userID
     $RealEmail = $musername; # we'll be forwarding the message to a local account if at all...
@@ -719,7 +724,7 @@ sub sendMail {
 
   return if !$rcpt;
   $config->debug("sending...") if $extradebug;
-  if (!$useXHeader && $subjecttext) {
+  if ((!$useXHeader || $useXHeader==2 && $subjecttext =~ /message/) && $subjecttext) {
     my $check = $$msgref =~ s/(^Subject\:.*$)/$1$subjecttext/mi;
     if (!$check) {
       $$msgref =~ s/(Date: )/Subject: $subjecttext\n$1/;

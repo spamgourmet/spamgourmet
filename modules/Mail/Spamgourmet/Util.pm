@@ -98,7 +98,7 @@ sub getNumberFromString {
   my $str = shift;
   my $default = shift;
   $default = 3 if !$default; #default default of 3
-  return $default if !$str;
+  return $default if !$str && $str ne '0';
   if ($str =~ /^\d*$/ || $str eq '*' || $str eq '+' || $str =~ /sender/i || $str =~ /domain/i) {
     return $str;
   }
@@ -135,8 +135,15 @@ sub getAddressAndDisplay {
   my $str = shift;
   my $combine = shift;
   my ($addr, $display, $part, @display);
-  my @parts = split(' ',$str);
-  @parts = split('<',$str) if @parts < 2;
+  my @parts;
+  if ($str =~ /</) {
+    @parts = split('<',$str);
+  } else {
+    @parts = split(' ',$str);
+  }
+  if (!@parts) {
+    push (@parts,$str);
+  }
   while (@parts) {
     $part = shift(@parts);
     if ($part =~ /\@/ && $part !~ /\"/) {

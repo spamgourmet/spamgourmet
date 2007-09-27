@@ -55,7 +55,7 @@ sub initialize {
       if ($filename) {
         my ($dev,$ino,$mode,$nlink,$uid,$gid,$rdev,$size, $atime,$mtime,$ctime,$blksize,$blocks) 
          = stat($self->{'cachedir'}.$filename);
-        if (time() - $mtime < $self->{'cachetimeout'}) {
+        if (!$self->{'config'}->db || time() - $mtime < $self->{'cachetimeout'}) {
           $freshcache = 1;
           $self->retrieveFromFile($filename, 0);
         }
@@ -65,14 +65,18 @@ sub initialize {
         my ($st,%attr);
         my $version = 0; 
         my $sql = "SELECT VersionNumber FROM Versions WHERE VersionName = 'Dialogs'";
-        $st = $self->{'config'}->db->prepare($sql);
-        $st->execute();
-        $st->bind_columns(\%attr,\$version);
-        $st->fetch();
-        if ($version && $self->{'cachedir'} && -e $self->{'cachedir'} . $version) {
-          $self->retrieveFromFile($version, $version);
+        if ($self->{'config'}->db) {
+          $st = $self->{'config'}->db->prepare($sql);
+          $st->execute();
+          $st->bind_columns(\%attr,\$version);
+          $st->fetch();
+          if ($version && $self->{'cachedir'} && -e $self->{'cachedir'} . $version) {
+            $self->retrieveFromFile($version, $version);
+          } else {
+            $self->retrieveFromDB($version);
+          }
         } else {
-          $self->retrieveFromDB($version);
+          $self->retrieveFromFile($version, $version);
         } 
       }
     } else {
@@ -119,6 +123,8 @@ sub retrieveFromDB {
   my ($text, $code, $name) = ('','','','');
 
   my $fileopen = 0;
+
+  return if !$self->{'config'}->db;
 
   my $sql = 'SELECT DialogName, DialogText, LanguageCode
    FROM Dialogs WHERE DialogType = 1';

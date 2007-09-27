@@ -23,6 +23,7 @@ $FEATURES{'DONOTLOGHIDDEN'} = 11;
 $FEATURES{'ACCOUNTDISABLED'} = 13;
 $FEATURES{'DISABLETAGLINE'} = 17;
 $FEATURES{'DONOTMATCHRECIP'} = 19;
+$FEATURES{'DISABLETAGLINETRUSTEDEXCLUSIVE'} = 23;
 
 sub new {
   my $proto = shift;
@@ -312,7 +313,7 @@ sub debug {
     print FILE $chunk;
     print FILE "\n";
     close FILE;
-#    print $chunk . "\n";
+    #print $chunk . "\n";
   }
 }
 

@@ -388,9 +388,10 @@ sub getIPToken {
   my $token = shift;
   #my $IPAddress = $ENV{'REMOTE_ADDR'};
   # aol often switches IP addresses - this pull it back to the class B
-  $ENV{'REMOTE_ADDR'} =~ /(\d\.\d)/;
-  my $IPAddress = $1;
-  return  &encrypt($token . $IPAddress);
+#  $ENV{'REMOTE_ADDR'} =~ /(\d\.\d)/;
+#  my $IPAddress = $1;
+#  return  &encrypt($token . $IPAddress);
+  return $token; # note - disabling this...
 }
 
 sub getNewImageHash {
