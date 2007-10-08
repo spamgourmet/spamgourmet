@@ -6,7 +6,7 @@
 <br>
 <%forwardingaddress%> <input type="text" name="realemail" value="<%realemail%>" onFocus="saveButton.disabled=false">
 <input type="hidden" name="saverealemail" value=1>
-  <input name="saveButton" id="saveButton" type="<%button%>" value="<%save%>" onClick="<%onclick%>" disabled>
+  <input name="saveButton" id="saveButton" type="<%button%>" value="<%save%>" onClick="<%onclick%>" onKeyPress="<%onclick%>" disabled>
 </td>
 </tr>
 
@@ -21,6 +21,9 @@
 <p><%eml%></p>
 </div>
 
+<p align="center"><a href="<%sendtolink%>"><%sendfromanaddress%></a></p>
+
+
 <table width="90%" border=0>
 <tr><td valign="top">
 <%senders%>
@@ -29,11 +32,11 @@
 </td></tr><tr>
 
 <td><form action="<%action%>" method="post">
-<input name="newsender" type="text"><br><input type="<%button%>" value="<%addtrustedsender%>" onClick="<%onclick%>"></form></td>
+<input name="newsender" type="text"><br><input type="<%button%>" value="<%addtrustedsender%>" onClick="<%onclick%>" onKeyPress="<%onclick%>"></form></td>
 
 <td><form action="<%action%>" method="post">
 <input name="newwatchword" type="text"><br><input type="<%button%>" value="<%addwatchword%>"
- onClick="<%onclick%>"></form></td>
+ onClick="<%onclick%>" onKeyPress="<%onclick%>"></form></td>
 </tr>
 <tr>
 <td colspan="2" align="center"><form action="">
@@ -74,12 +77,11 @@
 </table>
 
 
-<p align="center"><a href="<%sendtolink%>"><%sendfromanaddress%></a></p>
 
 <p align="center">
 <form action="<%action%>" method="post"><input type="hidden" name="advanced" value="1">
 <%defaultnumber%> <input type="text" size="2" name="defaultnumber" value="<%mydefaultnumber%>" onFocus="this.select();">
-<input name="saveDFButton" id="saveDFButton" type="<%button%>" value="<%save%>" onClick="<%onclick%>">
+<input name="saveDFButton" id="saveDFButton" type="<%button%>" value="<%save%>" onClick="<%onclick%>" onKeyPress="<%onclick%>">
 </form>
 </p>
 

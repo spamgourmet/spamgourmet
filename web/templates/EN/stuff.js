@@ -1,4 +1,3 @@
-
   winmiscw = 20;
   winmisch = 40;
   miscw = 0; // scrollbar affects this
@@ -38,6 +37,9 @@ function checkPrefixForm(obj) {
 
 
 function checkLoginForm(obj) {
+  if (!obj.user.value && !obj.pass.value && (obj.newuser.value || obj.realemail.value)) {
+    return checkSignUpForm(obj);
+  }
   if (!obj.user.value || !obj.pass.value) {
     alert('<%enterusernamepassword%>');
     if (!obj.user.value) {
@@ -48,6 +50,10 @@ function checkLoginForm(obj) {
     return false;
   }
   return true;
+}
+
+function openPage(pageLocation) {
+  window.open('http://' + pageLocation);
 }
 
 function checkNewUserForm(obj) {

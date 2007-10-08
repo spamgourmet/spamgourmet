@@ -11,22 +11,21 @@ Vous avez demandé à Spamgourmet de transférer vos messages à l'adresse
 ou bien coupez-la et collez-la dans la barre d'adresse de votre navigateur
 web
 
-* Ou bien répondez simplement à ce message en laissant l'URL dans la
-réponse.
+* Cliquez http://www.spamgourmet.com/contact.html - ou bien coupez-la et collez-la dans la barre d'adresse de votre navigateur web
 
 Si ce message vous est parvenu par erreur, c'est que quelqu'un a
 accidentellement donné votre adresse à Spamgourmet.
 
 English:
 
-You asked Spamgourmet to forward your emails to the address <%newaddress%>.
+You asked spamgourmet to forward your emails to the address <%newaddress%>.
 You must confirm. To confirm, either:
 
 * Clic on the URL <%url%>
 (or paste it into your browser address bar and press Enter)
 
-* Or just reply to this email -- make sure you leave the URL in the reply.
+* visit http://www.spamgourmet.com/contact.html to contact us.
 
 If you received this message unexpectedly, it's because someone entered your
-address in Spamgourmet by mistake.
+address in spamgourmet by mistake.
 

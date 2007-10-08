@@ -1,5 +1,5 @@
 <%eatenmessageinfo%>
 <table border=1 cellspacing=0 cellpadding=4>
-<tr><td><b><%date%></b> (PST)</td><td><b><%from%></b></td><td><b><%to%></b></td></tr>
+<tr><td><b><%date%></b> (UTC)</td><td><b><%from%></b></td><td><b><%to%></b></td></tr>
 <%rows%>
 </table>

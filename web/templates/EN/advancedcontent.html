@@ -16,15 +16,15 @@ If you add a domain, any user at that domain will be trusted.  If you add an ema
 <b>Watchwords</b>: Watchwords help you control the creation of disposable addresses.  If you have watchword enforcement turned on <i>and</i> at least one watchword, then the system will not <i>create</i> a new address unless one of your watchwords is included in the "word" of the address.  For example, if your username was 'spamcowboy', and your watchword list includes 'saddle' and 'rope', then these forms will work to create new addresses: 
 </p><p align="center">
 saddlesoap.3.spamcowboy@spamgourmet.com<br>
-OuchRopeBurn.2.spamcowboy@spamgourmet.com<br>
-backinthesaddle.6.spamcowboy@spamgourmet.com<br>
+GitARope.2.spamcowboy@spamgourmet.com<br>
+backinthesaddleagain.6.spamcowboy@spamgourmet.com<br>
 </p>
 and these will not: 
 <p align="center">
 coyote.20.spamcowboy@spamgourmet.com<br>
 eternalspamnation.*.spamcowboy@spamgourmet.com 
 </p>
-
+It's key for you to come back to the website and <i>change</i> the watchword(s) every now and then -- one example of "a little maintenance" -- this is to prevent someone from just adding something on to an existing address to create a new one.
 
 <p align="center">
 </p>
@@ -36,7 +36,9 @@ return address.
 <p>
 
 
-<b>Search Addresses</b>: You can view a big table with all your disposables by clicking the button that says "search addresses".  If you do not enter any search terms, all your addresses will be displayed.   
+<b>Search Addresses</b>: You can view a big table with all your disposables by clicking the button that says "search addresses".  If you do not enter any search terms, all your addresses will be displayed.
+<p>To sort the disposable adress table, click on the column headers.
+<p>
 On the table, you click on an address (by its 'word') and edit it to: 
 
 <br>
@@ -51,7 +53,6 @@ b) if you like, specify an 'exclusive sender' for the address.  You can read mor
 
 Or, if you like, you can <a href="<%xmllink%>">get the whole list in XML by clicking here</a>.
 
-<p> 
 
 <p>
 
@@ -81,5 +82,8 @@ And if you later change your prefix to 'coyote', the prefix 'cowpoke' will no lo
 
 
 <p>
-<b>Default Number</b>: Set this to be the number of messages you want to use for a new disposable address when spamgourmet can't figure out what you intended from looking at the address itself (for instance, if you left the number out).
+<b>Default Number</b>: Set this to be the number of messages you want to use for a new disposable address when spamgourmet can't figure out what you intended from looking at the address itself (for instance, if you left the number out).  Note that some things you put in place of the number will have other effects -- read the FAQ (painful as that task may be) for details.
 </p>
+<p><b>Eaten Message Log</b>: If this feature is enabled, the system will keep track of the last three messages that were eaten and show you information about them (who they were from, when they came in, and which address they were addressed to).  You can enable the option to not log for hidden addresses if you want the system to ignore addresses that you've designated as hidden.  This can all be useful, but if you don't think you'll use it, please don't enable it, because it makes the system work harder.  For the same reason, we found that we really can't keep track of more than three eaten messages.</p>
+
+<p><b>Hiding the Subject Tagline</b>: If you don't like the extra text that spamgourmet adds to the subject of your messages (e.g., informing you of the number of remaining messages, or the trusted status of the sender), enable the feature that says "hide subject tagline" -- the same information will then be put into a header of the message which you may or may not be able to view with your email client software.</p>

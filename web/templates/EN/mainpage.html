@@ -1,173 +1,294 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
 <html>
+
 <head>
-<meta name="description" content="spamgourmet provides on-the-fly self-destructing disposable email addresses.  Users can also set up rulesets for trusted or permitted senders, etc.">
-<meta name="keywords" content="spam, unsolicited bulk email, UBE, spam blocking, disposable email, disposable email address, throwaway email address, stop spam, block spam, spam prevention, temporary email address, prevent spam, address, disposable address, self-destructing email, DEA, spam-proof email, spamproof email">
+
+<meta name="description" content="spamgourmet provides spam protection using on-the-fly self-destructing disposable email addresses.  Users can also set up rulesets for trusted or permitted senders, etc.">
+
+<meta name="keywords" content="spam, spam protection, disposable email, unsolicited bulk email, UBE, spam blocking, disposable email address, throwaway email address, stop spam, block spam, spam prevention, temporary email address, prevent spam, address, disposable address, self-destructing email, DEA, spam-proof email, spamproof email">
+
+
 
 <meta http-equiv="pragma" content="no-cache">
-<title>spamgourmet - free disposable email addresses, spam blocking</title>
+
+<title>spamgourmet - free disposable email addresses, spam blocker</title>
+
+<%analytics%>
+
 <script language="JavaScript" type="text/javascript"><%mainjavascript%></script>
+
 <script language="JavaScript" src="<%imageshost%>stuff/js/AddressScrambler.js" type="text/javascript"></script>
+
 <style type="text/css"><!--
+
 body{margin-top:0px;margin-left:0px;margin-right:0px;margin-bottom:0px;}
+
 body,td,div,a{font-family:verdana,arial,helvetica,sans-serif; font-size:10pt }
+
 h2{font-size:13pt}
+
+h3{font-size:10pt; font-style:italic}
+
+h4{font-size:8pt}
+
+.tdlink{cursor:pointer;cursor:hand;text-decoration:none}
+
 table{border-style:none;}
+
 //-->
+
 </style>
+
 </head>
+
 <body bgcolor="#FFFFFF" onLoad="<%onload%>">
+
+
 <table cellspacing="0" cellpadding="0" width="100%">
+
  <tr>
-  <td valign="bottom" rowspan="2" align="center" width="240">
-   <img src="<%imageshost%>stuff/gourmet.png" border="0" width="230" height="200" alt="disposable email gourmet"><br>
-   <font size=1>"<%quote%>"</font>
-   <br><div id="serverstats"><font size="1"><%serverstats%></font></div>
+
+  <td valign="middle" colspan="2"><h2><%mainpageintro%></h2></td>
+
+  <td align="center" valign="top" rowspan="4" bgcolor="#FFFFCC">
+
+<%adsense%>
+
+
   </td>
-  <td height=100 align="left" valign="middle">
-   <h2><%mainpageintro%></h2>
+
+ </tr>
+
+ <tr>
+
+  <td valign="bottom" align="center" width="240" rowspan="2">
+
+   <h4><img src="<%imageshost%>stuff/gourmet.png" border="0" width="230" height="200" alt="disposable email spam gourmet" title="le gourmet">
+
+   "<%quote%>"</h4>
+
+  </td>
+
+  <td height="100" align="left" valign="middle">
+
    <table width="100%">
+
     <tr>
-     <td align="left" valign="middle">
-&nbsp;
-     </td>
+
      <td align="center" valign="middle" width=300>
-      <%spameatenthisweek%>
-      <a href="javascript:centerPopup('graphs.cgi','graphs',950,600)"><%weekchart%></a>
+
+<div id="serverstats"><font size="1"><%serverstats%></font></div>
+
+       <!-- %weekchart% -->
+
      </td>
-     <td align="left" valign="middle">
-      <font color="#993366"><%motd%></font>
+
+     <td align="center" valign="middle"><h3><%motd%></h3>
+
+      
+
      </td>
+
     </tr>
+
    </table>
+
   </td>
-  <td align="center" valign="top" rowspan=2>
-   <%languagelist%>
-   <%flags%>
-  </td>
+
  </tr> 
+
  <tr>
-  <td valign="bottom" height=75>
-   <table width="100%" cellspacing=2>
+
+  <td valign="bottom" height="75">
+
+   <table width="100%" cellspacing="2">
+
     <tr>
 
      <td valign="bottom" align="center">
+
       <a href="http://bbs.spamgourmet.com"><%discuss%>/<%support%></a>
+
      </td>
 
      <td valign="bottom" align="center">
-      <a href="javascript:centerPopup('<%action%>?printpage=whatsnew.html','whatsnew',400,400)"><%whatsnew%></a>
+
+      <a href="<%action%>?printpage=whatsnew.html" onClick="centerPopup('<%action%>?printpage=whatsnew.html','whatsnew',400,400);return false;"><%whatsnew%></a>
+
      </td>
 
      <td valign="bottom" align="center">
-      <a href="javascript:centerPopup('<%action%>?printpage=faq.html','faq',600,500)"><%FAQ%></a>
+
+      <a href="<%action%>?printpage=faq.html" onClick="centerPopup('<%action%>?printpage=faq.html','faq',600,500);return false;"><%FAQ%></a>
+
      </td>
 
      <td valign="bottom" align="center">
-      <a href="javascript:centerPopup('<%action%>?printpage=links.html','links',600,500)"><%links%></a>
-     </td>
 
-  <!--   <td valign="bottom" align="center">
-      <a href="https://sourceforge.net/tracker/?func=add&group_id=20543&atid=220543" target="_new"><%support%></a>
-     </td> -->
+      <a href="<%action%>?printpage=links.html" onClick="centerPopup('<%action%>?printpage=links.html','links',600,500);return false;"><%links%></a>
 
-     <td valign="bottom" align="center">
-      <a href="javascript:centerPopup('<%action%>?printpage=downloads.html','downloads',700,500)"><%downloads%></a>
      </td>
 
      <td valign="bottom" align="center">
-      <a href="javascript:centerPopup('<%action%>?printpage=team.html','team',700,500)"><%team%></a>
+
+      <a href="<%action%>?printpage=downloads.html" onClick="centerPopup('<%action%>?printpage=downloads.html','downloads',700,500);return false;"><%downloads%></a>
+
      </td>
 
      <td valign="bottom" align="center">
-      <a href="javascript:centerPopup('<%action%>?printpage=donate.html','faq',600,500)"><%donate%></a>
+
+      <a href="<%action%>?printpage=team.html" onClick="centerPopup('<%action%>?printpage=team.html','team',700,500);return false"><%team%></a>
+
      </td>
 
      <td valign="bottom" align="center">
-      <a href="javascript:centerPopup('http://www.cafepress.com/spamgourmet','store',750,600)"><%store%></a>
+
+      <a href="<%action%>?printpage=donate.html" onClick="centerPopup('<%action%>?printpage=donate.html','faq',600,500); return false;"><%donate%></a>
+
      </td>
 
+     <td valign="bottom" align="center">
+
+      <a href="http://www.cafepress.com/spamgourmet" onClick="centerPopup('http://www.cafepress.com/spamgourmet','store',750,600)"><%store%></a>
+
+     </td>
 
     </tr>
+
    </table>
+
+
 
    <%tabs%>
 
-  <td align="center" valign="middle">
+
 
   </td>
- </tr>
-</table>
 
-</td></tr>
-<tr>
-<td bgcolor="#993366" valign="top" align="center">
-<br>
-<b><font color="#FFFFFF"><%loginmsg%></font></b>
+ </tr>
+
+ <tr>
+
+  <td bgcolor="#993366" valign="top" align="center">
+
+  <b><font color="#FFFFFF"><%loginmsg%></font></b>
+
+
 
 <%loginform%>
-<br>
+
+<font color="#FFFFFF" size="-2">
+looking for <a href="http://www.gourmet.org"><font color="#FFFFFF" size="-2" style="text-decoration:none;">gourmet items</font></a>?<br><a href="http://www.gourmet.org"><img src="<%imageshost%>stuff/gourmetkitchen.png" border="0" width="135" height="59" alt="The Gourmet Kitchen" title="The Gourmet Kitchen"></a></font>
+
+<br><br>
+
+   <%languagelist%>
+
+   <%flags%><br><br>
+
 <%normallink%> | <%securelink%>
-<p>
-<a href="http://www.netendeavors.net/"><img src="<%imageshost%>stuff/netendea_sm.gif" border="0" alt="NetEndeavors.net button"></a>
-<br><font color="#FFFFFF">We thank NetEndeavors<br>for their support!</font></p>
-<br><a href="javascript:centerPopup('<%action%>?printpage=link.html','link',400,400)"><font color="#FFFFFF" size=2>
-
-<%linktous%>
-
-</font></a>
-<p>
-<script language="JavaScript" type="text/javascript">writeMailToWithScrambledDisplayText('nsktExufrltzwrjy3htr','Aktsy%htqtwB\'(KKKKKK\'%xn jB7CnsktExufrltzwrjy3htrA4ktsyC');</script>
 <br>
-<a href="javascript:centerPopup('<%action%>?printpage=privacy.html','terms
-',600,500)"><font color="#FFFFFF" size=1>
+<!-- script language="JavaScript" type="text/javascript">writeMailToWithScrambledDisplayText('nsktExufrltzwrjy3htr','Aktsy%htqtwB\'(KKKKKK\'%xn jB7CnsktExufrltzwrjy3htrA4ktsyC');</script --><a href="/contact.html">contact</a>
+  </td>
 
-<%privacy%>
+  <td valign="top" bgcolor="#FFFFCC">
 
-</font></a> 
+    <table cellspacing="0" cellpadding="0" width="100%">
+
+     <tr>
+
+       <td width=1 bgcolor="#000000"></td>
+
+       <td valign="top"><table cellspacing=0 cellpadding=5 width="100%"><tr>
+
+       <td valign="top">
+
+<center>
+
+<b><%message%></b>
+
+<br><%yourstats%>
+
+</center>
+
+<!--content start-->
+
+<%content%>
+
+<!--content stop -->
+
+       </td>
+
+      </tr></table>
+
+     </td>
+
+    </tr>
+
+   </table>
+
+  </td>
+
+ </tr>
+
+</table>
+
+
+
+<center><font size=1>
+
+
+
 <a href="javascript:centerPopup('<%action%>?printpage=terms.html','terms
-',600,500)"><font color="#FFFFFF" size=1>
+
+',600,500)">
+
+
 
 <%termsconditions%>
 
-</font></a>
 
 
-</td>
-<td valign="top" colspan="2" bgcolor="#FFFFCC">
-<table cellspacing="0" cellpadding="0" width="100%">
-<tr>
-<td width=1 bgcolor="#000000"></td>
-<td valign="top"><table cellspacing=0 cellpadding=5 width="100%"><tr>
-<td valign="top">
-<div align="center"><b></b></div>
+</a>
 
-<center>
-<b><%message%></b>
-<br><%yourstats%>
-</center>
-<!--content start-->
-<%content%>
-<!--content stop -->
-</td>
-</tr></table>
-</td>
-<td valign="top"><%adsense%></td>
 
-</tr></table>
-</td>
-</tr></table>
 
-<center><font size=1>
+<a href="javascript:centerPopup('<%action%>?printpage=privacy.html','terms
+
+',600,500)">
+
+<%privacy%>
+
+
+
+</a> 
+
+
+
+
+
  <a href="http://bbs.spamgourmet.com"><%discuss%>/<%support%></a>
+
  <a href="<%action%>?printpage=whatsnew.html"><%whatsnew%></a>
+
  <a href="<%action%>?printpage=faq.html"><%FAQ%></a>
+
  <a href="http://www.cafepress.com/spamgourmet"><%store%></a>
+
  <a href="<%action%>?printpage=links.html"><%links%></a>
+
 <!-- <a href="https://sourceforge.net/tracker/?func=add&group_id=20543&atid=220543" target="_new"><%support%></a> -->
+
  <a href="<%action%>?printpage=downloads.html"><%downloads%></a>
+
  <a href="<%action%>?printpage=team.html"><%team%></a>
+
 </font></center>
+
 </body>
+
 </html>
+
+
 

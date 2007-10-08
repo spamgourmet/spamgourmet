@@ -1,14 +1,11 @@
-Avancerat läge är precis som enkelt läge, fast du kan även specificera anförtrodda avsändare, kontrollord samt ett prefix. Du kan även slå på eller av svarsadress-maskering.
-Om du har anförtrodda avsändare, kontrollord eller ett prefix kommer du att få denna sida som standardsida när du loggar in.
+Avancerat läge är precis som enkelt läge, fast du kan även specificera anförtrodda avsändare, kontrollord samt ett prefix. Du kan även slå på eller av svarsadress-maskering. Om du har anförtrodda avsändare, kontrollord eller ett prefix kommer du att få denna sida som standardsida när du loggar in.
 
 <p>
 <p>
-<b>Anförtrodda avsändare</b>:Du kan lägga till och ta bort 'anförtrodda avsändare' här genom att antingen ange en domän eller en e-postadress.  Anförtrodda avsändare kommer att tillåtas skicka e-post till samtliga dina disponibla adresser utan att meddelanderäknaren räknas ner.
+<b>Anförtrodda avsändare</b>: Du kan lägga till och ta bort 'anförtrodda avsändare' här genom att antingen ange en domän eller en e-postadress.  Anförtrodda avsändare kommer att tillåtas skicka e-post till samtliga dina disponibla adresser utan att meddelanderäknaren räknas ner.
 
 <p>
-På detta sätt kan du prenumerera på en e-poslista som du inte litar på genom att använda en disponibel adress.  Sen, om du tycker om listan, kan du komma tillbaka hit och lägga till avsändarens e-postadress som en anförtrodd avsändare.
-
-Om du lägger till en domän kommer alla användare i den domänen att vara anfördtodda. Om du lägger till en e-postadress kommer bara den adressen att vara anförtrodd.
+På detta sätt kan du prenumerera på en e-postlista som du inte litar på genom att använda en disponibel adress. Sedan, om du tycker om listan, kan du komma tillbaka hit och lägga till avsändarens e-postadress som en anförtrodd avsändare. Om du lägger till en domän kommer alla användare i den domänen att vara anfördtodda. Om du lägger till en e-postadress kommer bara den adressen att vara anförtrodd.
 </p>
 <p>
 <b>Kontrollord</b>: Kontrollord hjälper dig att kontrollera skapandet av disponibla adresser.  Om du har kontrollordstvång påslaget <i>och</i> minst ett kontrollord, kommer systemet inte att <i>skapa</i> någon ny adress såvida inte något av dina kontrollord finns i "ord-delen" av en disponibel adress.  Till exempel, om ditt användarnamn är 'spamcowboy', och din kontrollordslista innehåller 'saddle' och 'rope' kommer följande exempel att skapa en ny adress:
@@ -30,20 +27,11 @@ eternalspamnation.*.spamcowboy@spamgourmet.com
 <p>
 
 
-<b>Visa adresser</b>: Du kan visa en stor tabell med alla dina disponibla adresser genom att klicka på knappen som heter "visa mina disponibla adresser".
-I tabellen kan du klicka på en adress (på dess "ord-del") och ändra:
-
+<b>Söka adresser</b>: Du kan visa en stor tabell med alla dina disponibla adresser genom att klicka på knappen som heter "sök adresser". Ifall du inte skriver in några söktermer kommer samtliga dina adresser att visas. I tabellen kan du klicka på en adress (på dess "ord-del") och ändra:
 <br>
-
 a) antalet återstående meddelanden kvar, och 
-
 <br>
-
-b) om du vill, specificera en 'exklusiv avsändare' för adressen. 
-
-<br>
-
-Du kan läsa mer om exklusiva avsändare i FAQ:n --  det är ungefär som att ha endast en anförtrodd avsändare för en disponibel adress.
+b) om du vill, specificera en 'exklusiv avsändare' för adressen. Du kan läsa mer om exklusiva avsändare i FAQ:n -- det är ungefär som att ha endast en anförtrodd avsändare för en viss disponibel adress.
 
 <p>
 
@@ -53,18 +41,15 @@ Eller, om du vill, så kan du <a href="<%xmllink%>">få hela listan i XML-format
 
 <p>
 
-<b>Prefix:</b> Om du är <i>riktigt</i> paranoid, kan du specificera ett 'prefix' som kommer att behövas på varje <i>ny</i> disponibel adress från en icke anförtrodd avsändare.  Se det som ett lösenord för att skapa nya disponibla adresser som du kan ändra lite då och då.
+<b>Prefix:</b> Om du är <i>riktigt</i> paranoid, kan du specificera ett 'prefix' som kommer att behövas på varje <i>ny</i> disponibel adress från en icke anförtrodd avsändare.  Se det som ett lösenord för att skapa nya disponibla adresser som du kan ändra lite då och då. Förresten så fungerar prefix ungefär likadant som kontrollord (de hindrar båda folk från att skapa disponibla adresser mot din vilja), och oftast är kontrollord ett bättre val. Läs mer om du vill...
 
 </p>
-
 <form action="<%action%>" method="post" onSubmit="return checkPrefixForm(this);"><p align="center">
-
 ditt prefix:
-
 <input type="text" name="prefix" value="<%prefix%>" maxlength=20> <input type="<%button%>" value="spara prefix" onClick="<%onClick%>">
 </p></form>
 
-Att ange ett prefix ger dig mer kontroll över dina disponibla adresser genom att kräva att ditt nuvarande prefix finns i "ord-delen" innan vi skapar en ny disponibel adress.  Detta kommer att skydda dig mot att någon annan än du hittar på nya adresser med ditt användarnamn.
+Om du anger ett prefix kommer systemet inte att skapa någon ny disponibel adress om inte prefixet finns i "ord-delen" av adressen. Detta kommer att skydda dig mot att någon annan än du hittar på nya adresser med ditt användarnamn.
 
 Formatet på en prefix:ad disponibel e-postadress är:
 
@@ -77,3 +62,6 @@ Så, om ditt prefix är 'cowpoke', kan du t.ex. skapa en ny adress i stil med:
 <p align="center">  cowpoke.spamelope.2.spamcowboy@spamgourmet.com</p>
 
 Och om du senare ändrar ditt prefix till 'coyote' kommer inte prefixet 'cowpoke' att fungera för att skapa <i>nya</i> adresser, men existerande adresser kommer att fortsätta att fungera. Om du tar bort ditt prefix helt kan du därefter skapa nya adresser med eller utan prefix.
+<p>
+<p>
+<b>Standard-antal:</b> Sätt denna till det antal meddelanden som du vill använda för en ny disponibel adress ifall spamgourmet inte kan lista ut vad antalet ska vara, (till exempel ifall du inte skriver någon siffra i adressen).

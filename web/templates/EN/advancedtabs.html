@@ -3,11 +3,12 @@
   <td valign="bottom">
    <table border=0 cellspacing=0 cellpadding=0>
     <tr>
-     <td valign="top" bgcolor="#999999" width=200 height=50 align="center">
-<a href="<%action%>?nobrainer=1">
+     <td valign="top" bgcolor="#999999" width=200 height=50 align="center" id="nobrainer" onClick="location='<%action%>?nobrainer=1';" class="tdlink">
+<a href="<%action%>?nobrainer=1" class="tdlink">
+<font color="#333333">
 <b><%nobrainermode%></b>
 <br><%goodprotection%>
-<br><%nomaintenance%></a>
+<br><%nomaintenance%></font></a>
      </td>
      <td valign="top" bgcolor="#FFFFCC" width=200 height=50 align="center">
 <b><%advancedmode%></b>
@@ -17,3 +18,5 @@
     </tr>
    </table>
   </td>
+ </tr>
+</table>

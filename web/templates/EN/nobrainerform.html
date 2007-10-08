@@ -1,8 +1,7 @@
-<form action="<%action%>" method="post">
-<p align="center">
+<center><form action="<%action%>" method="post">
 <%forwardingaddress%> <input type="text" name="realemail" value="<%realemail%>" onFocus="saveButton.disabled=false">
 <input type="hidden" name="saverealemail" value=1>
-<input name="saveButton" id="saveButton" type="<%button%>" value="<%save%>" onClick="<%onclick%>" disabled>
-</p>
+<input name="saveButton" id="saveButton" type="<%button%>" value="<%save%>" onClick="<%onclick%>" onKeyPress="<%onclick%>"  disabled>
 </form>
 <p><i><%pendingmsg%></i></p>
+</center>

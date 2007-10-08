@@ -49,7 +49,7 @@ entrez l'adresse (indiquée par son 1er mot) et cliquez sur le bouton «
 rechercher jetables ». Si vous le cliquez sans rien entrer, vous
 affichez un grand tableau
 avec toutes vos adresses jetables.</p>
-
+<p>Pour trier les adresses dans la table, cliquez sur l'entête des colonnes. 
 <p>
 Dans ce tableau, vous pouvez cliquer sur une adresse
 jetable (indiquée par son premier mot) et vous pouvez la modifier pour:
@@ -100,3 +100,16 @@ Ainsi, si votre préfixe est "cowpoke", vous indiqueriez une adresse jetable ain
 Et si vous changez plus tard votre préfixe en "coyote", le préfixe
 "cowpoke" ne marchera plus pour créer de nouvelles adresses. Mais
 les adresses existantes continueront à fonctionner. Si vous supprimez votre préfixe, des adresses jetables peuvent être créées avec ou sans préfixe.
+
+
+<p>
+<b>Nbre de messages par défaut</b>: Quand vous créez une nouvelle adresse jetable sans préciser le nombre, c'est ce "nombre de messages par défault" qui est utilisé pour initialiser le compteur de l'addresse. Par exemple, si votre nombre par défaut vaut 3 et que vous créez l'adresse "salut.spamcowboy@spamgourmet.com" (pas de compteur au milieu), le compteur pour cette adresse sera 3, comme si vous aviez écrit "salut.3.spamcowboy@spamgourmet.com".
+</p>
+
+<p><b>Liste des messages mangés</b>: Si cette option est activée, le système gardera trace les trois derniers messages mangés et affichera leur expéditeur, leur destinataire et leur horodate.</p>
+
+<p><b>Ne pas noter messages mangés pour les adr. cachées</b>: Si cette option est activée, le sytème n'enregistrera pas les messages mangés expédiés à vos adresses cachées. Si vous ne voyez pas l'utilité de ces options, ne les activez pas, car elles engendrent une charge supplémentaire pour le système. C'est aussi pour des raisons de performances que nous ne pouvons garder trace que des trois derniers messages mangés.</p>
+
+<p><b>Ne pas mettre décompte dans sujet</b>: Si vous n'aimez pas le texte supplémentaire entre parenthèses que spamgourmet ajoute dans vos messages (pour vous informer du nombre de messages restants ou du statut autorisé d'un expéditeur), activez cette option. Au lieu d'être dans le sujet, l'information sera alors insérée dans un entête de vos messages, que vous verrez si votre application de courrier électronique affiche les en-têtes SMTP complets.
+
+</p>

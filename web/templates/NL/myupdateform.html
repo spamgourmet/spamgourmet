@@ -1,6 +1,6 @@
 <font face="verdana,arial,helvetica" size=3 color="#000000">
 <p> </p>
-<div align="center">Werk uw weggooibare adressen bij:<br><b><%message%></b><br>
+<div align="center">Werk uw wegwerpadressen bij:<br><b><%message%></b><br>
 <form action="<%action%>" method="post">
 <input type="hidden" name="randomnumber" value=<%randomnumber%>>
 <input type="hidden" name="myemails" value=1>
@@ -13,12 +13,12 @@
 <tr><td>Exclusieve zender <input type="text" name="sender" value="<%sender%>" onFocus="this.select();"></tr>
 
 <tr><td colspan=2 align="center"><input type="radio" name="hidden" value=0 <%isnothidden%>>niet
-    verborgen <input type="radio" name="hidden" value=1 <%ishidden%>>verborgen</td></tr>
+    verbergen <input type="radio" name="hidden" value=1 <%ishidden%>>verbergen</td></tr>
 <tr><td colspan=2 align="center" valign="middle">notitie <textarea cols=40 rows=2 maxlength=254 name="note"><%note%></textarea></td></tr>
 <tr><td colspan=2 align="center"><input type="submit" value="update address"> </td></tr>
 </table>
 </div>
-Gebruik dit formulier om uw overblijvende berichten te bewerken (0-20).  Als u wilt kunt u een exclusieve zender specifieren (door Email adres of domein) deze zullen worden toegestaan om oneindig door het geselecteerde adres te sturen.  Naast je vertrouwde zenders, alleen de exclusieve zenders zullen door het adres kunnen mailen nadat het is verlopen.
+Gebruik dit menu om het aantal berichten op dit ene adres bij te stellen (0-20).  Als je wil, kun je verder een exclusieve zender invullen, het adres al of niet verbergen en een notitie toevoegen.
 <br>
 <input type="hidden" name="searchterms" value="<%searchterms%>">
 </form>
