@@ -2,6 +2,13 @@
 ## $Id: install.txt,v 1.2 2004/05/18 01:55:31 maratheamit Exp $
 ##
 
+(first - if you merely want to *use* the spamgourmet service, stop reading
+this and just go sign up at http://www.spamgourmet.com, or at some other
+site who's administrator didn't stop reading like you're about to do, and
+installed the sofware.  The software's only for if you want to *provide*
+the service).
+
+
 INSTALLATION NOTES
 ------------------
 
@@ -28,7 +35,7 @@ INSTALLATION NOTES
 - Apache
 
 - Sendmail
-	soft link from spameater.pl to /etc/smrsh
+	soft link from spameater to /etc/smrsh
 	specify the soft link name in .forward
 
 - Spamgourmet
