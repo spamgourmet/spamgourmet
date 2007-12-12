@@ -1,7 +1,7 @@
 #!/usr/bin/perl -w
 use strict;
 use vars qw{$thisscript $pagemaker};
-use lib "/path/to/modules";
+use lib "path/to/modules";
 use DBD::mysql;
 use CGI;
 use Digest::MD5 qw(md5_hex);
@@ -801,6 +801,7 @@ sub mainPage {
   my $flags =$pagemaker->new(template=>'flags.html',languageCode=>$session->getLanguageCode());
   $flags->setTags('action',$thisscript);
   my $adsense = '';
+  my $adsensemedrect = '';
   my $explorerkiller = $pagemaker->new(template=>'explorernotkiller')->getContent();
   my $analytics = '';
   my $adsensesmall = '';
@@ -811,6 +812,7 @@ sub mainPage {
 #    $adsensesmall=$pagemaker->new(template=>'adsensesmall')->getContent();
     $explorerkiller = $pagemaker->new(template=>'explorerkiller')->getContent();
     $analytics = $pagemaker->new(template=>'analytics')->getContent();
+    $adsensemedrect = $pagemaker->new(template=>'adsensemedrect',languageCode=>$session->getLanguageCode())->getContent();
   }
   my $loginform =$pagemaker->new(languageCode=>$session->getLanguageCode());
   my $form = $pagemaker->new(languageCode=>$session->getLanguageCode());
@@ -995,6 +997,7 @@ sub mainPage {
    'analytics',$analytics,
    'adsensesmall',$adsensesmall,
    'adsense',$adsense,
+   'adsensemedrect',$adsensemedrect,
    'weekchart',$weekchart,
    'FAQ',$session->getDialog('FAQ'),
    'donate',$session->getDialog('donate'),
@@ -1054,6 +1057,7 @@ sub doUpdates {
         $st = $config->db->prepare($sql);
         $st->execute($hashcode, $uid);
         my $wm = Mail::Spamgourmet::WebMessages->new(config=>$config); 
+        $session->setUserName($u); # this is so "from" email will be correct
         $wm->sendpasswordresetmessage($session, 
                                       $thisscript, 
                                       $re, 
@@ -1079,8 +1083,10 @@ sub doUpdates {
           $st = $config->db->prepare($sql);
           $st->execute($e,$hashcode,$UserID);
           my $wm = Mail::Spamgourmet::WebMessages->new(config=>$config);
+          my $username = $session->getUserName();
+          $username = $session->param('newuser') if !$username;
           $wm->sendconfirmationmessage($session,$thisscript,$e,$hashcode);
-          $msg = $session->getDialog('confirmationsent');
+          $msg = $session->getDialog('confirmationsent', 'adminemail', $config->getAdminEmail($username));
           $session->PendingEmail($e);
         } else {
           $sql = "UPDATE Users SET RealEmail = ?, PendingEmail = ? WHERE UserID = ?;";
@@ -1105,7 +1111,7 @@ sub doUpdates {
       if ($phc) {
         my $wm = Mail::Spamgourmet::WebMessages->new(config=>$config);
         $wm->sendconfirmationmessage($session,$thisscript,$session->PendingEmail,$phc);
-        $msg = $session->getDialog('confirmationsent');
+        $msg = $session->getDialog('confirmationsent', 'adminemail', $config->getAdminEmail($session->getUserName()));
       }
     }
     if (defined($session->param('defaultnumber'))) {
@@ -1211,7 +1217,7 @@ sub getServerStats {
   if (!$gotfromfile) {
     my $vals = '';
 
-    $sql = "SELECT Sum(NumForwarded) AS ForwardCount FROM Users;";
+    $sql = "SELECT NumForwarded AS ForwardCount FROM Counter WHERE CountDate = '0000-00-00';";
     $st = $config->db->prepare($sql);
     $st->execute();
     $st->bind_columns(\%attr,\$stats{'forwardcount'});

@@ -117,6 +117,12 @@ sub getUserName {
   return $self->{'UserName'};
 }
 
+sub setUserName {
+  my $self = shift;
+  my $uname = shift;
+  $self->{'UserName'} = $uname;
+}
+
 sub getWebUtil {
   my $self = shift;
   return $self->{'webutil'};

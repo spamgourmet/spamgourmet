@@ -5,7 +5,7 @@ use vars qw{%localdomains $websessiontimeout $dbstring $dbuser $dbpassword $weba
             $uselocalfilecache $localfilecachetimeout $secretphrase $delimiters
             $captchagenhost $captchagenport $dictionaryfile $admindomain 
             $secureURL $normalURL $secureimageshost $normalimageshost $chartserver
-            $mailhost $useunixaccounts $adminemail $otherdomainemail 
+            $mailhost $useunixaccounts $adminemail $adminaccount $otherdomainemail 
             $numberofeatenmessagestolog $recthrottleinterval $maxreccount
             $sendthrottleinterval $maxsendcount $maxexpireperiod
 
@@ -71,6 +71,7 @@ sub new {
   $self->{'mailhost'} = $mailhost;
   $self->{'useunixaccounts'} = $useunixaccounts;
   $self->{'adminemail'} = $adminemail;
+  $self->{'adminaccount'} = $adminaccount;
   $self->{'otherdomainemail'} = $otherdomainemail;
   $self->{'numberofeatenmessagestolog'} = $numberofeatenmessagestolog;
   $self->{'recthrottleinterval'} = $recthrottleinterval;
@@ -152,9 +153,30 @@ sub useUnixAccounts {
   return $self->{'useunixaccounts'};
 }
 
+#sub getAdminEmail {
+#  my $self = shift;
+#  return $self->{'adminemail'};
+#}
+
 sub getAdminEmail {
   my $self = shift;
-  return $self->{'adminemail'};
+  my $username = shift;
+  my $ret = '';
+  my $adminaccount = $self->getAdminAccount();
+  my $admindomain = $self->getAdminDomain();
+  if ($adminaccount && $admindomain && $username) {
+    $ret = "$username.$adminaccount\@$admindomain";
+  } else {
+    $ret = $self->{'adminemail'};
+  }
+  return $ret;
+}
+
+
+
+sub getAdminAccount {
+  my $self = shift;
+  return $self->{'adminaccount'};
 }
 
 sub getOtherDomainEmail {

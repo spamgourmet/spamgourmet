@@ -31,13 +31,13 @@ sub sendpasswordresetmessage {
                                           languageCode=>$session->getLanguageCode());
 
   $body->setTags('url',$url,'username',$session->{'UserName'});
-  my $msg = "From: " . $self->getConfig()->getAdminEmail() . "\n";
+  my $adminemail = $self->getConfig()->getAdminEmail($session->getUserName());
+  my $msg = "From: " . $adminemail . "\n";
   $msg .= "Subject: $subject\nMIME-Version: 1.0\nContent-Type: text/plain; charset=\"utf-8\"\n";
   $msg .= $body->getContent();
-  $self->{'mailer'}->sendMail(\$msg, $newaddress, $self->getConfig()->getAdminEmail());
+  $self->{'mailer'}->sendMail(\$msg, $newaddress, $adminemail);
 #  $self->{'config'}->debug("sent password reset message");
 }
-
 
 
 sub sendconfirmationmessage {
@@ -53,10 +53,11 @@ sub sendconfirmationmessage {
    languageCode=>$session->getLanguageCode());
 
   $body->setTags('url',$url,'newaddress',$newaddress);
-  my $msg = "From: " . $self->getConfig()->getAdminEmail() . "\n";
+  my $adminemail = $self->getConfig()->getAdminEmail($session->getUserName());
+  my $msg = "From: " . $adminemail . "\n";
   $msg .= "Subject: $subject\nMIME-Version: 1.0\nContent-Type: text/plain; charset=\"utf-8\"\n";
   $msg .= $body->getContent();
-  $self->{'mailer'}->sendMail(\$msg, $newaddress, $self->getConfig()->getAdminEmail());
+  $self->{'mailer'}->sendMail(\$msg, $newaddress, $adminemail);
 }
 
 sub getConfig {
