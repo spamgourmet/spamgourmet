@@ -1,7 +1,7 @@
 #!/usr/bin/perl -w
 use strict;
 use vars qw{$thisscript $pagemaker};
-use lib "path/to/modules";
+use lib "/path/to/modules";
 use DBD::mysql;
 use CGI;
 use Digest::MD5 qw(md5_hex);
@@ -1084,7 +1084,9 @@ sub doUpdates {
           $st->execute($e,$hashcode,$UserID);
           my $wm = Mail::Spamgourmet::WebMessages->new(config=>$config);
           my $username = $session->getUserName();
+          $username = $session->param('user') if !$username;
           $username = $session->param('newuser') if !$username;
+          $session->setUserName($username); #for the case where it's not set
           $wm->sendconfirmationmessage($session,$thisscript,$e,$hashcode);
           $msg = $session->getDialog('confirmationsent', 'adminemail', $config->getAdminEmail($username));
           $session->PendingEmail($e);
