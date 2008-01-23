@@ -31,12 +31,13 @@ sub sendpasswordresetmessage {
                                           languageCode=>$session->getLanguageCode());
 
   $body->setTags('url',$url,'username',$session->{'UserName'});
-  my $adminemail = $self->getConfig()->getAdminEmail($session->getUserName());
+  my $adminemail = $self->getConfig()->getAdminEmail($self->rot13($session->getUserName()));
   my $msg = "From: " . $adminemail . "\n";
   $msg .= "Subject: $subject\nMIME-Version: 1.0\nContent-Type: text/plain; charset=\"utf-8\"\n";
   $msg .= $body->getContent();
   $self->{'mailer'}->sendMail(\$msg, $newaddress, $adminemail);
 #  $self->{'config'}->debug("sent password reset message");
+  return $adminemail;
 }
 
 
@@ -53,12 +54,21 @@ sub sendconfirmationmessage {
    languageCode=>$session->getLanguageCode());
 
   $body->setTags('url',$url,'newaddress',$newaddress);
-  my $adminemail = $self->getConfig()->getAdminEmail($session->getUserName());
+  my $adminemail = $self->getConfig()->getAdminEmail($self->rot13($session->getUserName()));
   my $msg = "From: " . $adminemail . "\n";
   $msg .= "Subject: $subject\nMIME-Version: 1.0\nContent-Type: text/plain; charset=\"utf-8\"\n";
   $msg .= $body->getContent();
   $self->{'mailer'}->sendMail(\$msg, $newaddress, $adminemail);
+  return $adminemail;
 }
+
+sub rot13 { # used to help make the reply addresses for confirms
+  my $self = shift;
+  my $str = shift;
+  $str =~ y/A-Za-z/N-ZA-Mn-za-m/;
+  return $str;
+}
+
 
 sub getConfig {
   my $self = shift;

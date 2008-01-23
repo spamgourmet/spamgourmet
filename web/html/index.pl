@@ -1087,8 +1087,8 @@ sub doUpdates {
           $username = $session->param('user') if !$username;
           $username = $session->param('newuser') if !$username;
           $session->setUserName($username); #for the case where it's not set
-          $wm->sendconfirmationmessage($session,$thisscript,$e,$hashcode);
-          $msg = $session->getDialog('confirmationsent', 'adminemail', $config->getAdminEmail($username));
+          my $adminemail = $wm->sendconfirmationmessage($session,$thisscript,$e,$hashcode);
+          $msg = $session->getDialog('confirmationsent', 'adminemail', $adminemail);
           $session->PendingEmail($e);
         } else {
           $sql = "UPDATE Users SET RealEmail = ?, PendingEmail = ? WHERE UserID = ?;";
@@ -1112,8 +1112,8 @@ sub doUpdates {
       $st->fetch();
       if ($phc) {
         my $wm = Mail::Spamgourmet::WebMessages->new(config=>$config);
-        $wm->sendconfirmationmessage($session,$thisscript,$session->PendingEmail,$phc);
-        $msg = $session->getDialog('confirmationsent', 'adminemail', $config->getAdminEmail($session->getUserName()));
+        my $adminemail = $wm->sendconfirmationmessage($session,$thisscript,$session->PendingEmail,$phc);
+        $msg = $session->getDialog('confirmationsent', 'adminemail', $adminemail);
       }
     }
     if (defined($session->param('defaultnumber'))) {
