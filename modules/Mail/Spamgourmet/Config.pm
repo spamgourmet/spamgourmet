@@ -6,7 +6,7 @@ use vars qw{%localdomains $websessiontimeout $dbstring $dbuser $dbpassword $weba
             $captchagenhost $captchagenport $dictionaryfile $admindomain 
             $secureURL $normalURL $secureimageshost $normalimageshost $chartserver
             $mailhost $useunixaccounts $adminemail $adminaccount $otherdomainemail 
-            $numberofeatenmessagestolog $recthrottleinterval $maxreccount
+            $numberofeatenmessagestolog $recthrottleinterval $maxreccount $recthrottleoffperiod
             $sendthrottleinterval $maxsendcount $maxexpireperiod
 
             $mailerclass
@@ -76,6 +76,7 @@ sub new {
   $self->{'numberofeatenmessagestolog'} = $numberofeatenmessagestolog;
   $self->{'recthrottleinterval'} = $recthrottleinterval;
   $self->{'maxreccount'} = $maxreccount;
+  $self->{'recthrottleoffperiod'} = $recthrottleoffperiod;
   $self->{'sendthrottleinterval'} = $sendthrottleinterval;
   $self->{'maxsendcount'} = $maxsendcount;
   $self->{'delimiters'} = $delimiters;
@@ -134,6 +135,10 @@ sub getMaxRecCount {
   my $self = shift;
   return $self->{'maxreccount'};
 }
+sub getRecThrottleOffPeriod {
+  my $self = shift;
+  return $self->{'recthrottleoffperiod'};
+}
 sub getSendThrottleInterval {
   my $self = shift;
   return $self->{'sendthrottleinterval'};
@@ -169,6 +174,7 @@ sub getAdminEmail {
   } else {
     $ret = $self->{'adminemail'};
   }
+  $self->debug("username: $username; adminaccount: $adminaccount; admindomain: $admindomain; ret: $ret");
   return $ret;
 }
 
