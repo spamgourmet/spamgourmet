@@ -1,7 +1,7 @@
 #!/usr/bin/perl -w
 use strict;
 use vars qw{$thisscript $pagemaker};
-use lib "/path/to/modules";
+use lib "/var/www/modules";
 use DBD::mysql;
 use CGI;
 use Digest::MD5 qw(md5_hex);
@@ -23,6 +23,7 @@ Mail::Spamgourmet::Page->setGlobalConfig($config);
 $pagemaker = Mail::Spamgourmet::Page->new();
 
 $| = 1;
+
 
 if ($session->param('xml')) {
   &printMyXml($config,$session,$util);
@@ -669,7 +670,7 @@ sub mainPage {
   my $util = shift;
   my ($msg,$pendingmsg,$sendercount,$watchwordcount,$serverstats,
    $maskforwardon,$maskforwardoff,$watchwordson,$watchwordsoff,
-   $emlon,$emloff,$dlhmon,$dlhmoff,$hston,$hstoff,
+   $emlon,$emloff,$dlhmon,$dlhmoff,$hston,$hstoff,$tsoon,$tsooff,
    $todaycount,$counterID,$weekchart,$normallink,$securelink);
   my ($Senders,$Watchwords);
   my ($sql,$st,%attr);
@@ -780,6 +781,14 @@ sub mainPage {
   } else {
     $hston = "";
     $hstoff = "CHECKED";
+  }
+# hide for trusted/exclusiveonly setting
+  if ($session->hasFeature('DISABLETAGLINETRUSTEDEXCLUSIVE')) {
+    $tsoon = "CHECKED";
+    $tsooff = "";
+  } else {
+    $tsoon = "";
+    $tsooff = "CHECKED";
   }
 
 
@@ -966,7 +975,9 @@ sub mainPage {
       'eatenmessagelog', $session->getDialog('eatenmessagelog'),
       'emlon',$emlon,'emloff',$emloff,
       'hidesubjecttagline', $session->getDialog('hidesubjecttagline'),
+      'hidefortsonly', $session->getDialog('hidefortsonly'),
       'hston',$hston,'hstoff',$hstoff,
+      'tsoon',$tsoon,'tsooff',$tsooff,
       'dontloghiddenaddresses', $session->getDialog('dontloghiddenaddresses'),
       'dlhmon', $dlhmon, 'dlhmoff', $dlhmoff,
       'go', $session->getDialog('go'));
@@ -1167,18 +1178,29 @@ sub doUpdates {
 
     if ($session->param('addFeature')) {
       $session->addFeature($session->param('addFeature'));
+### need special logic for tagline for trusted/excl, because it's currently dependent on the main hide feature
+      if ($session->param('addFeature') == $config->getFeature('DISABLETAGLINETRUSTEDEXCLUSIVE')) {
+        $session->addFeature($config->getFeature('DISABLETAGLINE'));
+      }
       $sql = "UPDATE Users SET Features = ? WHERE UserID = ?;";
       $st = $config->db->prepare($sql);
       $st->execute($session->getFeatures(),$UserID);
     }
-    if ($session->param('removeFeature')) {
-      $session->removeFeature($session->param('removeFeature'));
-      $sql = "UPDATE Users SET Features = ? WHERE UserID = ?;";
-      $st = $config->db->prepare($sql);
-      $st->execute($session->getFeatures(),$UserID);
-    }
+
+# commenting this out - don't think it's used
+#    if ($session->param('removeFeature')) {
+#      $session->removeFeature($session->param('removeFeature'));
+#      $sql = "UPDATE Users SET Features = ? WHERE UserID = ?;";
+#      $st = $config->db->prepare($sql);
+#      $st->execute($session->getFeatures(),$UserID);
+#    }
+
     if ($session->param('clearFeature')) {
       $session->clearFeature($session->param('clearFeature'));
+### need special logic for tagline for trusted/excl, because it's currently dependent on the main hide feature
+      if ($session->param('clearFeature') == $config->getFeature('DISABLETAGLINE')) {
+        $session->clearFeature($config->getFeature('DISABLETAGLINETRUSTEDEXCLUSIVE'));
+      }
       $sql = "UPDATE Users SET Features = ? WHERE UserID = ?;";
       $st = $config->db->prepare($sql);
       $st->execute($session->getFeatures(),$UserID);

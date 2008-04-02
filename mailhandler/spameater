@@ -21,7 +21,6 @@
 use strict;
 use lib "/path/to/modules";
 use Mail::Spamgourmet::Config;
-
 # these dependencies are listed here for reference -- they're loaded later on an as-needed basis:
 #use DBD::mysql;
 #use Digest::MD5 qw(md5_hex);
@@ -50,7 +49,8 @@ my (
  $Prefix,$EmailID,$InitialCount,$Count,$UserID,$ExpireTime,
  $RealEmail,$SpamEmail,$Sender,$Features,$updatelog,$useXHeader, $Hidden,
  $connected, $connectTries, $interval,$DefaultNumber,
- $RecThrottleTime, $RecThrottleCount, $SendThrottleTime, $SendThrottleCount
+ $RecThrottleTime, $RecThrottleCount, 
+ $SendThrottleTime, $SendThrottleCount
  );
 
 my $extradebug = 0;
@@ -266,12 +266,16 @@ foreach $for (keys %deliveryAddresses) {
           $st->execute($SendThrottleTime, $SendThrottleCount, $UserID);
         } else {
           $config->debug("send throttle is in effect: stt: $SendThrottleTime, stc: $SendThrottleCount, userID: $UserID");
+          $sql = "UPDATE Users SET Features = (Features * 13) WHERE UserID = ?";
+          $st = $config->db->prepare($sql);
+          $st->execute($UserID);
+          $config->debug("disabled user $musername ($UserID) due to SendThrottle");
         }
       } else {
-        $config->debug("skipping an attempted send: checkTo: $checkTo, checkFrom: $checkFrom, checkFrom1: $checkFrom1, userID: $UserID");
+        $config->debug("skipping an attempted send: checkTo: $checkTo, checkFrom: $checkFrom, checkFrom1: $checkFrom1, userID: $musername($UserID)");
       }
     } else {
-      $config->debug("skipping an attempted send for disabled user: $UserID");
+      $config->debug("skipping an attempted send for disabled user: $musername ($UserID)");
     }
     next; # move on to the next recipient 
   }
@@ -382,10 +386,10 @@ foreach $for (keys %deliveryAddresses) {
   }
   # check rec throttle
   if ($UserID 
-   && ($RecThrottleCount > $config->getMaxRecCount() 
-   && ($RecThrottleTime > $now - $config->getRecThrottleInterval()))) {
+   && ($RecThrottleCount > $config->getMaxRecCount())
+   && ($RecThrottleTime > $now - $config->getRecThrottleOffPeriod())
+   ) {
   #  $config->debug("skipping...   rec throttle exceeded for username $musername (ID: $UserID)");
-  #  $config->debug("subject: $subject");
     next; # skip this one
   }
   # proceed only if a) it's for a real user, b) the user at least might have
@@ -574,6 +578,14 @@ foreach $for (keys %deliveryAddresses) {
           &sendMail($config,$useXHeader,$RealEmail,\$msg,$subjecttext,$subfrom,$subreplyto);
           &setCount($util,$UserID,$EmailID,1,$RecThrottleTime,$RecThrottleCount);
         } else {
+###ADDED Syskoll 2008-03-30
+## If here, the user has watchwords enabled AND
+## the email is not sent because its address does not match a watchword
+## Turn off logging if we don't log for hidden
+
+          $updatelog = ! $util->hasFeature('DONOTLOGHIDDEN',$Features);
+
+##End ADDED Syskoll 2008-03-30
           &sendMail($config,$useXHeader,$SpamEmail,\$msg,
            " ($mword - EATEN by spamgourmet: word does not match watchwords)",
            $subfrom,$subreplyto) if $SpamEmail;
