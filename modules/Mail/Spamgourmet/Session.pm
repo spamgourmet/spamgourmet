@@ -141,10 +141,11 @@ sub getNewImageFilename {
   my $self = shift;
   my $quizword = shift;
   my $fn = '';
-  use IO::Socket::INET;
   # Define $RmtPort and $RmtHost, remote port and host of server
   my $RmtHost =  $self->{'config'}->getCaptchagenHost();
+  return 'nocaptcha' unless $RmtHost;
   my $RmtPort = $self->{'config'}->getCaptchagenPort();
+  use IO::Socket::INET;
   my $socket = IO::Socket::INET
       ->new(PeerAddr => $RmtHost,
        PeerPort => $RmtPort,
@@ -170,6 +171,7 @@ sub getNewImageFilename {
 
 sub getImageWord {
   my $self = shift;
+  return 'nocaptcha' unless $self->{'config'}->getCaptchagenHost();
   my $quizword = '';
   open DICT, $self->{'config'}->{'dictionaryfile'} or die "Cannot read dictionary file: $!";
   seek DICT, 0, 2; # Go to end of file
@@ -447,7 +449,7 @@ sub newuser {
 
   } else {
     my $newhash = $self->getNewImageHash($u,$iw); #make a new hash from the user input to see if it matches the old
-    if ($newhash ne $ih) {
+    if ($self->{'config'}->getCaptchagenHost() && $newhash ne $ih) {
       $self->{'loginmsg'} = $self->{'dialogs'}->get('imagewordmismatch');
       my $word = $self->getImageWord();
       $self->{'imagefilename'} = $self->getNewImageFilename($word);

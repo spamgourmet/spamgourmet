@@ -1,7 +1,7 @@
 #!/usr/bin/perl -w
 use strict;
 use vars qw{$thisscript $pagemaker};
-use lib "/var/www/modules";
+use lib "/path/to/modules";
 use DBD::mysql;
 use CGI;
 use Digest::MD5 qw(md5_hex);
@@ -23,7 +23,6 @@ Mail::Spamgourmet::Page->setGlobalConfig($config);
 $pagemaker = Mail::Spamgourmet::Page->new();
 
 $| = 1;
-
 
 if ($session->param('xml')) {
   &printMyXml($config,$session,$util);
@@ -245,7 +244,8 @@ sub printMyXml {
 sub getSignUpForm {
   my $config = shift;
   my $session = shift;
-  my $page =$pagemaker->new(config=>$config,languageCode=>$session->getLanguageCode(),template=>'signupform.html');
+  my $signupformtemplate = $config->getCaptchagenHost() ? 'signupform.html' : 'signupformnocaptcha.html';
+  my $page =$pagemaker->new(config=>$config,languageCode=>$session->getLanguageCode(),template=>$signupformtemplate);
   $page->setTags('imagefilename',$session->getImageFileName(),
                  'loginmsg', $session->{'loginmsg'},
                  'action', $thisscript,

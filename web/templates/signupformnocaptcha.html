@@ -1,0 +1,35 @@
+<div align="center">
+<p><%loginmsg%></p>
+</div>
+
+<form name="newuserform" action="<%action%>" method="post" onSubmit="return checkNewUserForm(this);">
+
+
+
+<input type="hidden" name="newuser" value="<%newuser%>">
+<input type="hidden" name="realemail" value="<%realemail%>">
+<input type="hidden" name="saverealemail" value=1>
+<input type="hidden" name="imageword" value=1>
+
+<div align="center">
+<table>
+
+<tr><td colspan=2>
+<%providepassword%>
+</td></tr>
+<tr><td>
+
+<%newpass%>
+
+</td><td><input type=password name="newpass" size=10 onFocus="this.select();"></td></tr>
+<tr><td>
+
+<%confirm%>
+
+</td><td><input type=password name="confirm" size=10 onFocus="this.select();"></td></tr>
+
+<tr><td colspan=2 align="center"><input type="submit" value="<%go%>"></td></tr>
+</table>
+
+</div>
+</form>
