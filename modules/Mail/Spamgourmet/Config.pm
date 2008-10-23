@@ -7,8 +7,8 @@ use vars qw{%localdomains $websessiontimeout $dbstring $dbuser $dbpassword $weba
             $secureURL $normalURL $secureimageshost $normalimageshost $chartserver
             $mailhost $useunixaccounts $adminemail $adminaccount $otherdomainemail 
             $numberofeatenmessagestolog $recthrottleinterval $maxreccount $recthrottleoffperiod
-            $sendthrottleinterval $maxsendcount $maxexpireperiod
-
+            $sendthrottleinterval $maxsendcount $maxexpireperiod $newaddressthrottle
+	    $niceness 
             $mailerclass
 
             %FEATURES $_configFileLoaded};
@@ -35,6 +35,11 @@ sub new {
     my $configfile = $params{'configfile'};
     require "$configfile";
     $_configFileLoaded = 1;
+  }
+
+  if ($niceness) {  # if niceness has been set in config, then nice self
+    use POSIX qw ( nice );
+    nice($niceness);
   }
 
   if (defined($params{'mode'})) {
@@ -79,6 +84,7 @@ sub new {
   $self->{'recthrottleoffperiod'} = $recthrottleoffperiod;
   $self->{'sendthrottleinterval'} = $sendthrottleinterval;
   $self->{'maxsendcount'} = $maxsendcount;
+  $self->{'newaddressthrottle'} = $newaddressthrottle;
   $self->{'delimiters'} = $delimiters;
 
   $self->{'mailerclass'} = $mailerclass;
@@ -146,6 +152,11 @@ sub getSendThrottleInterval {
 sub getMaxSendCount {
   my $self = shift;
   return $self->{'maxsendcount'};
+}
+
+sub getNewAddressThrottle {
+  my $self = shift;
+  return $self->{'newaddressthrottle'};
 }
 
 sub getMailHost {

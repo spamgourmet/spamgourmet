@@ -50,7 +50,7 @@ my (
  $RealEmail,$SpamEmail,$Sender,$Features,$updatelog,$useXHeader, $Hidden,
  $connected, $connectTries, $interval,$DefaultNumber,
  $RecThrottleTime, $RecThrottleCount, 
- $SendThrottleTime, $SendThrottleCount
+ $SendThrottleTime, $SendThrottleCount, $LatestAddressTimeAdded
  );
 
 my $extradebug = 0;
@@ -390,6 +390,7 @@ foreach $for (keys %deliveryAddresses) {
    && ($RecThrottleTime > $now - $config->getRecThrottleOffPeriod())
    ) {
   #  $config->debug("skipping...   rec throttle exceeded for username $musername (ID: $UserID)");
+
     next; # skip this one
   }
   # proceed only if a) it's for a real user, b) the user at least might have
@@ -495,103 +496,119 @@ foreach $for (keys %deliveryAddresses) {
       } elsif ((!$Count || $Count >=0 || $mexpiretime) 
        && (!$Prefix || $mprefix eq $Prefix)) {  ## new address for the user
 
-        if ($util->hasFeature('WATCHWORDS',$Features)) {
-          my $watchword;
-          $sql = "SELECT Watchword FROM Watchwords WHERE UserID = ?;";
-          $st = $config->db->prepare($sql);
-          $st->execute($UserID);
-          $st->bind_columns(\%attr,\$watchword);
-          while ($st->fetch()) {
-            push @Watchwords, $watchword;
-          }
-        }
+        # first, check the new address throttle:
+        $sql = "SELECT MAX(TimeAdded) FROM Emails WHERE UserID = ?;";
+        $st = $config->db->prepare($sql);
+        $st->execute($UserID);
+        $st->bind_columns(\%attr,\$LatestAddressTimeAdded);
+        $st->fetch();
 
-        if (!@Watchwords || $util->containsOne($mword,@Watchwords)) {
-          $Sender = '';
-          my $icount = 0;
-          if ($trusted) {
-            if (!$mexpiretime) {
-              $mcount = 20 if $mcount > 20;
-              if ($mcount eq '+' || $mcount eq '*' 
-               || $mcount =~ /sender/i || $mcount =~ /domain/i) {
+        if ($now - $config->getNewAddressThrottle() > $LatestAddressTimeAdded) {
+          if ($util->hasFeature('WATCHWORDS',$Features)) {
+            my $watchword;
+            $sql = "SELECT Watchword FROM Watchwords WHERE UserID = ?;";
+            $st = $config->db->prepare($sql);
+            $st->execute($UserID);
+            $st->bind_columns(\%attr,\$watchword);
+            while ($st->fetch()) {
+              push @Watchwords, $watchword;
+            }
+          }
+
+          if (!@Watchwords || $util->containsOne($mword,@Watchwords)) {
+            $Sender = '';
+            my $icount = 0;
+            if ($trusted) {
+              if (!$mexpiretime) {
+                $mcount = 20 if $mcount > 20;
+                if ($mcount eq '+' || $mcount eq '*' 
+                 || $mcount =~ /sender/i || $mcount =~ /domain/i) {
+                  $mcount = 0;
+                }
+                $icount = $mcount;
+              } else {
                 $mcount = 0;
+                $ExpireTime = $util->getExpireTime($mexpiretime, $now);
               }
-              $icount = $mcount;
-            } else {
+              $subjecttext= " (trusted: $trusted)";
+            } elsif ($mcount eq '+' || $mcount =~ /sender/i) {
               $mcount = 0;
+              $Sender = $from;
+              $subjecttext = " ($mword exclusive: $from)";
+            } elsif ($mcount eq '*' || $mcount =~ /domain/i) {
+              $mcount = 0;
+              $Sender = $fromdomain;
+              $subjecttext = 
+               " ($mword exclusive: $fromdomain)";
+            } elsif ($mexpiretime) {
               $ExpireTime = $util->getExpireTime($mexpiretime, $now);
-            }
-            $subjecttext= " (trusted: $trusted)";
-          } elsif ($mcount eq '+' || $mcount =~ /sender/i) {
-            $mcount = 0;
-            $Sender = $from;
-            $subjecttext = " ($mword exclusive: $from)";
-          } elsif ($mcount eq '*' || $mcount =~ /domain/i) {
-            $mcount = 0;
-            $Sender = $fromdomain;
-            $subjecttext = 
-             " ($mword exclusive: $fromdomain)";
-          } elsif ($mexpiretime) {
-            $ExpireTime = $util->getExpireTime($mexpiretime, $now);
-            if ($ExpireTime) {
-              my $displayDate = $util->formatNumDate($ExpireTime, 1);
-              $subjecttext = " ($mword: expires $displayDate)";
+              if ($ExpireTime) {
+                my $displayDate = $util->formatNumDate($ExpireTime, 1);
+                $subjecttext = " ($mword: expires $displayDate)";
+              } else {
+                $subjecttext = " ($mword: invalid date $mcount)";
+              } 
             } else {
-              $subjecttext = " ($mword: invalid date $mcount)";
-            } 
-          } else {
-            $mcount = 20 if $mcount > 20;
-            $subjecttext = " ($mword: message 1 of $mcount";
-            $subjecttext .= " -last one!-" if $mcount == 1;
-            $subjecttext .= ")";
-            $icount = $mcount;
-            $mcount --;
-          }
-    
-          $PrivateHash = md5_hex($UserID . rand() . $now . $config->getSecretPhrase());
-
-          if ($config->isLocalDomain($todomain)) {
-            $for =~ s/\@.*/\@$todomain/;
-          }
-          $sql = "INSERT INTO Emails 
-           (UserID,Prefix,Word,InitialCount,Count,TimeAdded,
-            Sender,Address,PrivateHash,NumForwarded,ExpireTime) 
-            VALUES (?,?,?,?,?,?,?,?,?,?,?)";
-          $st = $config->db->prepare($sql);
-          $st->execute($UserID,$mprefix,$mword,$icount,
-           $mcount,$now,$Sender,$for,$PrivateHash,1,$ExpireTime);
-
-          if ($util->hasFeature('MASKFORWARD', $Features)) {
-            $subfrom = $util->getRedirectedAddress($from,
-                                                   $mword,
-                                                   $musername,
-                                                   $PrivateHash,
-                                                   $fromname);
-            if ($replyto) {
-              $subreplyto = $util->getRedirectedAddress($replyto,
-                                                        $mword,
-                                                        $musername,
-                                                        $PrivateHash,
-                                                        $replytoname);
+              $mcount = 20 if $mcount > 20;
+              $subjecttext = " ($mword: message 1 of $mcount";
+              $subjecttext .= " -last one!-" if $mcount == 1;
+              $subjecttext .= ")";
+              $icount = $mcount;
+              $mcount --;
             }
-          }
-          &sendMail($config,$useXHeader,$RealEmail,\$msg,$subjecttext,$subfrom,$subreplyto);
-          &setCount($util,$UserID,$EmailID,1,$RecThrottleTime,$RecThrottleCount);
-        } else {
+    
+            $PrivateHash = md5_hex($UserID . rand() . $now . $config->getSecretPhrase());
+
+            if ($config->isLocalDomain($todomain)) {
+              $for =~ s/\@.*/\@$todomain/;
+            }
+            $sql = "INSERT INTO Emails 
+             (UserID,Prefix,Word,InitialCount,Count,TimeAdded,
+              Sender,Address,PrivateHash,NumForwarded,ExpireTime) 
+              VALUES (?,?,?,?,?,?,?,?,?,?,?)";
+            $st = $config->db->prepare($sql);
+            $st->execute($UserID,$mprefix,$mword,$icount,
+             $mcount,$now,$Sender,$for,$PrivateHash,1,$ExpireTime);
+
+            if ($util->hasFeature('MASKFORWARD', $Features)) {
+              $subfrom = $util->getRedirectedAddress($from,
+                                                     $mword,
+                                                     $musername,
+                                                     $PrivateHash,
+                                                     $fromname);
+              if ($replyto) {
+                $subreplyto = $util->getRedirectedAddress($replyto,
+                                                          $mword,
+                                                          $musername,
+                                                          $PrivateHash,
+                                                          $replytoname);
+              }
+            }
+            &sendMail($config,$useXHeader,$RealEmail,\$msg,$subjecttext,$subfrom,$subreplyto);
+            &setCount($util,$UserID,$EmailID,1,$RecThrottleTime,$RecThrottleCount);
+          } else {
 ###ADDED Syskoll 2008-03-30
 ## If here, the user has watchwords enabled AND
 ## the email is not sent because its address does not match a watchword
 ## Turn off logging if we don't log for hidden
 
-          $updatelog = ! $util->hasFeature('DONOTLOGHIDDEN',$Features);
+            $updatelog = ! $util->hasFeature('DONOTLOGHIDDEN',$Features);
 
 ##End ADDED Syskoll 2008-03-30
-          &sendMail($config,$useXHeader,$SpamEmail,\$msg,
-           " ($mword - EATEN by spamgourmet: word does not match watchwords)",
-           $subfrom,$subreplyto) if $SpamEmail;
-          &setCount($util,$UserID,$EmailID,0,$RecThrottleTime,$RecThrottleCount,
-           $from,$mword,$updatelog);  
-        }
+            &sendMail($config,$useXHeader,$SpamEmail,\$msg,
+             " ($mword - EATEN by spamgourmet: word does not match watchwords)",
+             $subfrom,$subreplyto) if $SpamEmail;
+            &setCount($util,$UserID,$EmailID,0,$RecThrottleTime,$RecThrottleCount,
+             $from,$mword,$updatelog);  
+          }
+        } else {
+$config->debug("skipping address creaton due to throttle for $musername");
+            &sendMail($config,$useXHeader,$SpamEmail,\$msg,
+             " ($mword - EATEN by spamgourmet: new address throttle exceeded)",
+             $subfrom,$subreplyto) if $SpamEmail;
+            &setCount($util,$UserID,$EmailID,0,$RecThrottleTime,$RecThrottleCount,
+             $from,$mword,$updatelog);
+        } 
       } else {
         my $reason = 'missing or invalid prefix';
         $reason = 'address disabled' if $Count < 0;
