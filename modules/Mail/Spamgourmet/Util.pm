@@ -147,6 +147,7 @@ sub getAddressAndDisplay {
   while (@parts) {
     $part = shift(@parts);
     if ($part =~ /\@/ && $part !~ /\"/) {
+      $addr =~ s/\;//g;
       $addr = $part;
     } else {
       push (@display, $part);
@@ -280,6 +281,10 @@ sub getExpireTime {
   $parts[1]--;
   my $expiretime;
   eval "use Time::Local;";
+  # Jan Lellmann - fix for September 9 - thanks!
+  $parts[0] =~ s/^0+//;
+  $parts[1] =~ s/^0//;
+  $parts[2] =~ s/^0//;
   eval "timelocal(0,0,0,$parts[2],$parts[1],$parts[0]);";
   if (!$@) {
     $expiretime = timelocal(0,0,0,$parts[2],$parts[1],$parts[0]);
