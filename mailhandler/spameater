@@ -51,7 +51,7 @@ my (
  $RealEmail,$SpamEmail,$Sender,$Features,$updatelog,$useXHeader, $Hidden,
  $connected, $connectTries, $interval,$DefaultNumber,
  $RecThrottleTime, $RecThrottleCount, 
- $SendThrottleTime, $SendThrottleCount, $LatestAddressTimeAdded
+ $SendThrottleTime, $SendThrottleCount
  );
 
 
@@ -521,13 +521,14 @@ foreach $for (keys %deliveryAddresses) {
        && (!$Prefix || $mprefix eq $Prefix)) {  ## new address for the user
 
         # first, check the new address throttle:
-        $sql = "SELECT MAX(TimeAdded) FROM Emails WHERE UserID = ?;";
+        my $natt = $now - $config->getNewAddressThrottleTime();
+        $sql = "SELECT Count(EmailID) FROM Emails WHERE UserID = ? AND TimeAdded > ?;";
         $st = $config->db->prepare($sql);
-        $st->execute($UserID);
-        $st->bind_columns(\%attr,\$LatestAddressTimeAdded);
+        $st->execute($UserID,$natt);
+        $st->bind_columns(\%attr,\$natt);
         $st->fetch();
 
-        if ($now - $config->getNewAddressThrottle() > $LatestAddressTimeAdded) {
+        if ($config->getNewAddressThrottleCount() > $natt) {
           if ($util->hasFeature('WATCHWORDS',$Features)) {
             my $watchword;
             $sql = "SELECT Watchword FROM Watchwords WHERE UserID = ?;";

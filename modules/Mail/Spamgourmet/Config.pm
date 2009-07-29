@@ -7,7 +7,8 @@ use vars qw{%localdomains $websessiontimeout $dbstring $dbuser $dbpassword $weba
             $secureURL $normalURL $secureimageshost $normalimageshost $chartserver
             $mailhost $useunixaccounts $adminemail $adminaccount $otherdomainemail 
             $numberofeatenmessagestolog $recthrottleinterval $maxreccount $recthrottleoffperiod
-            $sendthrottleinterval $maxsendcount $maxexpireperiod $newaddressthrottle
+            $sendthrottleinterval $maxsendcount $maxexpireperiod 
+            $newaddressthrottle $newaddressthrottletime $newaddressthrottlecount
 	    $niceness 
             $mailerclass
 
@@ -85,6 +86,8 @@ sub new {
   $self->{'sendthrottleinterval'} = $sendthrottleinterval;
   $self->{'maxsendcount'} = $maxsendcount;
   $self->{'newaddressthrottle'} = $newaddressthrottle;
+  $self->{'newaddressthrottletime'} = $newaddressthrottletime;
+  $self->{'newaddressthrottlecount'} = $newaddressthrottlecount;
   $self->{'delimiters'} = $delimiters;
 
   $self->{'mailerclass'} = $mailerclass;
@@ -158,6 +161,17 @@ sub getNewAddressThrottle {
   my $self = shift;
   return $self->{'newaddressthrottle'};
 }
+
+sub getNewAddressThrottleTime {
+  my $self = shift;
+  return $self->{'newaddressthrottletime'};
+}
+
+sub getNewAddressThrottleCount {
+  my $self = shift;
+  return $self->{'newaddressthrottlecount'};
+}
+
 
 sub getMailHost {
   my $self = shift;

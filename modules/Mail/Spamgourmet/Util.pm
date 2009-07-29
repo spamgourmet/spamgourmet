@@ -125,7 +125,8 @@ sub getRedirectedAddress {
   my $hash = $self->getShortHash($addr,$key);
   my $raddr = '+' . $word . '+' . $user . '+' . $hash . '.' . $addr . '@' . $host;
   if ($name && length($raddr) < 80) {
-    $raddr = $name . ' <' . $raddr . '>';
+    $raddr = "\"$name\"" . ' <' . $raddr . '>';
+#    $raddr = $name . ' <' . $raddr . '>';
   }
   return $raddr;
 }
