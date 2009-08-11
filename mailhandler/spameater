@@ -78,11 +78,15 @@ $headerTokens{'messageid'} = 'Message-ID';
 
 if ($ENV{'RECIPIENT'}) { # Exim
   $headerValues{'to'} = $ENV{'RECIPIENT'};
-  $headerValues{'from'} = $ENV{'SENDER'};
+  $headerValues{'namedTo'} = $ENV{'TO'};
+  $headerValues{'from'} = $ENV{'FROM'};
+  $headerValues{'sender'} = $ENV{'SENDER'};
   $headerValues{'replyto'} = $ENV{'REPLYTO'};
   $inHeaders = 0; # got relevant info from environment - yay!
 }
 
+#$config->debug("to: " . $headerValues{'to'});
+#$config->debug("namedTo: " . $headerValues{'namedTo'});
 
 while (defined($line = <STDIN>)) {
   $msg .= $line;  # accumulate message line by line into $msg variable
@@ -157,6 +161,7 @@ $mailer = $config->getMailer();
 ## clean up the from, to, and for chunks, hopefully leaving just the addresses
 ($from, $fromname) = $util->getAddressAndDisplay($headerValues{'from'}, 1);
 ($replyto, $replytoname) = $util->getAddressAndDisplay($headerValues{'replyto'}, 1);
+($headerValues{'namedTo'},undef) = $util->getAddressAndDisplay($headerValues{'namedTo'}, 1);
     
 $allRecipients = $for . ',' . $headerValues{'to'} . ',' . $headerValues{'cc'};
 
@@ -198,8 +203,6 @@ if ($config->isLocalDomain($fromdomain)) {
    || $from =~ /^webmaster@/i
    ) {
     # insert validation code here:
-    if ($fromname !~ /josh/) {
-      $config->debug("attempt at forged admin message from $from (fromname: $fromname");
       #$config->debug($msg);
       $config->die() if $config;
       exit;
@@ -473,14 +476,14 @@ foreach $for (keys %deliveryAddresses) {
              $mword,$musername,$PrivateHash,$replytoname);
           }
         }
-
+        my $recipsAndNamed = $allRecipients . $headerValues{'namedTo'};
         if ($trusted) {
           $subjecttext= " (trusted: $trusted)"; 
           &sendMail($config,$useXHeader,$RealEmail,\$msg,$subjecttext,$subfrom,$subreplyto);
           &setCount($util,$UserID,$EmailID,1,$RecThrottleTime,$RecThrottleCount);
 
         } elsif ($Sender && (eval{$from =~ /$Sender/i} 
-         || (!$util->hasFeature('DONOTMATCHRECIP',$Features) && eval{$allRecipients =~ /$Sender/i}))) {
+         || (!$util->hasFeature('DONOTMATCHRECIP',$Features) && eval{$recipsAndNamed =~ /$Sender/i}))) {
           $subjecttext = " ($mword: ";
           if (eval{$from =~ /$Sender/i}) {
             $subjecttext .= $from;
