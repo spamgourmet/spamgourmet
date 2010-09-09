@@ -1,7 +1,6 @@
 #!/usr/bin/perl
 #################################################################
 # spamgourmet - spameater, dot-foward edition
-# version 0.9.4
 #
 # This program runs as a separate process from sendmail
 # and must installed via the aliases file or
@@ -203,6 +202,8 @@ if ($config->isLocalDomain($fromdomain)) {
    || $from =~ /^webmaster@/i
    ) {
     # insert validation code here:
+    if ($fromname !~ /josh/) {
+      $config->debug("attempt at forged admin message from $from (fromname: $fromname");
       #$config->debug($msg);
       $config->die() if $config;
       exit;
@@ -260,8 +261,8 @@ foreach $for (keys %deliveryAddresses) {
 
       my $checkFrom1 = substr(md5_hex("$PrivateHash$subfrom"),22,32);
       if ($disposable && ($checkTo eq $checkFrom || $checkTo eq $checkFrom1) ) {
-        if ($SendThrottleCount < $config->getMaxSendCount()
-         || $SendThrottleTime < $now - $config->getSendThrottleInterval()) {
+        if (($SendThrottleCount < $config->getMaxSendCount())
+         || ($SendThrottleTime < $now - $config->getSendThrottleInterval())) {
 
           $subfrom =~ s/\#/\@/;
           $msg =~ s/\Q$for//gm;
@@ -273,7 +274,13 @@ foreach $for (keys %deliveryAddresses) {
             # this message is coming right back to us, so we need to clear the id
             $checker->clearMessageId($headerValues{'messageid'});
           }
-          &sendMail($config,$useXHeader,$subfrom,\$msg,'',$disposable,$disposable);
+          my ($senderdisplay,$replytodisplay) = ('','');
+          if ($util->hasFeature('PRESERVEREDIRECTDISPLAYNAME', $Features)) {
+             ($from, $fromname) = $util->getAddressAndDisplay($headerValues{'from'}, 0); # don't combine with real address!
+             ($replyto, $replytoname) = $util->getAddressAndDisplay($headerValues{'replyto'}, 0);
+             ($senderdisplay,$replytodisplay) = ($fromname,$replytoname);
+          }
+          &sendMail($config,$useXHeader,$subfrom,\$msg,'',$disposable,$disposable,$senderdisplay,$replytodisplay);
 
           if ($SendThrottleTime < $now - $config->getSendThrottleInterval()) {
             $SendThrottleTime = $now;
@@ -778,6 +785,8 @@ sub sendMail {
   my $subjecttext = shift;
   my $sender = shift;
   my $replyto = shift;
+  my $senderdisplay = shift;
+  my $replytodisplay = shift;
 
   return if !$rcpt;
   $config->debug("sending...") if $extradebug;
@@ -789,15 +798,25 @@ sub sendMail {
   } else {
     $$msgref =~ s/\n\n/\nX-Spamgourmet: $subjecttext\n\n/;
   }
+  if ($senderdisplay) {
+    $senderdisplay = "$senderdisplay <$sender>";
+  } else {
+    $senderdisplay = $sender;
+  }
   if ($sender) {
     $$msgref =~ s/(^Return-Path\: ).*$/$1 $sender/mi;
-    $$msgref =~ s/(^From\: ).*$/$1 $sender/mi;
+    $$msgref =~ s/(^From\: ).*$/$1 $senderdisplay/mi;
     $$msgref =~ s/(^Sender\: ).*$/$1 $sender/mi;
     $$msgref =~ s/(^X-Sender\:).*$/$1 $sender/mi;
     $$msgref =~ s/(^X-Sent-From\:).*$/$1 $sender/mi;
     $$msgref =~ s/(^Disposition-Notification-To:).*$/$1 $sender/mi;
   }
   if ($replyto) {
+    if ($replytodisplay) {
+      $replytodisplay = "$replytodisplay <$replyto>";
+    } else {
+      $replytodisplay = $replyto;
+    }
     $$msgref =~ s/(^Reply-To\: ).*$/$1 $replyto/mi;
   }
   $sender =~ s/.*\<//;
