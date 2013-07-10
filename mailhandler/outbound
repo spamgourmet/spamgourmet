@@ -17,15 +17,15 @@ use Mail::Spamgourmet::Config;
 
 my $configfile = "/path/to/spamgourmet.config";
 
+##################### try not to edit anything below ##############
 
 use vars qw {$config $util $mailer $checker};
 $config = Mail::Spamgourmet::Config->new(configfile=>$configfile,mode=>0);
 
-$config->{'debugfilename'} = '/path/to/whatever';
+$config->{'debugfilename'} = '/path/to/outbound.log';
 
 #my $extradebug = 1;
 my $extradebug = 0;
-##################### try not to edit anything below ##############
 $config->debug('outbound started') if $extradebug;
 
 # variables to be used by the main routine (don't change these)
@@ -37,7 +37,7 @@ my (
  $mprefix,$mword,$musername,$mcount,$mexpiretime,
  $db,$sql,$st,%attr,$now,$nowcount,@Watchwords,
  $Prefix,$EmailID,$InitialCount,$Count,$UserID,$ExpireTime,
- $RealEmail,$SpamEmail,$Sender,$Features,$updatelog,$useXHeader, $Hidden,
+ $RealEmail,$SpamEmail,$Sender,$Features,$updatelog,$XHeader, $Hidden,
  $connected, $connectTries, $interval,$DefaultNumber,
  $RecThrottleTime, $RecThrottleCount, 
  $SendThrottleTime, $SendThrottleCount
@@ -80,6 +80,11 @@ if ($ENV{'RECIPIENT'}) { # Exim
 
 while (defined($line = <STDIN>)) {
   $msg .= $line;  # accumulate message line by line into $msg variable
+  if ($XHeader) {
+    if ($line =~ /X-Spamgourmet\: (.*)$/) {
+      $XHeader = $1;
+    }
+  }
 }
 if ($extradebug) {
   $config->debug('--------------start original message----------------------');
@@ -134,6 +139,20 @@ if ($config->isLocalDomain($fromdomain)) {
     }
   }
 }
+
+#my $pcpu = `ps h -p $$ -o pcpu`;
+#chomp ($pcpu);
+#if ($pcpu > 15) {
+#  $config->debug("heavy cpu ($pcpu) -> enabling extradebug");
+#  $extradebug = 1;
+#}
+
+
+#$config->debug($msg) if $extradebug;
+#if (keys %deliveryAddresses > 1) {
+#  $config->debug("handling multiple delivery addresses - turning on extradebug");
+#  $extradebug = 1;
+#}
 
 my @to = split(',', $allRecipients);
 foreach $to (@to) {
@@ -205,9 +224,9 @@ foreach $for (keys %deliveryAddresses) {
           }
 #else {$config->debug("no display");}
 #$config->debug("about to call sendMail - senderdisplay is $senderdisplay");
-          &sendMail($config,$useXHeader,$subfrom,\$msg,'',$disposable,$disposable,$senderdisplay,$replytodisplay);
+          &sendMail($config,$XHeader,$subfrom,\$msg,'',$disposable,$disposable,$senderdisplay,$replytodisplay);
 
-#          &sendMail($config,$useXHeader,$subfrom,\$msg,'',$disposable, $disposable, $fromdisplay);
+#          &sendMail($config,$XHeader,$subfrom,\$msg,'',$disposable, $disposable, $fromdisplay);
 
           if ($SendThrottleTime < $now - $config->getSendThrottleInterval()) {
             $SendThrottleTime = $now;
@@ -246,7 +265,7 @@ exit; # adios
 
 sub sendMail {
   my $config = shift;
-  my $useXHeader = shift;
+  my $XHeader = shift;
   my $rcpt = shift;
   my $msgref = shift;
   my $subjecttext = shift;
@@ -258,14 +277,14 @@ sub sendMail {
   return if !$rcpt;
   $config->debug("sending...") if $extradebug;
 $config->debug("in sendMail - sender: $sender / senderdisplay: $senderdisplay");
-  if ((!$useXHeader || $useXHeader==2 && $subjecttext =~ /message/) && $subjecttext) {
-    my $check = $$msgref =~ s/(^Subject\:.*$)/$1$subjecttext/mi;
-    if (!$check) {
-      $$msgref =~ s/(Date: )/Subject: $subjecttext\n$1/;
-    }
-  } else {
-    $$msgref =~ s/\n\n/\nX-Spamgourmet: $subjecttext\n\n/;
-  }
+#  if ((!$useXHeader || $useXHeader==2 && $subjecttext =~ /message/) && $subjecttext) {
+#    my $check = $$msgref =~ s/(^Subject\:.*$)/$1$subjecttext/mi;
+#    if (!$check) {
+#      $$msgref =~ s/(Date: )/Subject: $subjecttext\n$1/;
+#    }
+#  } else {
+#    $$msgref =~ s/\n\n/\nX-Spamgourmet: $subjecttext\n\n/;
+#  }
   if ($senderdisplay) {
     $senderdisplay = "$senderdisplay <$sender>";
   } else {
@@ -300,6 +319,7 @@ $config->debug("in sendMail - senderdisplay: $senderdisplay");
 
   $config->debug($$msgref) if $extradebug;
   $config->getMailer()->sendMail($msgref,$rcpt,$sender);
+  $$msgref =~ s/$XHeader// if $XHeader;
   $$msgref =~ s/$subjecttext//mi if $subjecttext; #now get rid of the subject text for the next iteration
 }
 

@@ -24,6 +24,7 @@ $pagemaker = Mail::Spamgourmet::Page->new();
 
 $| = 1;
 
+
 if ($session->param('xml')) {
   &printMyXml($config,$session,$util);
 } elsif ($session->param('printpage')) {
@@ -45,12 +46,13 @@ sub getLanguageList {
     $advanced=1;
   }
   my $lc = $session->{'LanguageCode'};
-  my %selected = ('DE'=>'','EN'=>'','ES'=>'','FR',=>'','JA'=>'','KO'=>'','IT'=>'',
+  my %selected = ('DA'=>'','DE'=>'','EN'=>'','ES'=>'','FR',=>'','JA'=>'','KO'=>'','IT'=>'',
    'NL'=>'','NO'=>'','PL'=>'','PT'=>'','RO'=>'','RU'=>'','SV'=>'','TR'=>'','ZH'=>'') ;
   $selected{$lc} = 'SELECTED';
   my $list =$pagemaker->new(template=>'languagelist.html',languageCode=>$session->getLanguageCode());
   $list->setTags(
    'action',$thisscript,
+   'DA',$selected{'DA'}, 'languageDanish', $session->getDialog('languageDanish'),
    'DE',$selected{'DE'}, 'languageGerman', $session->getDialog('languageGerman'),
    'EN',$selected{'EN'}, 'languageEnglish', $session->getDialog('languageEnglish'),
    'ES',$selected{'ES'}, 'languageSpanish', $session->getDialog('languageSpanish'),
@@ -811,7 +813,7 @@ sub mainPage {
   $flags->setTags('action',$thisscript);
   my $adsense = '';
   my $adsensemedrect = '';
-  my $explorerkiller = $pagemaker->new(template=>'explorernotkiller')->getContent();
+  my $explorerkiller = ''; #$pagemaker->new(template=>'explorernotkiller')->getContent();
   my $analytics = '';
   my $adsensesmall = '';
   if (!&secureMode()) {
@@ -819,9 +821,9 @@ sub mainPage {
     $adsense->setTags('addisclaimer',$session->getDialog('addisclaimer'));
     $adsense = $adsense->getContent();
 #    $adsensesmall=$pagemaker->new(template=>'adsensesmall')->getContent();
-    $explorerkiller = $pagemaker->new(template=>'explorerkiller')->getContent();
-    $analytics = $pagemaker->new(template=>'analytics')->getContent();
-    $adsensemedrect = $pagemaker->new(template=>'adsensemedrect',languageCode=>$session->getLanguageCode())->getContent();
+#    $explorerkiller = $pagemaker->new(template=>'explorerkiller')->getContent();
+#    $analytics = $pagemaker->new(template=>'analytics')->getContent();
+#    $adsensemedrect = $pagemaker->new(template=>'adsensemedrect',languageCode=>$session->getLanguageCode())->getContent();
   }
   my $loginform =$pagemaker->new(languageCode=>$session->getLanguageCode());
   my $form = $pagemaker->new(languageCode=>$session->getLanguageCode());
@@ -1329,6 +1331,7 @@ sub secureMode() {
   if (defined($ENV{'SERVER_PORT'}) &&  $ENV{'SERVER_PORT'} == 443) {
     $secure = 1;
   }
+#$secure = 1;
   return $secure;
 }
 

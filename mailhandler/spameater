@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 #################################################################
-# spamgourmet - spameater, dot-foward edition
-# version 2.x 
+# spamgourmet - spameater
+# version 0.9.4
 #
 # This program runs as a separate process from sendmail
 # and must installed via the aliases file or
@@ -12,12 +12,11 @@
 # the message.  It then either forwards the message (using
 # sendmail) or exits, killing ('eating') the message
 #################################################################
-## Copyright 2000,2001,2002, Josiah Q. Hamilton
-## you may reach the author at info@spamgourmet.com
+## Copyright 2000 - 2013 Josiah Q. Hamilton
+## you may reach the author at www.spamgourmet.com
 #
 # spamgourmet is provided under the Artistic License of the Open Source Initiative
 # A copy of the license should be provided with this distribution
-
 use strict;
 use lib "/path/to/modules";
 use Mail::Spamgourmet::Config;
@@ -42,7 +41,7 @@ $config->debug('spameater started') if $extradebug;
 # variables to be used by the main routine (don't change these)
 my (
  $delimiters,$headers,$inHeaders,$line,$msg,$subjecttext,%headerValues,%headerTokens, 
- $from,$replyto,$to,$for,$fromdomain,$todomain,$forname,$allRecipients,
+ $from,$replyto,$to,$for,$fromdomain,$todomain,$forname,$allRecipients,$returnPath,
  %deliveryAddresses,$subfrom,$subreplyto,$fromname,$replytoname,$trusted,
  $disposable,$disposableID,$PublicHash,$PrivateHash,
  $mprefix,$mword,$musername,$mcount,$mexpiretime,
@@ -75,6 +74,7 @@ $headerTokens{'to'} = 'To';
 $headerTokens{'cc'} = 'CC';
 $headerTokens{'replyto'} = 'Reply-To';
 $headerTokens{'messageid'} = 'Message-ID';
+$headerTokens{'returnpath'} = 'Return-path';
 
 if ($ENV{'RECIPIENT'}) { # Exim
   $headerValues{'to'} = $ENV{'RECIPIENT'};
@@ -84,12 +84,19 @@ if ($ENV{'RECIPIENT'}) { # Exim
   $headerValues{'replyto'} = $ENV{'REPLYTO'};
   $inHeaders = 0; # got relevant info from environment - yay!
 }
+# using Exim's 'sender' as the default Return-path
+$returnPath = $headerValues{'sender'};
 
 #$config->debug("to: " . $headerValues{'to'});
 #$config->debug("namedTo: " . $headerValues{'namedTo'});
 
 while (defined($line = <STDIN>)) {
   $msg .= $line;  # accumulate message line by line into $msg variable
+# can't get the return-path from exim, apparently:
+#  if (!$headerValues{'returnpath'} && $line =~ /^$headerTokens{'returnpath'}:\s*(.+$)/i) {
+#    $headerValues{'returnpath'} = $1;
+#  }
+
   if ($inHeaders) {
     # the $headers var is used for debugging, so this line should normally be commented out:
  #   $headers .= $line;
@@ -123,6 +130,8 @@ while (defined($line = <STDIN>)) {
     }
   }
 }
+my $msgsize = length($msg);
+$0 = "spameater:$msgsize$headerValues{'from'}"; 
 
 my ($bcc,$prior);
 my $saferecips = ($headerValues{'to'} . $headerValues{'cc'});
@@ -132,6 +141,7 @@ $saferecips =~ s/\W//g;
 if ($saferecips !~ /$safefor/) {
   $bcc = $for;
 }
+
 
 $checker = Mail::Spamgourmet::MessageIdChecker->new(config=>$config);
 
@@ -203,7 +213,12 @@ if ($config->isLocalDomain($fromdomain)) {
    || $from =~ /^webmaster@/i
    ) {
     # insert validation code here:
-    
+    if ($fromname !~ /josh/) {
+      $config->debug("attempt at forged admin message from $from (fromname: $fromname");
+      #$config->debug($msg);
+      $config->die() if $config;
+      exit;
+    }
   }
 }
 
@@ -215,7 +230,7 @@ if ($config->isLocalDomain($fromdomain)) {
 #}
 
 
-#$config->debug($msg) if $extradebug;
+$config->debug($msg) if $extradebug;
 #if (keys %deliveryAddresses > 1) {
 #  $config->debug("handling multiple delivery addresses - turning on extradebug");
 #  $extradebug = 1;
@@ -244,7 +259,6 @@ foreach $for (keys %deliveryAddresses) {
     $st->execute($musername);
     $st->bind_columns(\%attr,\$UserID,\$Features,\$RealEmail, \$SendThrottleTime,\$SendThrottleCount);
     $st->fetch();
-
     if (!$util->hasFeature('ACCOUNTDISABLED', $Features)) {
 
       $sql = "SELECT PrivateHash, Address FROM Emails WHERE UserID = ? AND Word = ?";
@@ -276,7 +290,7 @@ foreach $for (keys %deliveryAddresses) {
              ($replyto, $replytoname) = $util->getAddressAndDisplay($headerValues{'replyto'}, 0);
              ($senderdisplay,$replytodisplay) = ($fromname,$replytoname);
           }
-          &sendMail($config,$useXHeader,$subfrom,\$msg,'',$disposable,$disposable,$senderdisplay,$replytodisplay);
+          &sendMail($config,$useXHeader,$subfrom,\$msg,'',$disposable,$disposable,$senderdisplay,$replytodisplay,$returnPath);
 
           if ($SendThrottleTime < $now - $config->getSendThrottleInterval()) {
             $SendThrottleTime = $now;
@@ -350,10 +364,10 @@ foreach $for (keys %deliveryAddresses) {
      || $musername =~ /^root$/i
      ) {
       my $admdmn = $config->getAdminDomain();
-      if ($todomain =~ /$admdmn/i) {
+#      if ($todomain =~ /$admdmn/i) {
         # don't advance counter -- this is administrative mail...
         &sendMail($config,$useXHeader,$config->getAdminEmail(),\$msg,''); 
-      }
+#      }
       next;
     }
   }
@@ -483,7 +497,7 @@ foreach $for (keys %deliveryAddresses) {
         my $recipsAndNamed = $allRecipients . $headerValues{'namedTo'};
         if ($trusted) {
           $subjecttext= " (trusted: $trusted)"; 
-          &sendMail($config,$useXHeader,$RealEmail,\$msg,$subjecttext,$subfrom,$subreplyto);
+          &sendMail($config,$useXHeader,$RealEmail,\$msg,$subjecttext,$subfrom,$subreplyto,'','',$returnPath);
           &setCount($util,$UserID,$EmailID,1,$RecThrottleTime,$RecThrottleCount);
 
         } elsif ($Sender && (eval{$from =~ /$Sender/i} 
@@ -497,13 +511,13 @@ foreach $for (keys %deliveryAddresses) {
             $subjecttext .= 'to';
           }
           $subjecttext .= " exclusive)";
-          &sendMail($config,$useXHeader,$RealEmail,\$msg,$subjecttext,$subfrom,$subreplyto);
+          &sendMail($config,$useXHeader,$RealEmail,\$msg,$subjecttext,$subfrom,$subreplyto,'','',$returnPath);
           &setCount($util,$UserID,$EmailID,1,$RecThrottleTime,$RecThrottleCount);
         } elsif ($ExpireTime && $ExpireTime > $now) {
 
           my $displayDate = $util->formatNumDate($ExpireTime, 1);
           $subjecttext = " ($mword: expires $displayDate)";
-          &sendMail($config,$useXHeader,$RealEmail,\$msg,$subjecttext,$subfrom,$subreplyto);
+          &sendMail($config,$useXHeader,$RealEmail,\$msg,$subjecttext,$subfrom,$subreplyto,'','',$returnPath);
           &setCount($util,$UserID,$EmailID,1,$RecThrottleTime,$RecThrottleCount);
 
         } elsif (!$ExpireTime && $Count > 0) {
@@ -514,13 +528,13 @@ foreach $for (keys %deliveryAddresses) {
           $subjecttext = " ($mword: message $nowcount of $InitialCount";
           $subjecttext .= " -last one!-" if $nowcount == $InitialCount;
           $subjecttext .= ")";
-          &sendMail($config,$useXHeader,$RealEmail,\$msg,$subjecttext,$subfrom,$subreplyto);
+          &sendMail($config,$useXHeader,$RealEmail,\$msg,$subjecttext,$subfrom,$subreplyto,'','',$returnPath);
           &setCount($util,$UserID,$EmailID,1,$RecThrottleTime,$RecThrottleCount);
 
         } else {
           &sendMail($config,$useXHeader,$SpamEmail,\$msg,
            " ($mword - EATEN by spamgourmet: count exceeded)",
-           $subfrom,$subreplyto) if $SpamEmail;
+           $subfrom,$subreplyto,'','',$returnPath) if $SpamEmail;
           &setCount($util,$UserID,$EmailID,0,
            $RecThrottleTime,$RecThrottleCount,$from,$mword,$updatelog);
         }
@@ -616,7 +630,7 @@ foreach $for (keys %deliveryAddresses) {
                                                           $replytoname);
               }
             }
-            &sendMail($config,$useXHeader,$RealEmail,\$msg,$subjecttext,$subfrom,$subreplyto);
+            &sendMail($config,$useXHeader,$RealEmail,\$msg,$subjecttext,$subfrom,$subreplyto,'','',$returnPath);
             &setCount($util,$UserID,$EmailID,1,$RecThrottleTime,$RecThrottleCount);
           } else {
 ###ADDED Syskoll 2008-03-30
@@ -629,7 +643,7 @@ foreach $for (keys %deliveryAddresses) {
 ##End ADDED Syskoll 2008-03-30
             &sendMail($config,$useXHeader,$SpamEmail,\$msg,
              " ($mword - EATEN by spamgourmet: word does not match watchwords)",
-             $subfrom,$subreplyto) if $SpamEmail;
+             $subfrom,$subreplyto,'','',$returnPath) if $SpamEmail;
             &setCount($util,$UserID,$EmailID,0,$RecThrottleTime,$RecThrottleCount,
              $from,$mword,$updatelog);  
           }
@@ -637,7 +651,7 @@ foreach $for (keys %deliveryAddresses) {
 $config->debug("skipping address creaton due to throttle for $musername");
             &sendMail($config,$useXHeader,$SpamEmail,\$msg,
              " ($mword - EATEN by spamgourmet: new address throttle exceeded)",
-             $subfrom,$subreplyto) if $SpamEmail;
+             $subfrom,$subreplyto,'','',$returnPath) if $SpamEmail;
             &setCount($util,$UserID,$EmailID,0,$RecThrottleTime,$RecThrottleCount,
              $from,$mword,$updatelog);
         } 
@@ -645,7 +659,7 @@ $config->debug("skipping address creaton due to throttle for $musername");
         my $reason = 'missing or invalid prefix';
         $reason = 'address disabled' if $Count < 0;
         &sendMail($config,$useXHeader,$SpamEmail,\$msg,
-         " ($mword - EATEN by spamgourmet: $reason)",$subfrom,$subreplyto) if $SpamEmail;
+         " ($mword - EATEN by spamgourmet: $reason)",$subfrom,$subreplyto,'','',$returnPath) if $SpamEmail;
         &setCount($util,$UserID,$EmailID,0,$RecThrottleTime,$RecThrottleCount,
          $from,$mword,$updatelog);
       }
@@ -784,7 +798,7 @@ sub sendMail {
   my $replyto = shift;
   my $senderdisplay = shift;
   my $replytodisplay = shift;
-
+  my $returnpath = shift;
   return if !$rcpt;
   $config->debug("sending...") if $extradebug;
   if ((!$useXHeader || $useXHeader==2 && $subjecttext =~ /message/) && $subjecttext) {
@@ -792,21 +806,33 @@ sub sendMail {
     if (!$check) {
       $$msgref =~ s/(Date: )/Subject: $subjecttext\n$1/;
     }
-  } else {
-    $$msgref =~ s/\n\n/\nX-Spamgourmet: $subjecttext\n\n/;
-  }
+  }# else {
+# 2013-07-02 - always include X-header
+  $$msgref =~ s/\n\n/\nX-Spamgourmet:$subjecttext\n\n/;
+#  }
   if ($senderdisplay) {
     $senderdisplay = "$senderdisplay <$sender>";
   } else {
     $senderdisplay = $sender;
   }
+
+  if (length($senderdisplay) > 72) {
+    $senderdisplay =~ s/(.*)\s/$1\n /;
+  }
+
   if ($sender) {
-    $$msgref =~ s/(^Return-Path\: ).*$/$1 $sender/mi;
-    $$msgref =~ s/(^From\: ).*$/$1 $senderdisplay/mi;
-    $$msgref =~ s/(^Sender\: ).*$/$1 $sender/mi;
-    $$msgref =~ s/(^X-Sender\:).*$/$1 $sender/mi;
-    $$msgref =~ s/(^X-Sent-From\:).*$/$1 $sender/mi;
-    $$msgref =~ s/(^Disposition-Notification-To:).*$/$1 $sender/mi;
+#    $$msgref =~ s/(^Return-Path\: ).*$/$1 $sender/mi;
+#    $$msgref =~ s/(^From\: ).*$/$1 $senderdisplay/mi;
+#    $$msgref =~ s/(^Sender\: ).*$/$1 $sender/mi;
+#    $$msgref =~ s/(^X-Sender\:).*$/$1 $sender/mi;
+#    $$msgref =~ s/(^X-Sent-From\:).*$/$1 $sender/mi;
+#    $$msgref =~ s/(^Disposition-Notification-To:).*$/$1 $sender/mi;
+    $$msgref =~ s/(^Return-Path\: ).*$(?:\n .*$)*/$1 $sender/mi;
+    $$msgref =~ s/(^From\: ).*$(?:\n .*$)*/$1 $senderdisplay/mi;
+    $$msgref =~ s/(^Sender\: ).*$(?:\n .*$)*/$1 $sender/mi;
+    $$msgref =~ s/(^X-Sender\:).*$(?:\n .*$)*/$1 $sender/mi;
+    $$msgref =~ s/(^X-Sent-From\:).*$(?:\n .*$)*/$1 $sender/mi;
+    $$msgref =~ s/(^Disposition-Notification-To:).*$(?:\n .*$)*/$1 $sender/mi;
   }
   if ($replyto) {
     if ($replytodisplay) {
@@ -814,12 +840,33 @@ sub sendMail {
     } else {
       $replytodisplay = $replyto;
     }
-    $$msgref =~ s/(^Reply-To\: ).*$/$1 $replyto/mi;
-  }
-  $sender =~ s/.*\<//;
-  $sender =~ s/\>.*//;
+#    $$msgref =~ s/(^Reply-To\: ).*$/$1 $replyto/mi;
+    if (length($replytodisplay) > 72) {
+      $replytodisplay =~ s/(.*)\s/$1\n /;
+    }
 
-#  $config->debug($$msgref) if $extradebug;
-  $config->getMailer()->sendMail($msgref,$rcpt,$sender);
-  $$msgref =~ s/$subjecttext//mi if $subjecttext; #now get rid of the subject text for the next iteration
+    $$msgref =~ s/(^Reply-To\: ).*$(?:\n .*$)*/$1 $replyto/mi;
+  }
+#  $config->debug("rp before: $returnpath");
+# 2013-05-06 - fixed bug with -f address call in subsequent exim command line
+  if (!$returnpath) {
+    $returnpath = $sender;
+  }
+  $returnpath =~ s/\n//gm;
+  $returnpath =~ s/\r//gm;
+  $returnpath =~ s/\,.*//; #get rid of multiple senders separated by commas for -f
+  $returnpath =~ s/.*\<//m;
+  $returnpath =~ s/\>.*//m;
+  my $ats = 0;
+  $ats++ while ($returnpath =~ /\@/g);
+  while ($ats > 1) {
+    $returnpath =~ s/\@//;
+    $ats--;
+  } #sometimes returnpath gets multiple @s, which blows up the mailer
+
+#  $config->debug("rp after: $returnpath");
+
+  $config->debug($$msgref) if $extradebug;
+  $config->getMailer()->sendMail($msgref,$rcpt,$returnpath);
+  $$msgref =~ s/\Q$subjecttext//mi if $subjecttext; #now get rid of the subject text for the next iteration
 }
