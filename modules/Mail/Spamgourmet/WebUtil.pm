@@ -19,6 +19,14 @@ sub new {
   return $self;
 }
 
+sub getRedirectedAddressForWeb {
+  my $self = shift;
+  my $adr = $self->getRedirectedAddress(shift,shift,shift,shift);
+  $adr =~ s/\#/\%23/;
+  return $adr;
+}
+
+
 sub commify {
   my $instr = reverse $_[1];
   $instr = 0 if !$instr;
@@ -183,9 +191,14 @@ sub looksRight {
 #    return 0;
 #  }
 #  return ($addr =~ /.+\@.+\.\w+\]*$/)
-  my $ret = $addr =~ /^(([\w\-]+)(\.))*([\w\-]+)@([\w\-]+\.)+[a-zA-Z]{2,4}$/;
+# 2011-05-06 - edited to restore + in address
+  my $ret = $addr =~ /^(([\w\-\+]+)(\.))*([\w\-\+]+)@([\w\-]+\.)+[a-zA-Z]{2,4}$/;
+#  if ($ret =~ /\+/) {
+#    $ret = 0;
+#  }
+
   if (!$ret) {
-    $ret = $addr =~ /\+.*\@/;
+    $ret = $addr =~ /^\+.*\@/;
   }
   return $ret;
 }

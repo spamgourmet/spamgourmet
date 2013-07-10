@@ -6,7 +6,7 @@ use Mail::Spamgourmet::WebUtil;
 my $_config = 0;
 my $_defaultLanguageCode = 'EN';
 my $_defaultSessionTimeout = 1800;
-my @_supportedLanguageCodes = ('DE','EN','ES','FR','JA','NL','PL','PT','RO','RU','SV','TR','ZH');
+my @_supportedLanguageCodes = ('DA','DE','EN','ES','FR','JA','NL','PL','PT','RO','RU','SV','TR','ZH');
 
 sub new {
   my $proto = shift;
@@ -85,7 +85,10 @@ sub new {
                    $self->{'query'}->param('imagehash')
                    );
   } elsif ($self->{'query'}->param('newuser')) {
-    if ($self->checkForExistingUserName($self->{'query'}->param('newuser')) ) {
+    my $now = time();
+    if ($self->checkForTooManyAccountsFromIPAddress($now,$ENV{'REMOTE_ADDR'})) {
+      $self->{'loginmsg'} = '...';
+    } elsif ($self->checkForExistingUserName($self->{'query'}->param('newuser')) ) {
       $self->{'loginmsg'} = $self->{'dialogs'}->get('usernametaken','username',$self->{'query'}->param('newuser'));
     } else {
       my $word = $self->getImageWord();
@@ -432,6 +435,24 @@ sub checkForExistingUserName {
   } else {
     $check = 1;
   }
+  return $check;
+}
+
+
+sub checkForTooManyAccountsFromIPAddress {
+  my $self = shift;
+  my $now = shift;
+  my $ipaddress = shift;
+  my $check = 0;
+  my ($sql, $st, %attr, $uid);
+  my $hourago = $now - 3600;
+
+  $sql = "SELECT COUNT(1) FROM Users WHERE TimeAdded > ? AND IPAddress = ?";
+  $st = $self->{'config'}->db->prepare($sql);
+  $st->execute($hourago,$ipaddress);
+  $st->bind_columns(\%attr,\$check);
+  $st->fetch();
+  $check = 0 if $check < 3;
   return $check;
 }
 

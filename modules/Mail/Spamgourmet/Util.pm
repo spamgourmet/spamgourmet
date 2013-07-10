@@ -119,11 +119,13 @@ sub getRedirectedAddress {
   my $user = shift;
   my $key  = shift;
   my $name = shift;
-  my $host = $self->{'config'}->getMailHost();
+#  my $host = $self->{'config'}->getMailHost();
+  my $host = $self->{'config'}->getOutBoundMailHost();
 
   $addr =~ s/\@/\#/;
   my $hash = $self->getShortHash($addr,$key);
-  my $raddr = '+' . $word . '+' . $user . '+' . $hash . '.' . $addr . '@' . $host;
+#  my $raddr = '+' . $word . '+' . $user . '+' . $hash . '.' . $addr . '@' . $host;
+  my $raddr = $word . '.' . $user . '.' . $hash . '.' . $addr . '@' . $host;
   if ($name && length($raddr) < 80) {
     $raddr = "\"$name\"" . ' <' . $raddr . '>';
 #    $raddr = $name . ' <' . $raddr . '>';
@@ -258,8 +260,12 @@ sub containsOne {
   my $word;
   my $matches = 0;
   foreach $word (@words) {
-    if ($stuff =~ /$word/i) {
-      $matches = 1;
+    eval {$stuff =~ /$word/i;};
+    if (!$@) {
+      if ($stuff =~ /$word/i) {
+        $matches = 1;
+        last;
+      }
     }
   }
   return $matches;

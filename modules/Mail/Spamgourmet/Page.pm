@@ -118,7 +118,7 @@ sub fetchpage {
         $templatefile = $self->{'config'}->{'webtemplatedir'}.$_defaultLanguageCode.'/'.$template;
       }
       if (!-e $templatefile) {
-        $self->{'error'} = "Could not open templatefile: $templatefile";
+        $self->{'error'} .= "Could not open templatefile: $templatefile";
         return $self;
       } else {
         open (MYFILE,"$templatefile");
@@ -132,7 +132,7 @@ sub fetchpage {
       $self->{'content'} = $_templates{$templatefile};
     }
   } else {
-    $self->{'error'} = 'Template name must be supplied';
+    $self->{'error'} .= ' Template name must be supplied';
   }
   return $self;
 }
@@ -149,7 +149,7 @@ sub setTags {
   my $self = shift;
   my @args = @_;
   unless ($self->{'content'}) {
-    $self->{'error'} = 'No content!';
+    $self->{'error'} .= ' No content!';
     return;
   }
 
@@ -200,7 +200,7 @@ sub printpage {
   my $self = shift;
   my @args = @_;
   unless ($self->{'content'}) {
-    $self->{'error'} = 'No content!';
+    $self->{'error'} .= ' No content!';
     return;
   }
 
