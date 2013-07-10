@@ -213,12 +213,6 @@ if ($config->isLocalDomain($fromdomain)) {
    || $from =~ /^webmaster@/i
    ) {
     # insert validation code here:
-    if ($fromname !~ /josh/) {
-      $config->debug("attempt at forged admin message from $from (fromname: $fromname");
-      #$config->debug($msg);
-      $config->die() if $config;
-      exit;
-    }
   }
 }
 
