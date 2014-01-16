@@ -51,11 +51,12 @@ sub new {
     $self->{'query'} = new CGI;
   }
 
-  if ($self->{'query'}->param('languageCode')) {
-    $self->{'LanguageCode'} = $self->{'query'}->param('languageCode');
+  if ($self->{'query'}->param('languageCode') =~ /^(\w\w)/ ) {
+    
+    $self->{'LanguageCode'} = $1;
     $self->setCookies('languageCode',$self->{'LanguageCode'});
-  } elsif ($self->{'query'}->cookie('languageCode')) {
-    $self->{'LanguageCode'} = $self->{'query'}->cookie('languageCode');
+  } elsif ($self->{'query'}->cookie('languageCode') =~ /^\w\w/ ) {
+    $self->{'LanguageCode'} = $1;
   } elsif ($ENV{'HTTP_ACCEPT_LANGUAGE'}) {
     $self->{'LanguageCode'} = &guessLC;
   }
