@@ -451,7 +451,7 @@ foreach $for (keys %deliveryAddresses) {
           $parts[$i] .= ".$parts[$j]";
         }
       }
-      if (@parts < 10) { # we're doing an "in" clause, so we need to protect ourselves from a DOS
+      if (@parts && @parts < 10) { # we're doing an "in" clause, so we need to protect ourselves from a DOS
         my $placeholders = join ', ', ('?') x @parts;
         $sql = "SELECT Sender FROM Permitted 
          WHERE UserID = ? AND (Sender = ? OR Sender IN ($placeholders));";
@@ -821,12 +821,12 @@ sub sendMail {
 #    $$msgref =~ s/(^X-Sender\:).*$/$1 $sender/mi;
 #    $$msgref =~ s/(^X-Sent-From\:).*$/$1 $sender/mi;
 #    $$msgref =~ s/(^Disposition-Notification-To:).*$/$1 $sender/mi;
-    $$msgref =~ s/(^Return-Path\: ).*$(?:\n .*$)*/$1 $sender/mi;
-    $$msgref =~ s/(^From\: ).*$(?:\n .*$)*/$1 $senderdisplay/mi;
-    $$msgref =~ s/(^Sender\: ).*$(?:\n .*$)*/$1 $sender/mi;
-    $$msgref =~ s/(^X-Sender\:).*$(?:\n .*$)*/$1 $sender/mi;
-    $$msgref =~ s/(^X-Sent-From\:).*$(?:\n .*$)*/$1 $sender/mi;
-    $$msgref =~ s/(^Disposition-Notification-To:).*$(?:\n .*$)*/$1 $sender/mi;
+    $$msgref =~ s/(^Return-Path\: ).*$(?:\n\s.*$)*/$1 $sender/mi;
+    $$msgref =~ s/(^From\: ).*$(?:\n\s.*$)*/$1 $senderdisplay/mi;
+    $$msgref =~ s/(^Sender\: ).*$(?:\n\s.*$)*/$1 $sender/mi;
+    $$msgref =~ s/(^X-Sender\:).*$(?:\n\s.*$)*/$1 $sender/mi;
+    $$msgref =~ s/(^X-Sent-From\:).*$(?:\n\s.*$)*/$1 $sender/mi;
+    $$msgref =~ s/(^Disposition-Notification-To:).*$(?:\n\s.*$)*/$1 $sender/mi;
   }
   if ($replyto) {
     if ($replytodisplay) {
@@ -851,6 +851,7 @@ sub sendMail {
   $returnpath =~ s/\,.*//; #get rid of multiple senders separated by commas for -f
   $returnpath =~ s/.*\<//m;
   $returnpath =~ s/\>.*//m;
+  $returnpath =~ s/\://m;
   my $ats = 0;
   $ats++ while ($returnpath =~ /\@/g);
   while ($ats > 1) {
