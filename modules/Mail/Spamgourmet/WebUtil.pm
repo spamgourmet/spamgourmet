@@ -26,6 +26,16 @@ sub getRedirectedAddressForWeb {
   return $adr;
 }
 
+sub deScript {
+  my $self = shift;
+  my $str = shift;
+  $str =~ s/\"/\&\#34\;/g;
+  $str =~ s/\'/\&\#39\;/g;
+  $str =~ s/\</\&lt\;/g;
+  $str =~ s/\>/\&gt\;/g;
+  $str;
+}
+
 
 sub commify {
   my $instr = reverse $_[1];
@@ -192,7 +202,7 @@ sub looksRight {
 #  }
 #  return ($addr =~ /.+\@.+\.\w+\]*$/)
 # 2011-05-06 - edited to restore + in address
-  my $ret = $addr =~ /^(([\w\-\+]+)(\.))*([\w\-\+]+)@([\w\-]+\.)+[a-zA-Z]{2,4}$/;
+  my $ret = $addr =~ /^(([\w\-\+]+)(\.))*([\w\-\+]+)@([\w\-]+\.)+[a-zA-Z]{2,65}$/;
 #  if ($ret =~ /\+/) {
 #    $ret = 0;
 #  }
