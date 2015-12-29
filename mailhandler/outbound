@@ -276,7 +276,7 @@ sub sendMail {
 
   return if !$rcpt;
   $config->debug("sending...") if $extradebug;
-$config->debug("in sendMail - sender: $sender / senderdisplay: $senderdisplay");
+  $config->debug("in sendMail - sender: $sender / senderdisplay: $senderdisplay") if $extradebug;
 #  if ((!$useXHeader || $useXHeader==2 && $subjecttext =~ /message/) && $subjecttext) {
 #    my $check = $$msgref =~ s/(^Subject\:.*$)/$1$subjecttext/mi;
 #    if (!$check) {
@@ -286,11 +286,11 @@ $config->debug("in sendMail - sender: $sender / senderdisplay: $senderdisplay");
 #    $$msgref =~ s/\n\n/\nX-Spamgourmet: $subjecttext\n\n/;
 #  }
   if ($senderdisplay) {
-    $senderdisplay = "$senderdisplay <$sender>";
+    $senderdisplay = "\"$senderdisplay\" <$sender>";
   } else {
     $senderdisplay = $sender;
   }
-$config->debug("in sendMail - senderdisplay: $senderdisplay");
+#$config->debug("in sendMail - senderdisplay: $senderdisplay");
   if ($sender) {
 #    $$msgref =~ s/(^Return-Path\: ).*$/$1 $sender/mi;
 #    $$msgref =~ s/(^From\: ).*$/$1 $senderdisplay/mi;

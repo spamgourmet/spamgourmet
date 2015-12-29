@@ -1,6 +1,9 @@
 package Mail::Spamgourmet::Session;
 use strict;
+
 use Digest::MD5 qw(md5_hex);
+use Crypt::Eksblowfish::Bcrypt;
+use Crypt::Random;
 use Mail::Spamgourmet::WebUtil;
 
 my $_config = 0;
@@ -51,11 +54,11 @@ sub new {
     $self->{'query'} = new CGI;
   }
 
-  if ($self->{'query'}->param('languageCode') =~ /^(\w\w)/ ) {
-    
+  if ($self->{'query'}->param('languageCode') && $self->{'query'}->param('languageCode') =~ /^(\w\w)/ ) {
+
     $self->{'LanguageCode'} = $1;
     $self->setCookies('languageCode',$self->{'LanguageCode'});
-  } elsif ($self->{'query'}->cookie('languageCode') =~ /^\w\w/ ) {
+  } elsif ($self->{'query'}->cookie('languageCode') && $self->{'query'}->cookie('languageCode') =~ /^\w\w/ ) {
     $self->{'LanguageCode'} = $1;
   } elsif ($ENV{'HTTP_ACCEPT_LANGUAGE'}) {
     $self->{'LanguageCode'} = &guessLC;
@@ -275,9 +278,10 @@ sub login {
   my $IPToken = '';
   my $now = time();
   my $m;
-  my $checkpw;
+  my $badpw = 1;
   my $disabled = 0;
-  
+  my $uid;  
+
 # override default and cookie values, if inputs exist;
   if ($inUser || $hashCode) {
     $User = $inUser;
@@ -285,23 +289,54 @@ sub login {
     ($Pass, $m) = &encrypt($Pass) if $Pass;
 	
     if ($User) {
-      $sql = "SELECT UserID, UserName, LanguageCode, Features, RealEmail, PendingEmail, 
-       Prefix, NumDeleted, NumForwarded, PendingHashCode, Password, DefaultNumber FROM Users 
-       WHERE (UserName = ? AND (Password = ? OR Password = ?));";
+      my $dbpw = '';
+# this is wacky, but the cleanest way of transitioning pw methodology:
+      $sql = "SELECT UserID, Password FROM Users WHERE UserName = ?";
       $st = $self->{'config'}->db->prepare($sql);
-      $st->execute($User, $Pass, $m);
-    } else {
-      $sql = "SELECT UserID, UserName, LanguageCode, Features, RealEmail, PendingEmail,
-	   Prefix, NumDeleted, NumForwarded, PendingHashCode, Password, DefaultNumber FROM Users
-	   WHERE PendingHashCode = ?;";
-	  $st = $self->{'config'}->db->prepare($sql);
-	  $st->execute($hashCode);							
-	}
+      $st->execute($User);
+      $st->bind_columns(\%attr,\$uid,\$dbpw);
+      if ($st->fetch()) {
+# we got the encrypted pw from the db, now we need to compare
+        if (&check_password($inPass, $dbpw)) {
+# we're good
+          $badpw = 0; 
+        } elsif ($dbpw eq $m) {
+# update the dbpw:
+          $badpw = 0;
+          $sql = "UPDATE Users SET Password = ? WHERE UserName = ?";
+          $st = $self->{'config'}->db->prepare($sql);
+          $st->execute($Pass,$User);
+        } else {
+          $badpw = 1; #bad pw 
+        }
+      }
+      if (!$badpw) {
+        $sql = "SELECT UserID, UserName, LanguageCode, Features, RealEmail, PendingEmail, 
+         Prefix, NumDeleted, NumForwarded, PendingHashCode, DefaultNumber FROM Users 
+         WHERE (UserName = ?);";
+        $st = $self->{'config'}->db->prepare($sql);
+        $st->execute($User);
+      }
+    } else { # login based on $hashcode
+      $sql = "SELECT UserID FROM Users WHERE PendingHashCode = ?";
+      $st = $self->{'config'}->db->prepare($sql);
+      $st->execute($hashCode);							
+      $st->bind_columns(\%attr,\$uid);
+      $badpw = 0 if $st->fetch();
+    }
 
-    $st->bind_columns(\%attr,\$self->{'UserID'},\$self->{'UserName'},\$dbLC,\$self->{'Features'},
-     \$self->{'RealEmail'},\$self->{'PendingEmail'},\$self->{'Prefix'},
-     \$self->{'NumDeleted'},\$self->{'NumForwarded'}, \$self->{'PendingHashCode'}, \$checkpw,\$self->{'DefaultNumber'});
-    if ($st->fetch) {
+    if (!$badpw && $uid) {
+
+      $sql = "SELECT UserID, UserName, LanguageCode, Features, RealEmail, PendingEmail,
+       Prefix, NumDeleted, NumForwarded, PendingHashCode, DefaultNumber FROM Users
+       WHERE (UserID = ?);";
+      $st = $self->{'config'}->db->prepare($sql);
+      $st->execute($uid);
+      $st->bind_columns(\%attr,\$self->{'UserID'},\$self->{'UserName'},\$dbLC,\$self->{'Features'},
+       \$self->{'RealEmail'},\$self->{'PendingEmail'},\$self->{'Prefix'},
+       \$self->{'NumDeleted'},\$self->{'NumForwarded'}, \$self->{'PendingHashCode'}, \$self->{'DefaultNumber'});
+      $st->fetch();
+
       if (!$self->hasFeature($self->{'config'}->getFeature('ACCOUNTDISABLED'), $self->{'Features'})) {
         if ($self->{'query'}->param('languageCode') && ($self->{'query'}->param('languageCode') ne $dbLC)) {
           $sql = "UPDATE Users SET LanguageCode = ? WHERE UserID = ?;";
@@ -315,11 +350,11 @@ sub login {
         }
 
       ## update pw with md5 hash, if appropriate...
-        if ($checkpw && $Pass && $checkpw eq $Pass) {
-          $sql = 'UPDATE Users SET Password = ? WHERE UserID = ?';
-          $st2 = $self->{'config'}->db->prepare($sql);
-          $st2->execute($m , $self->{'UserID'});
-        }
+#        if ($checkpw && $Pass && $checkpw eq $Pass) {
+#          $sql = 'UPDATE Users SET Password = ? WHERE UserID = ?';
+#          $st2 = $self->{'config'}->db->prepare($sql);
+#          $st2->execute($m , $self->{'UserID'});
+#        }
 
         $newToken = &getNewToken($User);
         $IPToken = &getIPToken($newToken);
@@ -335,7 +370,7 @@ sub login {
         $self->{'UserID'} = 0;
         $self->{'loginmsg'} = $self->{'dialogs'}->get('accountdisabled');
       }
-    } elsif ($User) {
+    } elsif ($inUser) {
       $self->{'loginmsg'} = $self->{'dialogs'}->get('badusernamepassword');
     }
   } 
@@ -485,7 +520,8 @@ sub newuser {
     } elsif ($p ne $c) {
       $self->{'loginmsg'} = $self->{'dialogs'}->get('passwordmismatch');
     } else {
-      (undef, $p) = &encrypt($p);
+# come back here
+      ($p,undef) = &encrypt($p);
       my $t = time();
       my $activeLC = $self->{'query'}->param('languageCode');
       $activeLC = "" if !$activeLC;
@@ -494,7 +530,7 @@ sub newuser {
       $sql = "INSERT INTO Users (UserName,Password,TimeAdded,IPAddress,LanguageCode,SessionToken,LastCommand) 
        VALUES (?, ?, ?, ?, ?, ?, ?);";
       $st = $self->{'config'}->db->prepare($sql);
-      $st->execute($u, $p, $t, $ENV{'REMOTE_ADDR'}, $activeLC, $IPToken, $now);
+      $st->execute($u, $p, $t, 0, $activeLC, $IPToken, $now);
       $sql = "SELECT UserID FROM Users WHERE UserName = ? AND TimeAdded = ?;";
       $st = $self->{'config'}->db->prepare($sql);
       $st->execute($u,$t);
@@ -526,7 +562,7 @@ sub newpassword {
   my $self = shift;
   my ($p,$c,$cu) = @_;
   my $m;
-  my ($sql,$st,$uid,%attr);
+  my ($sql,$st,$dbpw,%attr);
   my $ok = 0;
   
   if ($p ne $c) {
@@ -534,26 +570,25 @@ sub newpassword {
   } elsif ($self->{'PendingHashCode'} && $self->{'PendingHashCode'} eq $self->{'query'}->param('hc')) {
     $ok =1;	
   } else {
-    my $e;
-    ($e, $m) = &encrypt($cu);
- #   my $e = &encrypt($cu);
+    (undef, $m) = &encrypt($cu);
     my $u = $self->{'UserID'};
-    $sql = "SELECT UserID FROM Users WHERE (Password = ? OR Password = ?) AND UserID = ?;";
+    $sql = "SELECT Password FROM Users WHERE UserID = ?;";
     $st = $self->{'config'}->db->prepare($sql);
-    $st->execute($e, $m ,$u);
-    $st->bind_columns(\%attr,\$uid);
-    if (!$st->fetch()) {
+    $st->execute($u);
+    $st->bind_columns(\%attr,\$dbpw);
+    $st->fetch();
+    if (!&check_password($cu,$dbpw) && $dbpw ne $m) {
       $self->{'loginmsg'} = $self->{'dialogs'}->get('badpassword');
     } else {
       $ok = 1;
-	}
+    }
   }
   if ($ok) {
     ($p, $m) = &encrypt($p);
     my $u = $self->{'UserID'};
     $sql = "UPDATE Users SET Password = ?, PendingHashCode = ? WHERE UserID = ?;";
     $st = $self->{'config'}->db->prepare($sql);
-    $st->execute($m,'',$u);
+    $st->execute($p,'',$u);
     $self->{'loginmsg'} =  $self->{'dialogs'}->get('passwordchanged');
   }
 # $self->{'loginmsg'} = "phc: " . $self->{'PendingHashCode'} . " hc: " . $self->query->param('hc'); 
@@ -642,12 +677,50 @@ sub setCookies {
 sub encrypt {
 # use system to perform one way encryption
   my $instr = shift;
-  my $md5 = '';
-  my $salt = substr($instr,0,1);
-  $md5 = substr(md5_hex($instr),22,32);
-  $instr = crypt($instr, $salt);
+  my $salt = &salt(); #substr($instr,0,1);
+  my $md5 = &encryptMD5($instr);
+  $instr = &encrypt_password($instr, $salt);
   return ($instr,$md5);
 }
+
+sub encryptMD5 {  # really weak - don't use for passwords
+  my $instr = shift;
+  return substr(md5_hex($instr),22,32);
+}
+
+# thanks gcrawshaw/gist:1071698 !
+# Encrypt a password
+sub encrypt_password {
+  my $password = shift;
+  my $salt = shift || &salt();
+  # Set the cost to 12 and append a NUL
+  my $settings = '$2a$12$'.$salt;
+  return Crypt::Eksblowfish::Bcrypt::bcrypt($password, $settings);
+}
+
+# Check if the passwords match
+sub check_password {
+  my ($plain_password, $hashed_password) = @_;
+  if ($hashed_password =~ m!^\$2a\$\d{2}\$([A-Za-z0-9+\\.\/]{22})!) {
+    my $match = encrypt_password($plain_password, $1);
+    my $bad = 0;
+    for (my $n=0; $n < length $match; $n++) {
+      $bad++ if substr($match, $n, 1) ne substr($hashed_password, $n, 1);
+    }
+    return $bad == 0;
+  } else {
+    return 0;
+  }
+}
+
+# Return a salt
+sub salt {
+    return Crypt::Eksblowfish::Bcrypt::en_base64(Crypt::Random::makerandom_octet(Length=>16));
+}
+
+
+
+
 
 
 sub hasFeature {

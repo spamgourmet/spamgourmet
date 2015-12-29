@@ -83,6 +83,22 @@ sub sanitize {
 #  }
 }
 
+sub webSanitize {
+  my $self = shift;
+  my $instr = shift;
+  $instr =~ s/\'//gi; ## get rid of single quotes
+  $instr =~ s/\"//gi; ## and double quotes
+  $instr =~ s/\(//gi; ## and open parens
+  $instr =~ s/\)//gi; ## and closed ones
+  $instr =~ s/\://gi; ## and colons
+  $instr =~ s/\=//gi; ## and equals signs
+  $instr =~ s/\;//gi; ## get rid of pesky semicolons
+  $instr =~ s/\|//gi; ## and pesky pipes
+  $instr =~ s/\<//gi; ## and HTML stuff
+  $instr =~ s/\>//gi; ## and other HTML stuff
+  $instr =~ s/\///gi; ## and more
+  return $instr;
+}
 
 
 sub getSearchRestriction {

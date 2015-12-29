@@ -163,9 +163,9 @@ sub confirmemailchange {
       $msg = $session->getDialog('confirmationsuccessful','address',$address); 
       $session->{'RealEmail'} = $address;
       my $now = time();
-      $sql = "INSERT INTO AddressAudit (UserID,Address,ChangeTime,IPAddress) VALUES (?,?,?,?);";
-      $st = $config->db->prepare($sql);
-      $st->execute($UserID,$address,$now,$ENV{'REMOTE_ADDR'});
+#      $sql = "INSERT INTO AddressAudit (UserID,Address,ChangeTime,IPAddress) VALUES (?,?,?,?);";
+#      $st = $config->db->prepare($sql);
+#      $st->execute($UserID,$address,$now,$ENV{'REMOTE_ADDR'});
     } elsif ($UserID) {
       $msg = $session->getDialog('confirmedalready','address',$address);
     }
@@ -246,18 +246,19 @@ sub printMyXml {
 sub getSignUpForm {
   my $config = shift;
   my $session = shift;
+  my $util = shift;
   my $signupformtemplate = $config->getCaptchagenHost() ? 'signupform.html' : 'signupformnocaptcha.html';
   my $page =$pagemaker->new(config=>$config,languageCode=>$session->getLanguageCode(),template=>$signupformtemplate);
   $page->setTags('imagefilename',$session->getImageFileName(),
                  'loginmsg', $session->{'loginmsg'},
                  'action', $thisscript,
-                 'newuser', $session->param('newuser'),
+                 'newuser', $util->webSanitize($session->param('newuser')),
                  'imagehash', $session->getImageHash(),
                  'typeimageword', $session->getDialog('typeimageword'),
                  'providepassword', $session->getDialog('providepassword'),
                  'newpass', $session->getDialog('newpass'),
                  'confirm', $session->getDialog('confirm'),
-                 'realemail', $session->param('realemail'),
+                 'realemail', $util->webSanitize($session->param('realemail')),
                  'go', $session->getDialog('go'),
                  'cannotreadimage', $session->getDialog('cannotreadimage')
                  );
@@ -343,6 +344,172 @@ sub getMySendToForm {
   return $page;
 }
 
+sub getMyUpdateForm {
+  my $config = shift;
+  my $session = shift;
+  my $disposable = shift;
+  my $msg = shift;
+  my ($sql,$st,%attr,$page) = ('',0,{},'');
+  my $UserID = $session->getUserID();
+  my ($EmailID,$Word,$MaxCount,$Count,$TimeAdded,$Sender,$Address,$Hidden,$Note);
+  my ($isHidden,$isNotHidden) = ('','CHECKED');
+  my $showHidden = 'CHECKED' if $session->param('showHidden');
+  my $searchterms = $session->param('searchterms');
+
+  $EmailID = $session->param('EmailID');
+  $sql = "SELECT EmailID, Word, InitialCount, Count, TimeAdded, Sender, Address, Hidden, Note
+   FROM Emails WHERE UserID = ? AND EmailID = ?;";
+  $st = $config->db->prepare($sql);
+  $st->execute($UserID,$EmailID);
+  $st->bind_columns(\%attr,\$EmailID,\$Word,\$MaxCount,\$Count,
+   \$TimeAdded,\$Sender,\$Address,\$Hidden,\$Note);
+  $st->fetch();
+  $page = $pagemaker->new(config=>$config,languageCode=>$session->getLanguageCode()); 
+  if ($Count >= -10) {
+
+    if ($Hidden == 1) {
+      ($isHidden,$isNotHidden) = ('CHECKED','');
+    }
+    $Address = $Word if !$Address; # before Feb, 2001, Addresses weren't stored...
+    my $message = $Address;
+
+    srand();
+    my $r = rand(10000);
+
+    $page->setTemplate('myupdateform.html');
+    $page->setTags('message',$message,'action',$thisscript,'emailid',$EmailID,
+    'updateaddress',$session->getDialog('updateaddress'),
+     'remainingmessages',$session->getDialog('remainingmessages'),
+     'exclusivesender',$session->getDialog('exclusivesender'),
+     'thenote',$session->getDialog('note'),
+     'hidden',$session->getDialog('hidden'),
+     'nothidden',$session->getDialog('nothidden'),
+     'updatedescription',$session->getDialog('updatedescription'),
+     'trustedwarning',$session->getDialog('trustedwarning'),
+     'sendfromaddress',$session->getDialog('sendfromaddress'),
+     'editexemplar',$session->getDialog('editexemplar'),
+     'delete',$session->getDialog('delete'),
+     'deleteareyousure',$session->getDialog('deleteareyousure'),
+     'randomnumber',$r,'count',$Count,'sender',$Sender,'searchterms',$searchterms,'note',$Note,
+     'ishidden',$isHidden,'isnothidden',$isNotHidden,'showhidden',$showHidden,'returnwithoutsaving',
+      $session->getDialog('returnwithoutsaving'));
+  } else {
+    $page->setTemplate('addressdisabled.html');
+    $page->setTags('message', $session->getDialog('addressdisabled'),
+     'returnwithoutsaving', $session->getDialog('returnwithoutsaving'));
+  }
+  return $page
+
+}
+
+sub getEditExemplarForm {
+  my $config = shift;
+  my $session = shift;
+  my $disposable = shift;
+  my $msg = shift;
+  my ($sql,$st,%attr,$EmailID,$Address,$Word,$Number,$page) = ('',0,{},0,'','','','');
+  $disposable = 0 if !$disposable;
+#  $msg = "disposable is $disposable" if !$msg;
+  $sql = "SELECT EmailID, Address, Word
+   FROM Emails WHERE UserID = ? AND EmailID = ?";
+  $st = $config->db->prepare($sql);
+  $st->execute($session->getUserID(), $disposable);
+  $st->bind_columns(\%attr,\$EmailID,\$Address, \$Word);
+  $st->fetch();
+  $msg = $Address;
+#  if ($st->fetch()) {
+#$msg .= " editing $Address word is $Word";
+#  } else {
+#$msg .= " no fetch?";
+#  }
+  my $domainoptions = '';
+  my $option = '';
+  my $domain;
+  my $selecteddomain;
+  $Address =~ /(.*)\@(.*)/;
+  my $localpart = $1;
+  my $existingdomain = $2;
+  if ($session->param('domain')) {
+    $selecteddomain = $session->param('domain');
+  } elsif ($existingdomain) {
+    $selecteddomain = $existingdomain;
+  } else {
+    $selecteddomain = $config->getMailHost();
+  }
+  my $selected = '';
+  my @domains = $config->getLocalDomains();
+  foreach $domain (@domains) {
+    $selected = '';
+    if ($domain eq $selecteddomain) {
+      $selected = 'SELECTED';
+    }
+    $option =$pagemaker->new(template=>'domainoption', languageCode=>$session->getLanguageCode());
+    $option->setTags('domain', $domain, 'selected', $selected);
+    $domainoptions .= $option->getContent();
+  }
+#  if ($session->param('domain')) {
+#    $domain = $session->param('domain');
+#  } else {
+#    $domain = $config->getMailHost();
+#  }
+  my ($mprefix,$mword,$mcount,$musername);
+  my $delimiters = $config->getDelimiters();
+  if ($localpart =~ /(.+)[$delimiters](.+)[$delimiters](.+)[$delimiters](.+)/) {
+    ($mprefix,$mword,$mcount,$musername) = ($1,$2,$3,$4);
+  } elsif ($localpart =~ /(.+)[$delimiters](.+)[$delimiters](.+)/) {
+    ($mprefix,$mword,$mcount,$musername) = ('',$1,$2,$3);
+  } elsif ($localpart =~ /(.+)[$delimiters](.+)/) {
+    ($mprefix,$mword,$mcount,$musername) = ('',$1,'',$2);
+  }
+  $mword = $Word if !$mword;
+  $musername = $session->getUserName() if !$musername;
+
+  $page = $pagemaker->new(template=>'editexemplarform.html',languageCode=>$session->getLanguageCode());
+  my $prefix = '';
+  my $prefixinput = '';
+#  if ($session->Prefix()) {
+#    $prefix = $session->Prefix();
+#  } else {
+    $prefix = $mprefix;
+#  }
+  if ($prefix || $session->Prefix) {
+    $prefixinput = $pagemaker->new(template=>'prefixtextinput',languageCode=>$session->getLanguageCode());
+    $prefixinput->setTags(
+                 'prefix', $session->getDialog('prefix'),
+                 'theprefix', $prefix
+                 );
+  } else {
+    $prefixinput = $pagemaker->new(template=>'prefixhiddeninput',languageCode=>$session->getLanguageCode());
+  }
+
+  $page->setTags('msg', $msg,
+                 'domainrequired',$session->getDialog('domainrequired'),
+                 'domainnotinlist',$session->getDialog('domainnotinlist'),
+                 'canonlychangecase', $session->getDialog('canonlychangecase'),
+                 'returntoadvancedmode',$session->getDialog('returntoadvancedmode'),
+                 'disposable', $EmailID,
+                 'prefixinput', $prefixinput->getContent(),
+                 'currentprefix', $session->Prefix(),
+                 'prefixmismatch', $session->getDialog('prefixmismatch'),
+                 'numberrequiredforprefix', $session->getDialog('numberrequiredforprefix'),
+                 'word', $session->getDialog('word'),
+                 'theword', $mword,
+                 'username', $musername,
+                 'theusername', $session->getUserName(),
+                 'user', $session->getDialog('user'),
+                 'number', $session->getDialog('number'),
+                 'thenumber', $mcount,
+                 'thedomain', $selecteddomain,
+                 'domain', $selecteddomain,
+                 'domainoptions', $domainoptions,
+                 'username', $session->getUserName(),
+                 'go', $session->getDialog('go'),
+                 'editexemplardescription', $session->getDialog('editexemplardescription')
+                 );
+  return $page;
+}
+
+
 
 sub myemails {
   my $config = shift;
@@ -354,7 +521,7 @@ sub myemails {
   my $UserID = $session->{'UserID'};
   my ($searchterms,$urlsearchterms,$searchrestriction) = ('','','');
   my $showHidden = '';
-
+  my $showAddressInSearch = 0;
   if ($UserID) {
     $showHidden = 'CHECKED' if $session->param('showHidden');
     $searchterms = $session->param('searchterms');
@@ -362,49 +529,11 @@ sub myemails {
      = (       0,  '',        0,     0,          0,            0,         0,     '',      '',      0,    '');
 
     if ($session->param('myupdateform')) {
-      my ($isHidden,$isNotHidden) = ('','CHECKED');
-      $EmailID = $session->param('EmailID');
-      $sql = "SELECT EmailID, Word, InitialCount, Count, TimeAdded, Sender, Address, Hidden, Note
-       FROM Emails WHERE UserID = ? AND EmailID = ?;";
-      $st = $config->db->prepare($sql);
-      $st->execute($UserID,$EmailID);
-      $st->bind_columns(\%attr,\$EmailID,\$Word,\$MaxCount,\$Count,
-       \$TimeAdded,\$Sender,\$Address,\$Hidden,\$Note);
-      $st->fetch();
-
-      if ($Count >= -10) {
-
-        if ($Hidden == 1) {
-          ($isHidden,$isNotHidden) = ('CHECKED','');
-        }
-        $Address = $Word if !$Address; # before Feb, 2001, Addresses weren't stored...
-        $message = $Address;
-
-        srand();
-        my $r = rand(10000);
-
-        $page->setTemplate('myupdateform.html');
-        $page->setTags('message',$message,'action',$thisscript,'emailid',$EmailID,
-         'updateaddress',$session->getDialog('updateaddress'),
-         'remainingmessages',$session->getDialog('remainingmessages'),
-         'exclusivesender',$session->getDialog('exclusivesender'),
-         'thenote',$session->getDialog('note'),
-         'hidden',$session->getDialog('hidden'),
-         'nothidden',$session->getDialog('nothidden'),
-         'updatedescription',$session->getDialog('updatedescription'),
-         'trustedwarning',$session->getDialog('trustedwarning'),
-         'sendfromaddress',$session->getDialog('sendfromaddress'),
-         'randomnumber',$r,'count',$Count,'sender',$Sender,'searchterms',$searchterms,'note',$Note,
-         'ishidden',$isHidden,'isnothidden',$isNotHidden,'showhidden',$showHidden,'returnwithoutsaving',
-         $session->getDialog('returnwithoutsaving'));
-      } else {
-        $page->setTemplate('addressdisabled.html');
-        $page->setTags('message', $session->getDialog('addressdisabled'),
-                       'returnwithoutsaving', $session->getDialog('returnwithoutsaving'));
-      }
+      $page = &getMyUpdateForm($config,$session,$session->param('disposable'));
     } elsif ($session->param('mysendtoform')) {
       $page = &getMySendToForm($config,$session,$session->param('disposable'));
-    } elsif ($session->param('recipient')) {
+   
+    } elsif ($session->param('recipient')) { # process new sendto address
       my $ph = '';
       my $toAddress = '';
       my $alreadyexists = 0;
@@ -499,7 +628,52 @@ sub myemails {
                      'disposable',$Address,
                      'toaddress',$toAddress);
       }
+      
+    } elsif ($session->param('editexemplarform')) {
+      $page = &getEditExemplarForm($config,$session,$session->param('disposable'));
     } else {
+
+      if ($session->param('editexemplar')) {
+        $EmailID = $session->param('editexemplar');
+        my $ExistingWord;
+        $sql = "SELECT Word FROM Emails WHERE EmailID = ? AND UserID = ?";
+        $st = $config->db->prepare($sql);
+        $st->execute($EmailID,$UserID);
+        $st->bind_columns(\%attr,\$ExistingWord);
+        $st->fetch();
+        $Word = $session->param('word');
+        if (lc($Word) ne lc($ExistingWord)) {
+          $Word = $ExistingWord;
+        }
+        my $UserName = $session->param('username');
+        my $Number = $session->param('number');
+        my $AdrPrefix = $session->param('adrprefix');
+        my $Domain = $session->param('domain');
+        if (lc($UserName) ne lc($session->getUserName())) {
+          $UserName = $session->getUserName();
+        }
+        my $adr = $UserName . '@' . $Domain;
+        $adr = "$Number.$adr" if $Number;
+        $adr = "$Word.$adr";
+        $adr = "$AdrPrefix.$adr" if $AdrPrefix;
+        $sql = "UPDATE Emails SET Address = ? WHERE EmailID = ? AND UserID = ?";
+        $st = $config->db->prepare($sql);
+        $st->execute($adr,$EmailID,$UserID);
+        $showAddressInSearch = $EmailID;
+      }
+      if ($session->param('deleteaddress')) {
+        $EmailID = $session->param('disposable');
+        $sql = "SELECT Address FROM Emails WHERE EmailID = ? AND UserID = ?";
+        my $adr;
+        $st = $config->db->prepare($sql);
+        $st->execute($EmailID,$UserID);
+        $st->bind_columns(\%attr,\$adr);
+        $st->fetch(); 
+        $sql = "DELETE FROM Emails WHERE EmailID = ? AND UserID = ?";
+        $st = $config->db->prepare($sql);
+        $st->execute($EmailID,$UserID);
+        $message .= "$adr " . $session->getDialog('deleted');
+      }
       if ($session->param('updateemail')) {
         $Sender = $session->param('sender');
         $Count = $session->param('count');
@@ -516,10 +690,13 @@ sub myemails {
          WHERE EmailID = ? AND UserID = ? AND Count >= -10";
         $st = $config->db->prepare($sql);
         $st->execute($Count, $Count,$Sender,$Hidden,$Note,$EmailID,$UserID);
+        $showAddressInSearch = $EmailID;
       }
 
 
-      if ($searchterms) {
+      if ($showAddressInSearch) {
+        $searchrestriction = "AND EmailID = $showAddressInSearch";
+      } elsif ($searchterms) {
         $urlsearchterms = $util->URLEncode($searchterms);
         $searchrestriction = $util->getSearchRestriction($searchterms,1,'Prefix','Word','Address','Sender','Note');
       }
@@ -554,7 +731,7 @@ sub myemails {
       $orderby = " TimeAdded DESC" if !$orderby;
 
       my $hiddenrestriction = '';
-      $hiddenrestriction = ' AND HIDDEN = 0 ' if !$showHidden;
+      $hiddenrestriction = ' AND HIDDEN = 0 ' if !$showHidden && !$showAddressInSearch;
    
 
       $sql = "SELECT EmailID, Word, InitialCount, Count, NumDeleted, NumForwarded,
@@ -691,8 +868,8 @@ sub mainPage {
   } 
 
 ## yourstats:
-
-  $yourstats = &getYourStats($config, $session);
+ # moved to below myemails
+#  $yourstats = &getYourStats($config, $session);
 
 ## email address confirmation
   if ($session->param('confirmemailchange')
@@ -840,6 +1017,7 @@ sub mainPage {
     $remembermecheck =$pagemaker->new(template=>'remembermecheck',languageCode=>$session->getLanguageCode());
     $rememberme = $session->getDialog('rememberme');
     $loginform->setTags(
+                        'action', $config->getConfigParameter('secureURL') . $thisscript,
                         'login',$session->getDialog('login'),
                         'user',$session->getDialog('user'),'pass',$session->getDialog('pass'),
                         'remembermecheck', $remembermecheck->getContent(), 'rememberme', $rememberme,
@@ -847,7 +1025,7 @@ sub mainPage {
                         'createaccount',$session->getDialog('createaccount'),'newuser',$session->getDialog('newuser'),
                         'newpass',$session->getDialog('newpass'),'confirm',$session->getDialog('confirm'),
                         'email',$session->getDialog('email'),'go',$session->getDialog('go'),  
-                        'realemail',$session->param('realemail'));
+                        'realemail',$util->webSanitize($session->param('realemail')));
 
     $alert = $session->getDialog('mustloginfirst');
     $myemailslink = "javascript:$alert";
@@ -872,7 +1050,7 @@ sub mainPage {
     $tabs->setTemplate('advancedtabs.html');
   } elsif ($session->getImageHash()) {
     $loginform =$pagemaker->new(template=>'noform.html');
-    $content = &getSignUpForm($config, $session);
+    $content = &getSignUpForm($config, $session,$util);
     $tabs->setTemplate('nobrainertabs.html');
   } elsif ($UserID && $session->param('resetpassword')) {
     $content->setTemplate('newpassword.html');
@@ -892,9 +1070,6 @@ sub mainPage {
                       'go', $session->getDialog('go')
                       );
     $tabs->setTemplate('nobrainertabs.html');
-
-
-
 
   } elsif ((!$session->{'Prefix'} && !$sendercount 
            && !$watchwordcount && !$session->param('advanced')) 
@@ -989,6 +1164,10 @@ sub mainPage {
      );
     $tabs->setTemplate('advancedtabs.html');
   }
+
+## yourstats:
+
+  $yourstats = &getYourStats($config, $session);
 
   $tabs->setTags(
     'nobrainermode', $session->getDialog('nobrainermode'),

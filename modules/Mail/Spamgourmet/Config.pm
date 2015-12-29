@@ -5,7 +5,7 @@ use vars qw{%localdomains $websessiontimeout $dbstring $dbuser $dbpassword $weba
             $uselocalfilecache $localfilecachetimeout $secretphrase $delimiters
             $captchagenhost $captchagenport $dictionaryfile $admindomain 
             $secureURL $normalURL $secureimageshost $normalimageshost $chartserver
-            $mailhost $useunixaccounts $adminemail $adminaccount $otherdomainemail 
+            $mailhost $obmailhost $useunixaccounts $adminemail $adminaccount $otherdomainemail 
             $numberofeatenmessagestolog $recthrottleinterval $maxreccount $recthrottleoffperiod
             $sendthrottleinterval $maxsendcount $maxexpireperiod 
             $newaddressthrottle $newaddressthrottletime $newaddressthrottlecount
@@ -15,7 +15,7 @@ use vars qw{%localdomains $websessiontimeout $dbstring $dbuser $dbpassword $weba
             %FEATURES $_configFileLoaded};
             
 $_configFileLoaded = 0;
-use constant EX_TEMPFAIL    => 75; # temp failure; user is invited to retry
+use constant EX_TEMPFAIL    => 69; # temp failure; user is invited to retry
 $FEATURES{'MASKFORWARD'} = 2;
 $FEATURES{'WATCHWORDS'} = 3;
 $FEATURES{'LEGACYPREFIX'} = 5;
@@ -76,6 +76,7 @@ sub new {
   $self->{'maxexpireperiod'} = $maxexpireperiod;
 
   $self->{'mailhost'} = $mailhost;
+  $self->{'obmailhost'} = $obmailhost;
   $self->{'useunixaccounts'} = $useunixaccounts;
   $self->{'adminemail'} = $adminemail;
   $self->{'adminaccount'} = $adminaccount;
@@ -125,6 +126,11 @@ sub getFeature {
   my $self = shift;
   my $featureword = shift;
   return $FEATURES{$featureword};
+}
+
+sub getFeatureList {
+  my $self = shift;
+  return %FEATURES;
 }
 
 sub getDelimiters {
@@ -178,6 +184,12 @@ sub getMailHost {
   my $self = shift;
   return $self->{'mailhost'};
 }
+
+sub getOutBoundMailHost {
+  my $self = shift;
+  return $self->{'obmailhost'};
+}
+
 
 sub useUnixAccounts {
   my $self = shift;
@@ -278,11 +290,13 @@ sub getDBConnection {
   my $connectTries = 0;
   my $interval = 6; # crisis mode
   my $connected = 0;
+  my $totaltime = 0;
   while (!$connected && $connectTries < 50) {
     $connected = $self->{'db'} = DBI->connect($self->{'dbstring'},$self->{'dbuser'},$self->{'dbpassword'});
     if (!$connected) {
-  $self->debug("failed attempt to connect - try number: $connectTries");
+  $self->debug("failed attempt to connect - try number: $connectTries, total time: $totaltime");
       sleep $interval;
+      $totaltime += $interval;
     }
     $connectTries ++;
     $interval = 15 if ($connectTries > 10); # emergency mode

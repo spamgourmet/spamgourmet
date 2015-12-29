@@ -33,6 +33,7 @@ sub sendpasswordresetmessage {
   $body->setTags('url',$url,'username',$session->{'UserName'});
   my $adminemail = $self->getConfig()->getAdminEmail($self->rot13($session->getUserName()));
   my $msg = "From: " . $adminemail . "\n";
+  $msg .= "To: " . $newaddress . "\n";
   $msg .= "Subject: $subject\nMIME-Version: 1.0\nContent-Type: text/plain; charset=\"utf-8\"\n";
   $msg .= $body->getContent();
   $self->{'mailer'}->sendMail(\$msg, $newaddress, $adminemail);
@@ -56,6 +57,7 @@ sub sendconfirmationmessage {
   $body->setTags('url',$url,'newaddress',$newaddress);
   my $adminemail = $self->getConfig()->getAdminEmail($self->rot13($session->getUserName()));
   my $msg = "From: " . $adminemail . "\n";
+  $msg .= "To: " . $newaddress . "\n";
   $msg .= "Subject: $subject\nMIME-Version: 1.0\nContent-Type: text/plain; charset=\"utf-8\"\n";
   $msg .= $body->getContent();
   $self->{'mailer'}->sendMail(\$msg, $newaddress, $adminemail);

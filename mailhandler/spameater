@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 #################################################################
-# spamgourmet - spameater
+# spamgourmet - spameater, dot-foward edition
 # version 0.9.4
 #
 # This program runs as a separate process from sendmail
@@ -12,8 +12,8 @@
 # the message.  It then either forwards the message (using
 # sendmail) or exits, killing ('eating') the message
 #################################################################
-## Copyright 2000 - 2013 Josiah Q. Hamilton
-## you may reach the author at www.spamgourmet.com
+## Copyright 2000,2001,2002, Josiah Q. Hamilton
+## you may reach the author at info@spamgourmet.com
 #
 # spamgourmet is provided under the Artistic License of the Open Source Initiative
 # A copy of the license should be provided with this distribution
@@ -56,7 +56,8 @@ my (
 
 $useXHeader = 0; # set this up later, based on features
 
-use constant EX_TEMPFAIL    => 75; # temp failure; user is invited to retry
+use constant EX_TEMPFAIL    => 69; # temp failure; user is invited to retry
+# josh: modify to 69 
 
 # snarf the message line by line
 # get 'From' data (first occurrence)
@@ -213,6 +214,12 @@ if ($config->isLocalDomain($fromdomain)) {
    || $from =~ /^webmaster@/i
    ) {
     # insert validation code here:
+    if ($fromname !~ /josh/) {
+      $config->debug("attempt at forged admin message from $from (fromname: $fromname");
+      #$config->debug($msg);
+      $config->die() if $config;
+      exit;
+    }
   }
 }
 
@@ -242,7 +249,7 @@ foreach $for (keys %deliveryAddresses) {
 
   ($mprefix,$mword,$mcount,$musername,$mexpiretime) = ('','','','','');
 
-  ## check to see if this is *from* a user first (the *new* way):
+  ## check to see if this is *from* a user first (the old way):
   if ($for =~ /^\+(.+)\+(.+)\+(\w+)\.(.+)\@/) {
     $mword = $1;
     $musername = $2;
@@ -253,8 +260,9 @@ foreach $for (keys %deliveryAddresses) {
     $st->execute($musername);
     $st->bind_columns(\%attr,\$UserID,\$Features,\$RealEmail, \$SendThrottleTime,\$SendThrottleCount);
     $st->fetch();
+$config->debug('sending on old style redir addr for user ' . $musername);
     if (!$util->hasFeature('ACCOUNTDISABLED', $Features)) {
-
+$config->debug('actually not... the account is disabled.');
       $sql = "SELECT PrivateHash, Address FROM Emails WHERE UserID = ? AND Word = ?";
       $st = $config->db->prepare($sql);
       $st->execute($UserID, $mword);
@@ -358,10 +366,10 @@ foreach $for (keys %deliveryAddresses) {
      || $musername =~ /^root$/i
      ) {
       my $admdmn = $config->getAdminDomain();
-#      if ($todomain =~ /$admdmn/i) {
+      if ($todomain =~ /$admdmn/i) {
         # don't advance counter -- this is administrative mail...
         &sendMail($config,$useXHeader,$config->getAdminEmail(),\$msg,''); 
-#      }
+      }
       next;
     }
   }
