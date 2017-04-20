@@ -650,20 +650,20 @@ sub setCookies {
    '%26','\:\:','%3A%3A','\s','+');
   my @giveyoucookies = @_;
   my ($giveyoucookie,$value,$cookiechar);
-  my $httpd = 1;
+#  my $httpd = 1;
   my $expires = '';
-  if ($httpd == 2) {
-    print "Set-Cookie: ";
-    while(($giveyoucookie,$value) = @giveyoucookies ) {
-      foreach $cookiechar (@encoding) {
-        $giveyoucookie =~ s/$cookiechar/$encoding{$cookiechar}/g;
-        $value =~ s/$cookiechar/$encoding{$cookiechar}/g;
-      }
-      print $giveyoucookie, "=",  $value,  ";expires=never";
-      shift(@giveyoucookies); shift(@giveyoucookies);
-    }
-    print "\n";
-  } else {
+#  if ($httpd == 2) {
+#    print "Set-Cookie: ";
+#    while(($giveyoucookie,$value) = @giveyoucookies ) {
+#      foreach $cookiechar (@encoding) {
+#        $giveyoucookie =~ s/$cookiechar/$encoding{$cookiechar}/g;
+#        $value =~ s/$cookiechar/$encoding{$cookiechar}/g;
+#      }
+#      print $giveyoucookie, "=",  $value,  ";expires=never";
+#      shift(@giveyoucookies); shift(@giveyoucookies);
+#    }
+#    print "\n";
+#  } else {
     while(($giveyoucookie,$value) = @giveyoucookies ) {
       foreach $cookiechar (@encoding) {
         $expires = '';
@@ -673,10 +673,14 @@ sub setCookies {
           $expires = 'expires=Wed, 31 Dec 2036 00:00:00 UTC';
         }
       }
-      print "Set-Cookie: ",$giveyoucookie,"=",$value,";path=/;$expires\n";
+      my $secure = '';
+      $secure = 'Secure;' unless $giveyoucookie eq 'languageCode';
+      my $httponly = '';
+      $httponly = 'httponly;' unless $giveyoucookie eq 'languageCode';
+      print "Set-Cookie: ",$giveyoucookie,"=",$value,";path=/;$httponly$secure$expires\n";
       shift(@giveyoucookies); shift(@giveyoucookies);
     }
-  }
+#  }
 }
 
 sub encrypt {

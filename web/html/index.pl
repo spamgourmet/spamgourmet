@@ -1,7 +1,7 @@
 #!/usr/bin/perl -w
 use strict;
 use vars qw{$thisscript $pagemaker};
-use lib "/home/spamgourmet/modules";
+use lib "/path/to/modules";
 use DBD::mysql;
 use CGI;
 use Digest::MD5 qw(md5_hex);
@@ -1640,35 +1640,6 @@ sub getSayingNum {
   $saying;
 }
 
-sub setCookies {
-  my @encoding = ('\%','\+','\;','\,','\=','\&','\:\:','\s');
-  my %encoding =('\%','%25','\+','%2B','\;','%3B','\,','%2C','\=','%3D','\&',
-   '%26','\:\:','%3A%3A','\s','+');   
-  my @giveyoucookies = @_;
-  my ($giveyoucookie,$value,$cookiechar);
-#  my $httpd = 1;
-#  if ($httpd == 2) {
-#    print "Set-Cookie: ";
-#    while(($giveyoucookie,$value) = @giveyoucookies ) {
-#      foreach $cookiechar (@encoding) {
-#        $giveyoucookie =~ s/$cookiechar/$encoding{$cookiechar}/g;
-#        $value =~ s/$cookiechar/$encoding{$cookiechar}/g;
-#      }
-#      print $giveyoucookie, "=",  $value,  ";expires=never";
-#      shift(@giveyoucookies); shift(@giveyoucookies);
-#    }
-#    print "\n";
-#  } else {
-    while(($giveyoucookie,$value) = @giveyoucookies ) {
-      foreach $cookiechar (@encoding) {
-        $giveyoucookie =~ s/$cookiechar/$encoding{$cookiechar}/g;
-        $value =~ s/$cookiechar/$encoding{$cookiechar}/g;
-      }
-      print "Set-Cookie: ",$giveyoucookie,"=",$value,";path=/; httponly; Secure\n";
-      shift(@giveyoucookies); shift(@giveyoucookies);
-    }
-#  }
-}
 
 
 
