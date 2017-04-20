@@ -83,6 +83,7 @@ if ($ENV{'RECIPIENT'}) { # Exim
   $headerValues{'from'} = $ENV{'FROM'};
   $headerValues{'sender'} = $ENV{'SENDER'};
   $headerValues{'replyto'} = $ENV{'REPLYTO'};
+  $headerValues{'messageid'} = $ENV{'MESSAGE_ID'};
   $inHeaders = 0; # got relevant info from environment - yay!
 }
 # using Exim's 'sender' as the default Return-path
@@ -132,7 +133,7 @@ while (defined($line = <STDIN>)) {
   }
 }
 my $msgsize = length($msg);
-$0 = "spameater:$msgsize$headerValues{'from'}"; 
+$0 = "spameater: $headerValues{'messageid'} ($msgsize)"; #$headerValues{'from'}"; 
 
 my ($bcc,$prior);
 my $saferecips = ($headerValues{'to'} . $headerValues{'cc'});
@@ -835,6 +836,9 @@ sub sendMail {
     $$msgref =~ s/(^X-Sender\:).*$(?:\n\s.*$)*/$1 $sender/mi;
     $$msgref =~ s/(^X-Sent-From\:).*$(?:\n\s.*$)*/$1 $sender/mi;
     $$msgref =~ s/(^Disposition-Notification-To:).*$(?:\n\s.*$)*/$1 $sender/mi;
+## 2017-03-30 - attempt at DKIM quick fix
+    $$msgref =~ s/^DKIM-Signature/OriginalDKIM-Signature/mig;
+#    $$msgref =~ s/^DKIM-Signature.*\n//mi;
   }
   if ($replyto) {
     if ($replytodisplay) {
