@@ -18,6 +18,34 @@ sub new {
 }
 
 
+
+sub sendchangedemailmessage {
+  my $self = shift;
+  my $session = shift;
+  my $thisscript = shift;
+  my $oldaddress = shift;
+  my $newaddress = shift;
+  my $subject = $session->getDialog('changedemail');
+
+  my $body = Mail::Spamgourmet::Page->new(template=>'changedemail.txt',
+                                          languageCode=>$session->getLanguageCode());
+
+  $body->setTags('oldaddress',$oldaddress,'newaddress',$newaddress);
+  my $adminemail = 'noreply@spamgourmet.com';
+  my $msg = "From: $adminemail\n";
+
+
+  $msg .= "To: " . $oldaddress . "\n";
+  $msg .= "Subject: $subject\nMIME-Version: 1.0\nContent-Type: text/plain; charset=\"utf-8\"\n";
+  $msg .= $body->getContent();
+  $self->{'mailer'}->sendMail(\$msg, $oldaddress, $adminemail);
+#  $self->{'config'}->debug("sent password reset message");
+  return 0;
+}
+
+
+
+
 sub sendpasswordresetmessage {
   my $self = shift;
   my $session = shift;

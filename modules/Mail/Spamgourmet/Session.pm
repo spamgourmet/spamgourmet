@@ -326,14 +326,15 @@ sub login {
     }
 
     if (!$badpw && $uid) {
-
-      $sql = "SELECT UserID, UserName, LanguageCode, Features, RealEmail, PendingEmail,
+      my $existingToken;
+      my $tokenToSet;
+      $sql = "SELECT UserID, UserName, LanguageCode, Features, RealEmail, PendingEmail, SessionToken,
        Prefix, NumDeleted, NumForwarded, PendingHashCode, DefaultNumber FROM Users
        WHERE (UserID = ?);";
       $st = $self->{'config'}->db->prepare($sql);
       $st->execute($uid);
       $st->bind_columns(\%attr,\$self->{'UserID'},\$self->{'UserName'},\$dbLC,\$self->{'Features'},
-       \$self->{'RealEmail'},\$self->{'PendingEmail'},\$self->{'Prefix'},
+       \$self->{'RealEmail'},\$self->{'PendingEmail'},\$existingToken,\$self->{'Prefix'},
        \$self->{'NumDeleted'},\$self->{'NumForwarded'}, \$self->{'PendingHashCode'}, \$self->{'DefaultNumber'});
       $st->fetch();
 
@@ -356,14 +357,18 @@ sub login {
 #          $st2->execute($m , $self->{'UserID'});
 #        }
 
-        $newToken = &getNewToken($User);
-        $IPToken = &getIPToken($newToken);
+        if (!$existingToken) {
+          $newToken = &getNewToken($User);
+          $IPToken = &getIPToken($newToken);
 
-        $sql = 'UPDATE Users SET SessionToken = ?, LastCommand = ? WHERE UserID = ?';
-        $st2 = $self->{'config'}->db->prepare($sql);
-        $st2->execute($IPToken, $now, $self->{'UserID'});
-
-        $self->setCookies('token',$newToken);
+          $sql = 'UPDATE Users SET SessionToken = ?, LastCommand = ? WHERE UserID = ?';
+          $st2 = $self->{'config'}->db->prepare($sql);
+          $st2->execute($IPToken, $now, $self->{'UserID'});
+          $tokenToSet = $newToken;
+        } else {
+          $tokenToSet = $existingToken;
+        }
+        $self->setCookies('token',$tokenToSet);
         $self->{'loginmsg'} = $self->{'dialogs'}->get('loggedinas','user',$self->{'UserName'});
       } else {
         $disabled = 1;

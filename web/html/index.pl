@@ -1,7 +1,7 @@
 #!/usr/bin/perl -w
 use strict;
 use vars qw{$thisscript $pagemaker};
-use lib "/path/to/modules";
+use lib "/home/spamgourmet/modules";
 use DBD::mysql;
 use CGI;
 use Digest::MD5 qw(md5_hex);
@@ -163,9 +163,18 @@ sub confirmemailchange {
       $msg = $session->getDialog('confirmationsuccessful','address',$address); 
       $session->{'RealEmail'} = $address;
       my $now = time();
-#      $sql = "INSERT INTO AddressAudit (UserID,Address,ChangeTime,IPAddress) VALUES (?,?,?,?);";
-#      $st = $config->db->prepare($sql);
-#      $st->execute($UserID,$address,$now,$ENV{'REMOTE_ADDR'});
+      $sql = "INSERT INTO AddressAudit (UserID,Address,ChangeTime,IPAddress) VALUES (?,?,?,?);";
+      $st = $config->db->prepare($sql);
+      $st->execute($UserID,$address,$now,$ENV{'REMOTE_ADDR'});
+
+########### send changed email message to old address
+      my $wm = Mail::Spamgourmet::WebMessages->new(config=>$config);
+      $wm->sendchangedemailmessage($session,
+                                      $thisscript,
+                                      $realaddress,
+                                      $address);
+
+
     } elsif ($UserID) {
       $msg = $session->getDialog('confirmedalready','address',$address);
     }
@@ -351,18 +360,19 @@ sub getMyUpdateForm {
   my $msg = shift;
   my ($sql,$st,%attr,$page) = ('',0,{},'');
   my $UserID = $session->getUserID();
-  my ($EmailID,$Word,$MaxCount,$Count,$TimeAdded,$Sender,$Address,$Hidden,$Note);
+  my ($EmailID,$Word,$MaxCount,$Count,$TimeAdded,$Sender,$Address,$Hidden,$Note,$NumForwarded,$NumDeleted);
   my ($isHidden,$isNotHidden) = ('','CHECKED');
   my $showHidden = 'CHECKED' if $session->param('showHidden');
   my $searchterms = $session->param('searchterms');
 
   $EmailID = $session->param('EmailID');
-  $sql = "SELECT EmailID, Word, InitialCount, Count, TimeAdded, Sender, Address, Hidden, Note
+  $sql = "SELECT EmailID, Word, InitialCount, Count, TimeAdded, Sender, Address, Hidden, Note, 
+   NumForwarded, NumDeleted 
    FROM Emails WHERE UserID = ? AND EmailID = ?;";
   $st = $config->db->prepare($sql);
   $st->execute($UserID,$EmailID);
   $st->bind_columns(\%attr,\$EmailID,\$Word,\$MaxCount,\$Count,
-   \$TimeAdded,\$Sender,\$Address,\$Hidden,\$Note);
+   \$TimeAdded,\$Sender,\$Address,\$Hidden,\$Note,\$NumForwarded,\$NumDeleted);
   $st->fetch();
   $page = $pagemaker->new(config=>$config,languageCode=>$session->getLanguageCode()); 
   if ($Count >= -10) {
@@ -375,10 +385,20 @@ sub getMyUpdateForm {
 
     srand();
     my $r = rand(10000);
-
+    $TimeAdded = $util->formatNumDate($TimeAdded); 
+    my $deletednodash = $session->getDialog('deleted');
+    $deletednodash =~ s/\-<br>//g;
+    my $forwardednodash = $session->getDialog('forwarded');
+    $forwardednodash  =~ s/\-<br>//g;
     $page->setTemplate('myupdateform.html');
     $page->setTags('message',$message,'action',$thisscript,'emailid',$EmailID,
     'updateaddress',$session->getDialog('updateaddress'),
+
+    'forwarded', $forwardednodash,
+    'deleted', $deletednodash,
+    'created', $session->getDialog('created'),
+
+
      'remainingmessages',$session->getDialog('remainingmessages'),
      'exclusivesender',$session->getDialog('exclusivesender'),
      'thenote',$session->getDialog('note'),
@@ -390,6 +410,7 @@ sub getMyUpdateForm {
      'editexemplar',$session->getDialog('editexemplar'),
      'delete',$session->getDialog('delete'),
      'deleteareyousure',$session->getDialog('deleteareyousure'),
+     'numforwarded',$NumForwarded,'numdeleted',$NumDeleted,'timeadded',$TimeAdded,
      'randomnumber',$r,'count',$Count,'sender',$Sender,'searchterms',$searchterms,'note',$Note,
      'ishidden',$isHidden,'isnothidden',$isNotHidden,'showhidden',$showHidden,'returnwithoutsaving',
       $session->getDialog('returnwithoutsaving'));
@@ -1625,28 +1646,28 @@ sub setCookies {
    '%26','\:\:','%3A%3A','\s','+');   
   my @giveyoucookies = @_;
   my ($giveyoucookie,$value,$cookiechar);
-  my $httpd = 1;
-  if ($httpd == 2) {
-    print "Set-Cookie: ";
+#  my $httpd = 1;
+#  if ($httpd == 2) {
+#    print "Set-Cookie: ";
+#    while(($giveyoucookie,$value) = @giveyoucookies ) {
+#      foreach $cookiechar (@encoding) {
+#        $giveyoucookie =~ s/$cookiechar/$encoding{$cookiechar}/g;
+#        $value =~ s/$cookiechar/$encoding{$cookiechar}/g;
+#      }
+#      print $giveyoucookie, "=",  $value,  ";expires=never";
+#      shift(@giveyoucookies); shift(@giveyoucookies);
+#    }
+#    print "\n";
+#  } else {
     while(($giveyoucookie,$value) = @giveyoucookies ) {
       foreach $cookiechar (@encoding) {
         $giveyoucookie =~ s/$cookiechar/$encoding{$cookiechar}/g;
         $value =~ s/$cookiechar/$encoding{$cookiechar}/g;
       }
-      print $giveyoucookie, "=",  $value,  ";expires=never";
+      print "Set-Cookie: ",$giveyoucookie,"=",$value,";path=/; httponly; Secure\n";
       shift(@giveyoucookies); shift(@giveyoucookies);
     }
-    print "\n";
-  } else {
-    while(($giveyoucookie,$value) = @giveyoucookies ) {
-      foreach $cookiechar (@encoding) {
-        $giveyoucookie =~ s/$cookiechar/$encoding{$cookiechar}/g;
-        $value =~ s/$cookiechar/$encoding{$cookiechar}/g;
-      }
-      print "Set-Cookie: ",$giveyoucookie,"=",$value,";path=/;\n";
-      shift(@giveyoucookies); shift(@giveyoucookies);
-    }
-  }
+#  }
 }
 
 

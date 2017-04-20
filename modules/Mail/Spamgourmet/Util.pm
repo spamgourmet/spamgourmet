@@ -1,5 +1,6 @@
 package Mail::Spamgourmet::Util;
 use strict;
+use utf8;
 use Digest::MD5 qw(md5_hex);
 
 sub new {
@@ -121,7 +122,7 @@ sub getRedirectedAddress {
   my $name = shift;
 #  my $host = $self->{'config'}->getMailHost();
   my $host = $self->{'config'}->getOutBoundMailHost();
-
+  utf8::upgrade($name);
   $addr =~ s/\@/\#/;
   my $hash = $self->getShortHash($addr,$key);
 #  my $raddr = '+' . $word . '+' . $user . '+' . $hash . '.' . $addr . '@' . $host;
@@ -165,6 +166,7 @@ sub getAddressAndDisplay {
     $display =~ s/^ //;
     $display =~ s/ $//;
   }
+  utf8::upgrade($display);
   $addr =~ s/<//;
   $addr =~ s/>//;
   $addr =~ s/\s//g;
