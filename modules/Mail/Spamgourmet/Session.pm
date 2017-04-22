@@ -416,6 +416,7 @@ sub login {
         }
       } else {
         $self->{'loginmsg'} .= $self->{'dialogs'}->get('loginproblem');
+        $self->setCookies('token', ''); # clear the stale token
       }
     }
   }
