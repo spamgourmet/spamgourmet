@@ -823,6 +823,9 @@ sub sendMail {
     $senderdisplay =~ s/(.*)\s/$1\n /;
   }
 
+# 2017-04-23 - need to take this approach for almost all messages
+  $$msgref =~ s/^DKIM-Signature/OriginalDKIM-Signature/mig;
+
   if ($sender) {
 #    $$msgref =~ s/(^Return-Path\: ).*$/$1 $sender/mi;
 #    $$msgref =~ s/(^From\: ).*$/$1 $senderdisplay/mi;
@@ -837,7 +840,7 @@ sub sendMail {
     $$msgref =~ s/(^X-Sent-From\:).*$(?:\n\s.*$)*/$1 $sender/mi;
     $$msgref =~ s/(^Disposition-Notification-To:).*$(?:\n\s.*$)*/$1 $sender/mi;
 ## 2017-03-30 - attempt at DKIM quick fix
-    $$msgref =~ s/^DKIM-Signature/OriginalDKIM-Signature/mig;
+#    $$msgref =~ s/^DKIM-Signature/OriginalDKIM-Signature/mig;
 #    $$msgref =~ s/^DKIM-Signature.*\n//mi;
   }
   if ($replyto) {
