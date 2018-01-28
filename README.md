@@ -2,9 +2,9 @@
 These are instructions and a helper script to clone the spamgourmet website 
 
 Everything below is built on the shoulders of:
-1. **Josh Parris** (https://bbs.spamgourmet.com/viewtopic.php?f=2&t=1703)
-1. **cgz** (https://bbs.spamgourmet.com/viewtopic.php?f=2&t=1356)
-1. **cndpost** (https://bbs.spamgourmet.com/viewtopic.php?f=2&t=1298)
+1. **Josh Parris** [see here](https://bbs.spamgourmet.com/viewtopic.php?f=2&t=1703)
+1. **cgz** [see here](https://bbs.spamgourmet.com/viewtopic.php?f=2&t=1356)
+1. **cndpost** [see here](https://bbs.spamgourmet.com/viewtopic.php?f=2&t=1298)
 
 I and you owe them many thanks.
 
