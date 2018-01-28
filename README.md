@@ -13,7 +13,7 @@ NB. This is very brittle, the script does absolutely no error checking.
 **You WILL have problems running it :-)** if you do not follow the instructions to the letter (and probably even if you do).
 
 ## Prerequisites
-Before you attempt to run this script **from a root shell on the target host*** you should:
+Before you attempt to run this script **from a root shell on the target host** you should:
 1. ensure you can ssh as root with no password to your host (i.e. with a ssh key)
 1. ensure you can set up LetsEncrypt for your domain, and reach a state where the certificate renewal actually renews your certificates by simply running `cd /var/lib/dehydrated; dehydrated -c`.
 1. have asked your hosting provider to set up reverse DNS (**rDNS**) to resolve to your *example.com* (replace this with your own domain), and ensured that they did it by running `host ip.addr.of.host`.
