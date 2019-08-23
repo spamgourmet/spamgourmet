@@ -38,8 +38,8 @@ NOTE: This software is only if you want to *provide* the service.
 
 - Spamgourmet
 
-	* make appropriate changes to spamgourmet.config
-  
+	* make appropriate changes to spamgourmet.config	  
+  &nbsp;
   ```
 	cd conf
 	cp spamgourmet.config.default spamgourmet.config
