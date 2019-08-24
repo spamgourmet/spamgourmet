@@ -120,7 +120,7 @@ while (defined($line = <STDIN>)) {
     }
 
     if (!$for || $for eq $config->getOtherDomainEmail()) {
-      $line =~ /^.*for <*(.+)>*/;
+      $line =~ /^ for <*(.+)>*/;
       $for = $1;
       if (!$for || $for eq $config->getOtherDomainEmail()) {
         $line =~ /^Delivered\-To\:\s+\w+\-\w{3}\-(.*)/;
@@ -240,6 +240,13 @@ $config->debug($msg) if $extradebug;
 
 foreach $for (keys %deliveryAddresses) {
   $config->debug("handling $for") if $extradebug;
+
+  if ($from && lc($for) eq lc($from)) {
+    # assume spoof attempt
+    $config->debug("assumed spoof $ENV{'SENDERIP'}: $from to $for exiting");
+    $config->die() if $config;
+    exit;
+  }
 
   # initialize the vars:
   ($UserID,$RealEmail,$SpamEmail,$Prefix,$Features,
