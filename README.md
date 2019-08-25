@@ -1,6 +1,20 @@
 
 NOTE: This software is only if you want to *provide* the service.
 
+Additional documentation:
+
+- [cloning script][clone-script]
+- [spamgourmet home][spam-home] ([archived][spam-home-arch])
+    - [spamgourmet bulletin board][spam-bbs] ([archived][spam-bbs-arch])
+        - [Developers forum][spam-bbs-dev] ([archived][spam-bbs-dev-arch])
+
+[clone-script]: https://github.com/vasile-gh/spamgourmet-clone
+[spam-home]: https://www.spamgourmet.com/index.pl
+[spam-home-arch]: https://web.archive.org/web/*/www.spamgourmet.com
+[spam-bbs]: https://bbs.spamgourmet.com/index.php
+[spam-bbs-arch]: https://web.archive.org/web/*/https://bbs.spamgourmet.com/index.php
+[spam-bbs-dev]: https://bbs.spamgourmet.com/viewforum.php?f=2
+[spam-bbs-dev-arch]: https://web.archive.org/web/*/https://bbs.spamgourmet.com/viewforum.php?f=2
 
 ### INSTALLATION NOTES
 ------------------
@@ -38,7 +52,7 @@ NOTE: This software is only if you want to *provide* the service.
 
 - Spamgourmet
 
-	* make appropriate changes to spamgourmet.config	  
+	* make appropriate changes to spamgourmet.config
   &nbsp;
   ```
 	cd conf
