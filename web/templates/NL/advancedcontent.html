@@ -20,27 +20,28 @@ ikverfoeispam.12.tweelingzus@spamgourmet.com</p>
 
 <p><b>Antwoordadres Maskeren</b>: soms wens je te antwoorden op een mailtje (waarvan je in het vak <i>Aan:</i> een van je SpamGourmet-adressen herkent). Bij een klik op "Beantwoorden" merk je dat in het vak "Van:" opnieuw je af te schermen echte adres staat. Daar weet SpamGourmet raad mee: als je de functie <b>Antwoordadres Maskeren</b> activeert, gaat je antwoord éérst naar SpamGourmet; ons systeem vervangt dan in het vak "Van:" jouw echte adres door het wegwerpadres dat door de zender is gebruikt, alvorens het antwoord naar de zender door te sturen.
 
-<p><b>Zoek in of toon wegwerpadressen</b>: je kunt een tabel met al je
+<p><b>Toon wegwerpadressen of zoek erin</b>: je kunt een tabel met al je
 wegwerpadressen oproepen door op deze button te klikken. <br>
-Als je geen zoekterm intikt, zie je al je adressen:
-<br>* Je kunt de kolomhoofden aanklikken om te sorteren.
-<br>* Je kunt op het onderstreepte koppelingswoord van elk wegwerpadres afzonderlijk klikken om te wijzigen: 
-<br><br>a) het aantal resterende mails aanpassen;<br>
+Als je geen zoekterm intikt, zie je al je adressen:<br>
+* Je kunt de kolomhoofden aanklikken om te sorteren.<br>
+* Je kunt op het onderstreepte koppelingswoord van elk wegwerpadres afzonderlijk klikken om een en ander te wijzigen: 
+<br><br>
+a) het aantal overblijvende berichten aanpassen ("0" als je al de berichten ernaar (behalve van de vertrouwde zenders) meteen wil laten opeten);<br>
 b) een exclusieve zender invullen; je verneemt meer over exclusieve zenders in de Veelgestelde Vragen (FAQ) - het is vrijwel hetzelfde als een vertrouwde zender hebben voor het betreffende adres;<br>
-c) het adres al of niet verbergen in de lijst: je zult het adres willen verbergen als het niet meer actief is of als het  adres niet door jou is aangemaakt, maar door iemand die dezelfde gebruikersnaam heeft gebruikt (immers, je kunt geen wegwerpadressen integraal verwijderen);<br>
+c) het adres al of niet verbergen in de lijst: je zult het adres willen verbergen als het niet meer actief of nuttig is of als je het adres niet herkent als door jou aangemaakt, maar misschien door een machine (immers, berichten worden opgegeten, maar je kunt geen wegwerpadressen integraal verwijderen);<br>
 d) een notitie maken (bv. aard van de zender; product).<br>
  
 <p>Of, als je wilt, kun je de hele
 lijst in XML krijgen door <a href="<%xmllink%>">hier</a> te klikken.</p> 
 
 <p><b>Prefix:</b> Mocht je echt paranoïde zijn, kun je een <i>`prefix´</i> specifiëren. Dat is dan
-vereist voor elk nieuw bericht van een niet vertrouwde zender. Denk hierbij aan een leuze bij het creëren van nieuwe wegwerpadressen dat je van tijd tot tijd verandert. In feite zorgt een prefix voor hetzelfde als een leuze (het belet het creëren van nieuwe wegwerpadressen door anderen) - over het algemeen zijn leuzen een betere optie. Maar lees verder als je er nog zin in hebt...</p>
+vereist voor elk nieuw bericht van een niet-vertrouwde zender. Denk hierbij aan een leuze bij het creëren van nieuwe wegwerpadressen dat je van tijd tot tijd verandert. In feite zorgt een prefix voor hetzelfde als een leuze (het belet het creëren van nieuwe wegwerpadressen door anderen) - over het algemeen zijn leuzen een betere optie. Maar lees verder als je er nog zin in hebt...</p>
 
 <form action="<%action%>" method="post" onSubmit="return checkPrefixForm(this);"><p align="center">
 Je prefix: <input type="text" name="prefix" value="<%prefix%>" maxlength=20> <input type="<%button%>" value="sla prefix op" onClick="<%onClick%>">
 </p></form>
 
-Indien je een prefix specifieert, zal het systeem daarzonder geen nieuwe adressen creëren. Dit zal je beschermen als je denkt dat iemand anders adressen aanmaakt met je gebruikersnaam. De structuur van een `geprefixeerd´ wegwerpadres is:
+Indien je een prefix specificeert, zal het systeem daarzonder geen nieuwe adressen creëren. Dit zal je beschermen als je denkt dat iemand anders adressen aanmaakt met je gebruikersnaam. De structuur van een `geprefixeerd´ wegwerpadres is:
 
 <p align="center">
 <i>prefix.woord.x.gebruiker</i>@spamgourmet.com</p>
@@ -50,15 +51,21 @@ Indien je een prefix specifieert, zal het systeem daarzonder geen nieuwe adresse
 <p align="center">
 toedeloe.datisdekwestie.2.tweelingzus@spamgourmet.com</p>
 
-En als je later je prefix verandert in `hocuspocus´, dan zal de prefix `toedeloe´
+<p>En als je later je prefix verandert in `hocuspocus´, dan zal de prefix `toedeloe´
 niet meer werken om een adres aan te maken, maar bestaande adressen zullen
 blijven werken. Indien je je prefix verwijdert, zullen wegwerpadressen
-gemaakt kunnen worden met of zonder prefix.
+gemaakt kunnen worden met of zonder prefix.</p>
 
-<p><b>Standaardwaarde:</b> vul dit in, wanneer je het wil laten verschillen van "3", de standaardwaarde die SpamGourmet toekent, indien je het vak leeglaat of bij het aanmaken vergeten bent het getal te vermelden.</p>
+<p><b>Standaardwaarde:</b> vul dit in, wanneer je het wil laten verschillen van "3", de standaardwaarde die SpamGourmet toekent, indien je het vak leeg laat of bij het aanmaken vergeten bent het getal te vermelden.</p>
 
-<p><b>Opgegeten berichten loggen:</b> als dit aanstaat, toont SpamGourmet je de 3 laatste berichten die opgegeten zijn. Hou de server ajb snel door dit niet te activeren (en zeker niet voor de verborgen adressen), als je denkt er nooit naar te zullen omzien (die berichten zijn toch voorgoed weg). Wij vinden dat we maximaal 3 opgegeten berichten kunnen loggen, omdat loggen de snelheid van het systeem verzwaart. </p> 
+<p><b>Opgegeten berichten loggen:</b> als dit aanstaat, toont SpamGourmet je de 3 laatste berichten die opgegeten zijn. Hou de server ajb snel door dit niet te activeren (en zeker niet voor de verborgen adressen), als je denkt er nooit naar te zullen omzien (die berichten zijn toch voorgoed weg). Wij vinden dat we maximaal 3 opgegeten berichten kunnen loggen, omdat loggen de snelheid van het systeem verzwaart.</p> 
 
-<p><b>Onderwerpregel verbergen:</b> als dit aanstaat, toont SpamGourmet je geen bijzonderheden (in het Engels) boven in elk doorgestuurd bericht naar je echte adres (bv. "remaining messages", "trusted sender"). Je vindt diezelfde informatie in de `header´ van je e-mailbericht dat je doorgaans met je e-mailprogramma kunt raadplegen.</p>
+<p><b>Onderwerpregel verbergen:</b> als dit aanstaat, verbergt SpamGourmet een van de twee volgende bijzonderheden (<i>in het Engels</i>) van boven in elk doorgestuurd bericht:
+<br>(a) het hoeveelste bericht van welk totaal;
+<br>(b) de zender is vertrouwd/exclusief. 
+<br>Zoals hierboven beschreven sluiten beide vermeldingen elkaar wederzijds uit: (a) de teller loopt dus naar 0, zolang je de zender niet opneemt in je lijstje vertrouwde zenders; (b) voor een vertrouwde of exclusieve zender is de teller stopgezet.
+<br>Je vindt diezelfde informatie in de `header´ (het `origineel´) van je e-mailbericht dat je doorgaans met je e-mailprogramma kunt raadplegen.</p>
+
+<p><b>Enkel "vertrouwd/exclusief" verbergen:</b> dit spreekt voor zichzelf. Merk op dat daarom één keuze in combinatie met de vorige regel onmogelijk gemaakt is: nee-ja verspringt automatisch naar ja-ja.</p>
 
 

@@ -88,9 +88,7 @@ eintragen, wird unser interner Zähler auf 20 gesetzt. Aber Sie möchten <i>nich
 wirklich </i>mehr als 20 Nachrichten über eine Wegwerfadresse erhalten, oder?
 </p>
 
-<p>Hinweis: Seit 8. Juni 2001 können Sie die Kontingente Ihrer Wegwerfadressen
-im Profimodus wieder auf das Maximum von 20 Nachrichten
-auffüllen.
+<p>Hinweis: Seit dem 8. Juni 2001 können Sie ausschließliche Absender für bestimmte Wegwerfadressen hinzufügen, bearbeiten und entfernen, indem Sie sich die Wegwerfadressen mit dem Suchformular im Profimodus anzeigen lassen und dann auf die Wegwerfadresse klicken.  Das erlaubt Ihnen, eine normale Wegwerfadresse auszugeben und sie dann jederzeit auf den Absender der Nachrichten auszurichten – ähnlich dem Hinzufügen eines vertrauenswürdigen Absenders, aber eingeschränkt auf diese Wegwerfadresse.  Wenn es sich bei der ausschließlichen Adresse statt einer Absender‐ um eine Empfängeradresse handelt, etwa die „to“‐Adresse einer Mailingliste, die sie abonnieren wollen, dann geht das auch.  (Nur geben Sie natürlich die Wegwerfadresse selbst hier nicht an, denn das hätte den Effekt, daß jeder an diese Adresse eine unbeschränkte Anzahl an Nachrichten schicken könnte.)
 </p>
 
 <p>F. <b>Also kann ich mit "Ja" antworten, wenn ich gefragt werde, ob
@@ -138,9 +136,9 @@ Absender als vertrauten Absender eintragen und erhalte die E-Mails?</b><br>
 A. Ja. Tragen Sie die Absenderadresse einer der erhaltenen E-Mails einfach als
 "trusted sender" ein.</p>
 
-<p>F. Gibt es eine Möglichkeit, eine Adresse herauszugeben, die es dem
+<p>F. <b>Gibt es eine Möglichkeit, eine Adresse herauszugeben, die es dem
 ursprünglichen Absender erlaubt, mir eine unbegrenzte Anzahl von Nachrichten zu
-schicken, die aber von anderen nicht benutzt werden kann?<br>
+schicken, die aber von anderen nicht benutzt werden kann?</b><br>
 A. Ja ... aber seien Sie vorsichtig, denn der erste Absender muss nicht
 unbedingt der sein, an den Sie gedacht haben. Die Adresse muss dann so aussehen:<br>
     <i>irgendwas.+.spamcowboy@spamgourmet.com </i>oder<br>
@@ -185,6 +183,12 @@ Spambots werden immer cleverer, aber das sollte sie für eine Weile aufhalten.<p
 <p>F. <b>Wie lang kann mein ausgedachtes Wort und der Präfix sein?<br>
 </b>A. Jeweils 20 Zeichen. Auch hierin sind Punkte nicht erlaubt.</p>
 
+
+<p>F: <b>Gibt es irgendwelche Unterschiede zwischen vertrauenswürdigen und ausschließlichen Absendern außer dem Umstand, dass vertrauenswürdige Absender unbeschränkt Nachrichten an jede Wegwerfadresse des Benutzerkontos schicken können, während ausschließliche Absender unbeschränkt Nachrichten nur an eine einzelne Wegwerfadresse schicken können (und sowohl auf die „To:“‐ als auch die „From:“‐Adresse passen)?</b><br>
+
+   A: Ja.  Das System verwendet für vertrauenswürdige Absender den Domain‐Stil‐Abgleich, d. h., auf „example.com“ würden Adressen wie „me@example.com“ und auch „you@other.example.com“ passen, auf „other.example.com“ jedoch würde nur die zweite passen.  Ausschließliche Absender dagegen machen den Abgleich mit regulären Ausdrücken.  Der Grund dafür liegt in der Schnelligkeit der Berechnung und darin, dass Spamgourmet so gewachsen ist; aber es funktioniert, daher bleiben wir dabei.
+
+</p>
 
 <p>F. <b>Warum muss ich meine Weiterleitungsadresse bestätigen? Vor dem 10.
 Dezember 2001 war das noch nicht erforderlich.<br>
@@ -255,19 +259,21 @@ benutzen, die genauso funktionieren. Picken Sie sich eines raus und bleiben
 dabei, damit Sie den Überblick über Ihre Wegwerfadressen nicht verlieren.
 </p>
 
-<p>F. <b>Wow. Ich besitze eine nicht genutzte Domain, die ich für Spamgourmet
+<!-- note - no longer accurate, so commenting out <p>F. <b>Wow. Ich besitze eine nicht genutzte Domain, die ich für Spamgourmet
 benutzen möchte. Wie geht das?<br>
 </b>A. Vorzugsweise lassen Sie Ihren ISP alle Mails an Ihre Mails an @spamgourmet.com
 weiterleiten. Wenn er sendmail benutzt könnte in die virtusertable-Datei die
 folgende Zeile eingetragen werden: 
 <pre>@youridledomain.com    %1@spamgourmet.com</pre>
-Weniger zu empfehlen ist die Weiterleitung aller E-Mails an Ihre Adresse <i>spamcowboy@spamgourmet.com.</i>
+Weniger zu empfehlen ist die Weiterleitung aller E-Mails an Ihre Adresse <i>spameater@spamgourmet.com.</i>
 Wenn Sie eines Tages die Domain für andere Zwecke brauchen und E-Mail-Adressen
 dieser Domain in verschiedensten Spam-Listen stehen, könnten Sie unangenehm
 überrascht werden.<p>F. <b>Wie kann ich einen Bug oder Verbesserungsvorschläge
 äußern?<br>
 </b>A. Senden Sie uns eine möglichst detaillierte <a href="mailto:info@spamgourmet.com">E-Mail</a>.
 Wir werden sie nicht wegwerfen. Versprochen.</p>
+-->
+
 
 <p>F. <b>Werde ich über neue Features informiert?<br>
 </b>A. Wahrscheinlich nicht. E-Mails an alle Benutzer von Spamgourmet zu
@@ -298,8 +304,8 @@ verklagt?<br>
 A. Nein, überhaupt nicht. Hormel hat eine fortschrittliche Einstellung zur
 Benutzung des Wortes "Spam" für unverlangte Massen-E-Mails und
 anderen Internet-Phänomenen, vorausgesetzt das Wort wird nicht komplett groß
-geschrieben. Sie können <a href="http://www.spam.com/ci/ci_in.htm">hier</a>
-mehr darüber lesen. Wenn doch nur andere Firmen diesem Beispiel folgen würden
+geschrieben. 
+Wenn doch nur andere Firmen diesem Beispiel folgen würden
 ...</p>
 
 <p>F. <b>Verkaufen Sie die Liste der Benutzer und ihre E-Mail-Adressen an

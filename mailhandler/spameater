@@ -18,6 +18,7 @@
 # spamgourmet is provided under the Artistic License of the Open Source Initiative
 # A copy of the license should be provided with this distribution
 use strict;
+use utf8;
 use lib "/path/to/modules";
 use Mail::Spamgourmet::Config;
 # these dependencies are listed here for reference -- they're loaded later on an as-needed basis:
@@ -831,8 +832,10 @@ sub sendMail {
   }
 
 # 2017-04-23 - need to take this approach for almost all messages
-  $$msgref =~ s/^DKIM-Signature/OriginalDKIM-Signature/mig;
+  $$msgref =~ s/^DKIM-Signature/Original-DKIM-Signature/mig;
+  $$msgref =~ s/^ARC-Message-Signature/Original-ARC-Message-Signature/mig;
 
+  $$msgref =~ s/^ARC-Seal/Original-ARC-Seal/mig;
   if ($sender) {
 #    $$msgref =~ s/(^Return-Path\: ).*$/$1 $sender/mi;
 #    $$msgref =~ s/(^From\: ).*$/$1 $senderdisplay/mi;

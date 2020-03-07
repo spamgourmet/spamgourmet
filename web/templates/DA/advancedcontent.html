@@ -1,0 +1,81 @@
+Avanceret tilstand er ligesom tomhjerne tilstand, bortset fra at du kan angive betroede afsendere, watch-ord og et præfiks. Du kan også slå svaradresse maskering til og fra, og vise/redigere dine engangsadresser. Hvis du har betroede afsendere, watch-ord eller et præfiks, vil du se denne skærm, når du logger på.
+
+<p>
+<p>
+
+<b>Betroede Afsendere</b>: Du kan tilføje eller fjerne 'betroede afsendere' her ved at angive enten et domæne eller en email adresse. Betroede afsendere har lov til at sende dig emails på en hvilken som helst af dine engangsadresser, uden at påvirke besked tælleren.
+
+<p>
+På den måde kan du tilmelde dig noget, som du ikke har tillid til med en engangs adresse. Hvis du så kan lide det du har tilmeldt dig, kan du komme tilbage og tilføje email adressen som en betroet afsender.
+
+Hvis du tilføjer et domæne, bliver enhver bruger fra domænet en betroet afsender. Hvis du tilføjer en email adresse, bliver kun den ene adresse en betroet afsender.
+</p>
+<p>
+<b>Watch-ord</b>: Watch-ord hjælper dig til at kontrollere tilblivelsen af dine engangsadresser. Hvis du har watch-ords håndhævelse til <i>og</i> mindst ét watch-ord, så vil systemet ikke <i>lave</i> en ny adresse med mindre et af dine watch-ord er med i ordet i adressen. For eksempel, hvis dit brugernavn var 'spamcowboy', og din watch-ords liste indeholder 'sadel' og 'reb', så vil disse lave nye adresser:
+</p><p align="center">
+sadelsæbe.3.spamcowboy@spamgourmet.com<br>
+skafEtReb.2.spamcowboy@spamgourmet.com<br>
+tilbageisadlenigen.6.spamcowboy@spamgourmet.com<br>
+</p>
+og disse vil ikke: 
+<p align="center">
+coyote.20.spamcowboy@spamgourmet.com<br>
+evigspamnation.*.spamcowboy@spamgourmet.com 
+</p>
+Det er nødvendigt for dig at komme tilbage til den her side og <i>skifte</i> watch-ordene ud nu og da -- et af eksemplerne på "lidt vedligeholdelse" -- Det er for at undgå at nogen bare tilføjer noget til en eksisterende adresse for at lave en ny en.
+
+<p align="center">
+</p>
+<b>Svaradresse Maskering</b>: Med svaradresse maskering slået til, modificerer systemet hver videresendt besked sådan, at hvis du besvarer beskeden, så vil dit svar vende tilbage til spamgourmet i stedet for at gå direkte til afsenderen. Systemet vil så erstatte din rigtige adressen med den engangsadresse, som oprindeligt blev brugt af afsenderen, og på den måde skjule din rigtige adresse.
+<p>
+
+
+<b>Søg I Adresser</b>: Du kan se en stor tabel med alle dine engangsadresser ved at klikke på knappen "søg i adresser". Hvis du ikke indtaster nogle søgeord, vil alle dine engangsadresser blive vist.
+<p>For at sortere i engangsadresse-tabellen, så klik på kolonnens overskrift.
+<p>
+I tabellen klikker du på en adresse (ved dens 'ord') og redigerer den til: 
+
+<br>
+
+a) ændre nummeret af resterende beskeder, og 
+
+<br>
+
+b) hvis du vil, angiv en 'eksklusiv afsender' til adressen. Du kan læse mere om eksklusive afsendere i FAQ'en -- det er meget som at have en betroet afsender til en bestemt adresse.
+
+<p>
+
+Eller, hvis di vil, kan du <a href="<%xmllink%>">få hele listen i XML ved at klikke her</a>.
+
+<p>
+
+<b>Præfiks:</b> Hvis du er <i>virkelig</i> paranoid, kan di angive et 'præfiks', som vil være krævet til hver <i>nyr</i> engangsadresse fra en utroværdig afsender. Tænk på det som et kodeord for at kunne lave en ny engangsadresse, som du kan skifte fra tid til anden. For resten, præfikset gør pænt meget det samme som watch-ord (Hindrer folk i at lave nye engangs adresser mod din vilje), og generelt er watch-ord et bedre valg. Læs videre hvis du vil...
+
+</p>
+
+<form action="<%action%>" method="post" onSubmit="return checkPrefixForm(this);"><p align="center">
+
+Dit præfiks:
+
+<input type="text" name="prefix" value="<%prefix%>" maxlength=20> <input type="<%button%>" value="gem præfiks" onClick="<%onClick%>">
+</p></form>
+
+Hvis du angiver et præfiks, vil systemet ikke lave en ny engangsadresse uden den. Dette vil beskytte dig, hvis du tror, at en anden en dig laver nye adresser med dit brugernavn.
+Opsætningen af en engangsadresse med præfiks ser sådan ud:  
+
+<p align="center">  <i>præfiks.ord.x.bruger</i>@spamgourmet.com</p>
+
+<p>
+
+Så hvis dit præfiks er 'cowpoke', vil du lave en engangsadresse sådan:
+
+<p align="center">  cowpoke.spamelope.2.spamcowboy@spamgourmet.com</p>
+
+Og hvis du senere skifter dit præfiks til 'coyote', vil præfikset 'cowpoke' ikke længere virke til at lave nye adresser, men eksisterende adresser vil stadig virke. Hvis du sletter dit præfiks, kan engangsadresser laves med eller uden præfiks.
+
+<p>
+<b>Standard nummer</b>: Sæt dette til det nummer af beskeder du vil bruge til en ny engangsadresse, når spamgourmet ikke kan regne ud, hvad du havde i tankerne ved at kigge på adresse (fx hvis du har undladt nummeret). Bemærk, at nogle ting du putter ind i stedet for nummeret, vil have andre effekter -- læs FAQ'en (selv om det kan lyde smertefuldt) for yderligere detaljer.   
+</p>
+<p><b>Spist besked log</b>: Hvis denne funktion er er slået til vil systemet holde styr på de sidste tre beskeder, som blev spist og vise dig information om dem (hvem de var fra, hvornår de kom ind og hvilken adresse de var til). Du kan aktivere indstillingen med ikke at logføre skjulte adresser, hvis du gerne vil have systemet til at ignorere addresser, som du har udpeget som skjulte. Det kan alt sammen være brugbart, men hvis du ikke ved om du bruger det, så slå det venligst fra, da det får systemet til at arbejde hårdere. Af samme grund har vi fundet ud af, at vi ikke kan holde styr på mere end tre spiste beskeder.</p>
+
+<p><b>Skjul Emne Taglinjen</b>: Hvis du ikke kan lide den ekstra tekst, som spamgourmet tilføjer til dine beskeders emne (fx informerer om nummeret af resterende beskeder eller betroet status på afsenderen), så aktiver funktionen, der hedder "skjul emne taglinje" -- den samme information vil så blive puttet ind i en overskrift, som din email klient muligvis kan eller ikke kan vise.</p>

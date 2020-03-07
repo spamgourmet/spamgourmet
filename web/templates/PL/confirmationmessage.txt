@@ -1,0 +1,12 @@
+<%url%>
+Poprosiłeś o przesyłanie Twoich wiadomości na adress <%newaddress%>
+Musisz potwierdzić tę prośbę. Możesz to zrobić w następujący sposób:
+
+* Kliknij na link:
+<%url%>
+(albo wklej go do Twojej przeglądarki internetowej i naciśnij Enter)
+
+* Jeśli wolisz - odpowiedz na ten list. Upewnij się, że odpowiedź zawiera link.
+
+Jeśli ta wiadomość trafiła do Ciebie nieoczekiwanie - oznacza to, że ktoś omyłkowo podał Twój
+adres w serwisie Spamgourmet. Możesz po prostu skasować tę wiadomość.

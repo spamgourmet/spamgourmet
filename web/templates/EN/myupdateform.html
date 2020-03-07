@@ -1,5 +1,7 @@
 <br>
-<div align="center"><%updateaddress%><br><b><%message%></b><br>
+<div align="center"><%updateaddress%>  
+ <br><b><%message%></b> <br>(<i><%forwarded%></i>: <%numforwarded%>; <i><%deleted%></i>: <%numdeleted%>; <i><%created%></i>: <%timeadded%>UTC)
+<br><br>
 <form action="<%action%>" method="post">
 <input type="hidden" name="randomnumber" value=<%randomnumber%>>
 <input type="hidden" name="myemails" value=1>
@@ -8,8 +10,8 @@
 <input type="hidden" name="showHidden" value="<%showhidden%>">
 
 <table border=0 cellspacing=0 cellpadding=2>
-<tr><td><%remainingmessages%> <input type="text" name="count" value="<%count%>" onFocus="this.select();" size=2 maxlength=2></td></tr>
-<tr><td><%exclusivesender%> <input type="text" name="sender" value="<%sender%>" onFocus="this.select();"></tr>
+<tr><td><%remainingmessages%> <input type="text" name="count" value="<%count%>" onFocus="" size=2 maxlength=2></td></tr>
+<tr><td><%exclusivesender%> <input type="text" name="sender" value="<%sender%>" onFocus=""></tr>
 
 <tr><td colspan=2 align="center"><input type="radio" name="hidden" value=0 <%isnothidden%>><%nothidden%>    
   <input type="radio" name="hidden" value=1 <%ishidden%>><%hidden%></td></tr>
@@ -24,7 +26,11 @@
 
 <p><%trustedwarning%></p>
 
-<p align="center"><a href="<%action%>?myemails=1&mysendtoform=1&disposable=<%emailid%>"><%sendfromaddress%><a/></p>
+<p align="center"><a href="<%action%>?myemails=1&mysendtoform=1&disposable=<%emailid%>&showHidden=<%showhidden%>&searchterms=<%searchterms%>"><%sendfromaddress%><a/></p>
+
+<p align="center"><a href="<%action%>?myemails=1&editexemplarform=1&disposable=<%emailid%>&showHidden=<%showhidden%>&searchterms=<%searchterms%>"><%editexemplar%></a></p>
+
+<p align="center"><a href="<%action%>?myemails=1&deleteaddress=1&disposable=<%emailid%>&showHidden=<%showhidden%>&searchterms=<%searchterms%>" onclick="return confirm('<%deleteareyousure%>');"><%delete%></a></p>
 
 <p align="center"><a href="<%action%>?myemails=1&showHidden=<%showhidden%>&searchterms=<%searchterms%>"><%returnwithoutsaving%></a>
 </p>

@@ -1,0 +1,75 @@
+Tryb zaawansowany opiera się na takich samych założeniach, jak tryb podstawowy. Dodatkowe mozliwości to: dodawanie zaufanych nadawców, słów kluczowych i przedrostka. Można także włączać i wyłączać maskowanie adresu zwrotnego, przeglądać i edytować tymczasowe adresy.
+Jeśli zdefiniowałeś zaufanych nadawców, slowa kluczowe lub przedrostek - tryb zaawansowany będzie dla Ciebie ustawieniem domyślnym. 
+
+<p>
+<p>
+
+<b>Zaufani nadawcy</b>: Możesz dodawać i usuwać "zaufanych nadawców", definiując ich jako adres mailowy lub domenę. Zaufani nadawcy mogą wysyłać do Ciebie listy bez zwiększania stanu licznika wiadomości.   
+
+<p>
+W ten sposób możesz się zapisać na nieznaną listę dyskusyjną używając adresu tymczasowego. jeśli po jakimś czasie nie będziesz miał zastrzeżeń - możesz dodać adres z jakiego rozsyłana jest lista do twoich zaufanych nadawców. 
+
+Dodając domenę, ustalasz, że każdy nadawca z tej domeny będzie zaufanym nadawcą. Dodanie adresu powoduje dodanie tylko jednego zaufanego nadawcy.
+</p>
+<p>
+<b>Słowa kluczowe</b>: Slowa kluczowe dają Ci lepszą kontrolę nad tworzeniem nowych adresów. Jeśli włączyłeś wymaganie słów kluczowych <i>i</i> zdefiniowałeś przynajmniej jedno takie słowo - system nie stworzy nowego adresu, jeśli pierwszy człon adresu nie zawiera słowa kluczowego. Na przykład, jeśli twój identyfikator to "spamcowboy" a Twoja lista słów kluczowych zawiera słowa "saddle" i "rope", następujące adresy sa poprawne:
+</p><p align="center">
+saddlesoap.3.spamcowboy@spamgourmet.com<br>
+OuchRopeBurn.2.spamcowboy@spamgourmet.com<br>
+backinthesaddle.6.spamcowboy@spamgourmet.com<br>
+</p>
+a takie nie są: 
+<p align="center">
+coyote.20.spamcowboy@spamgourmet.com<br>
+eternalspamnation.*.spamcowboy@spamgourmet.com 
+</p>
+
+
+<p align="center">
+</p>
+<b>Ukrywanie adresu zwrotnego</b>: Włączenie tej opcji powoduje, że system modyfikuje każdą wysłaną wiadomość w ten sposób, że Twoja odpowiedź trafi spowrotem do Spamgourmet. Wtedy system podstawi w miejsce Twojego prawdziwego adresu adres tymczasowy, na który wysłano poprzednią wiadomość. Pozwoli to ukryć Twój prawdziwy adres.
+<p>
+
+
+<b>Przeglądanie adresów</b>: Możesz zobaczyć wielką tablicę ze wszystkimi tymczasowymi adresami, jeśli klikniesz na klawisz "szukaj w adresach". Jesli nie podasz żadnych parametrów wyświetlone zostaną wszystkie Twoje tymczasowe adresy. 
+W tabeli możesz kliknąć na adres, żeby dokonac następujących modyfikacji: 
+
+<br>
+
+a) zmienić ilość wiadomości pozostałych do wygaśnięcia adresu,
+<br>
+
+b) ustalić "wyłącznego nadawcę" dla danego adresu. Możesz o tym przeczyatć w FAQ. To mniej więcej, jakby mieć zaufanego nadawcę dla jednego adresu.
+
+<p>
+
+Jeśli chcesz - możesz otrzymać <a href="<%xmllink%>">pełną listę w formacie XML klikając tutaj</a>.
+
+<p> 
+
+<p>
+<b>Prefiks: </b> Jesli bardzo sie obawiasz, mozesz ustalic prefiks ("przedrostek"), który bedzie wymagany w kazdym tymczasowym adresie wysylanym przez nadawce, który nie ma statusu "zaufanego nadawcy". Prefiks dziala jak haslo, niezbedne do utworzenia nowego adresu, które można zmieniać od czasu do czasu. 
+
+</p>
+
+<form action="<%action%>" method="post" onSubmit="return checkPrefixForm(this);"><p align="center">
+
+Twój prefiks:
+
+<input type="text" name="prefix" value="<%prefix%>" maxlength=20> <input type="<%button%>" value="save prefix" onClick="<%onClick%>">
+</p></form>
+
+Jesli ustalisz prefiks - system nie stworzy nowego adresu tymczasowego, jesli ten adres nie bedzie zawieral prefiksu. Zabezpieczy Cię to przed tworzeniem Twoich nowych adresów tymczasowych przez kogoś innego.
+Format tymczasowego adresu z prefiksem jest nastepujacy:
+
+<p align="center">  <i>prefiks.jakieśsłowo.x.identyfikator</i>@spamgourmet.com</p>
+
+<p>
+
+Jeśli Twój prefiks to "cowpoke" , Twój tymczasowy adres powinien wygladać tak:
+
+<p align="center">  cowpoke.spamelope.2.spamcowboy@spamgourmet.com</p>
+
+Jesli kiedys zmienisz swój prefiks na "coyote" - Twój stary prefiks "cowpoke" nie bedzie już mógł być wykorzystany do utworzenia nowych adresów, ale istniejące adresy bedą nadal funkcjonowały. Jesli usuniesz prefiks - adresy beda mogły byc znowu tworzone z prefiksem lub bez niego.
+
+<p>

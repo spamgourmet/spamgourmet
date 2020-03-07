@@ -1,0 +1,11 @@
+<%url%>
+Arra kérted a Spamgourmet, hogy továbbítsa a leveleidet a következő címre: <%newaddress%>
+Ezt vissza kell igazolnod. Következőképpen járhatsz el:
+
+* Kattints erre a címre:
+<%url%>
+(vagy másold be a böngésződbe, majd nyomd meg az "Enter" gombot)
+
+* Amennyiben ez nem mũködött, válaszolj erre a levélre. Ügyelj arra, hogy az általunk megadott internetes címet hagyd benne a válaszban.
+
+Amennyiben váratlanul ért ez a levél, az azért történt, mert valaki véletlenül a te címedet adta meg a Spamgourmet-nak. Ebben az esetben egyszerũen hagyd figyelmen kívül ezt a levelet, és töröld ki a postafiókodból!

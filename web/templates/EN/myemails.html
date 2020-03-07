@@ -5,10 +5,11 @@
             <img src="<%imageshost%>stuff/mom2.png" border="0" alt="mom" title="mom">
            </td>
            <td> 
+            <b><%message%></b><br>
             <%yourdisposableaddresses%>   <br><a href="<%action%>?advanced=1"><%returntoadvancedmode%></a> <br><br>
             <form name="searchform" action="<%action%>"><input type="hidden" name="myemails" value=1>         
             <input type="hidden" name="randomnumber" value="<%randomnumber%>">
-            <input type="text" size=20 name="searchterms" value="<%searchterms%>" onFocus="this.select()"> 
+            <input type="text" size=20 name="searchterms" value="<%searchterms%>" onFocus=""> 
             <input type="submit" value="<%search%>">
             <br><input type="checkbox" name="showHidden" value=1 <%showhidden%>><%showhiddenaddresses%>
             </form>   

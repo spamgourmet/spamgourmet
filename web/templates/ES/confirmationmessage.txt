@@ -1,0 +1,13 @@
+<%url%>
+Pediste que Spamgourmet reenvíe (tus) mensajes a la dirección de correo <%newaddress%>
+Debes confirmarlo. Para ello, por favor:
+
+* Sigue el enlace siguiente
+<%url%>
+(o copia y pega en tu navegador y pulsa entrar)
+
+* Si no te funciona, contesta a este mensaje, asegurandote de dejar el enlace en la
+contestación.
+
+Si recibiste este mensaje de forma inexperada, es porque alguien puso por error tu dirección
+en Spamgourmet -- puedes simplemente borrar este mensaje.
