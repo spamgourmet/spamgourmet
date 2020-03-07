@@ -1,0 +1,37 @@
+<p><font size="+2">
+Come funziona spamgourmet
+</font></p>
+
+<p>
+Se continui a dare in giro il tuo indirizzo email a tutti, sicuramente prima o poi riceverai dello spam, e non capirai mai da dove è iniziato. Non sarebbe meglio dare un diverso indirizzo per ogni azienda o sito web, ma ricevendo tutte le email esattamente come prima?
+Non sarebbe più semplice avere un indirizzo da dare ai potenziali spammers, che ti salva dallo spam e che si arresta automaticamente dopo un po',  a meno che tu non decida altrimenti ?</p>
+
+<p>
+Questo è proprio quello che SpamGourmet ti offre! Niente da installare sul tuo computer e <i>una volta che lo hai attivato, molto probabilmente non dovrai neanche più tornare qui.</i> Ecco cosa rende spamgourmet il più pratico e il più efficace anti-spam oggi disponibile </p>
+
+
+<p>Proteggiti dallo spam in tre semplici passi:</p>
+
+<p><b>1.</b>
+Se non l'hai ancora fatto, crea un account spamgourmet.
+<!-- CHANGE syskoll 2004-02-07 16:13:51 -->
+Scegli lo user name e l'indirizzo email che vuoi sia protetto.  Ti chiederemo di identificare la parola in un immagine di scegliere una password.</p>
+<!-- END CHANGE syskoll 2004-02-07 16:13:51 -->
+<p><b>2.</b>
+Spam gourmet inoltrerà a questo indirizzo tutte le email inviate ai tuoi indirizzi usa&getta di spamgourmet -- così non dovrai mai più dire a nessun altro qual è quello reale -- ecco il motivo per cui lo definiamo anche  <i>indirizzo protetto</i>. Ovviamente questo indirizzo protetto deve esistere per davvero. Ecco perché dovrai confermarlo. Infatti riceverai un'email di richiesta di conferma. </p>
+
+<p><b>3.</b>
+Dopo aver confermato il tuo indirizzo protetto, puoi dare in giro indirizzi usa&getta che si autodistruggono tutte le volte che vuoi. Questi indirizzi usa&getta sono del tipo:</p>
+
+<p align="center"><b>paroladicontrollo.</b><i>x.</i><b>utente</b>@spamgourmet.com</p>
+
+ <p>dove <b>paroladicontrollo</b> è una parola qualunque che non hai ancora usato, <i>x</i> (opzionale) il numero massimo di messaggi che vuoi ricevere a questo indirizzo (fino a 20, e per default sarà il numero 3 se non specifichi niente), e <b>utente</b> sarà il tuo username.</p>
+
+<p>Ad esempio, se il tuo user name è "spamdistelle", e l'azienda Spammettoni vuole che tu le fornisca il tuo indirizzo email (via web, al telefono, in negozio - non importa quando e dove), invece di fornire il tuo vero indirizzo, darai questo:</p>
+
+<p align="center"><b><i>DaSpammettoni.3.spamdistelle@spamgourmet.com</i></b><br>(e <b><i>daspammettoni.spamdistelle@spamgourmet.com</i></b> funzionerà allo stesso modo)</p>
+
+<p>Questo indirizzo usa&getta verrà creato qui <i>la prima volta che Spammettoni lo userà</i> (non devi fare assolutamente niente per crearlo), e riceverai almeno 3 messaggi, inoltrati al tuo indirizzo protetto. Tutto il resto sarà consumato senza ritegno.</p>
+
+<p>Se preferisci più opzioni, scegli la linguetta "modalità avanzata" più su.</p>
+<p>A proposito, noi non inviamo *mai* email con allegati -- se ne ricevi una che sembra provenga da noi, non aprirla! È probabilmente un virus.</p>
