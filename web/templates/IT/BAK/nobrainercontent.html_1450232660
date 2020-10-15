@@ -1,0 +1,33 @@
+<p><font size="+2">
+Come funziona spamgourmet
+</font></p>
+
+<p>
+Se sei tra quelli che fornisce a chiunque  il proprio indirizzo email, vedrai che prima o poi la tua casella si riempirà di email spazzatura (spam), senza manco sapere come possa essere successo. Sarebbe il massimo poter dare un indirizzo diverso ad ogni azienda o sito web, continuando però a ricevere ogni email esattamente come prima, no?
+Se la tua casella di posta è purtroppo a rischio costante di spam, perché non usare un indirizzo email che, dopo un prestabilito numero di messaggi ricevuti dallo stesso mittente, si blocca automaticamente, a meno che tu non decida altrimenti?</p>
+
+<p>
+È proprio questo che spamgourmet ti permette! Niente da installare sul tuo computer e <i> a servizio attivato, molto probabilmente non avrai neanche più bisogno di tornare qui.</i> Ecco perchè spamgourmet è il più pratico e il più efficace strumento anti-spam che tu possa avere </p>
+
+<p>Proteggiti dallo spam in tre semplici passaggi:</p>
+
+<p><b>1.</b>
+Se non l'hai ancora fatto, crea un account spamgourmet.
+Nel pannello a sinistra, scegli il tuo user name e inserisci il reale indirizzo email che usi al momento.  Ti chiederemo di digitare la parola che apparirà in un'immagine, e di scegliere una password.</p>
+<p><b>2.</b>
+spamgourmet inoltrerà all'indirizzo reale da te fornito tutte le email inviate ai tuoi indirizzi spamgourmet usa&getta  -- così che non dovrai più dare la tua vera email -- ed ecco perché  definiamo il tuo indirizzo reale come: <i>indirizzo di inoltro</i>. Ovviamente l' <i>indirizzo di inoltro</i> deve esistere per davvero. Ecco perché dovrai confermarlo. Riceverai una nostra email di richiesta di conferma. </p>
+<p><b>3.</b>
+Dopo aver confermato il tuo indirizzo d'inoltro, potrai usare, quando serve, indirizzi che dopo aver ricevuto una, due, tre o altro numero prestabilito di email si autoeliminano. Gli indirizzi usa&getta hanno questo schema:</p>
+
+<p align="center"><b>paroladicontrollo.</b><i>x.</i><b>utente</b>@spamgourmet.com</p>
+
+ <p>dove <b>paroladicontrollo</b> è una parola qualunque che non hai usato in precedenza, <i>x</i> (opzionale) indica il numero massimo di messaggi che vuoi ricevere a tale indirizzo (fino a 20, per default è 3 se non specifichi nessun numero), e <b>utente</b> è il tuo username.</p>
+
+<p>Ad esempio, se il tuo user name è "spamdistelle", e l'azienda Spammettoni SpA ti chiede  il tuo indirizzo email (via web, al telefono, in negozio - non importa quando e dove), invece di fornire il tuo vero indirizzo, potrai sull'istante inventarti uno tipo:</p>
+
+<p align="center"><b><i>DaSpammettoni.3.spamdistelle@spamgourmet.com</i></b><br>(ma in questo caso se usi solo <b><i>spammettoni.spamdistelle@spamgourmet.com</i></b> cioè senza specificare il numero, funzionerà come avessi specificato il 3 perché il default di ricezione per i messaggi se non specificato è 3)</p>
+
+<p>Questo indirizzo usa&getta si genererà in automatico in spamgourmet <i>la prima volta che Spammettoni SpA lo userà</i> (tu non devi fare assolutamente niente per crearlo), e riceverai da loro fino a 3 email, inoltrati in modo trasparente al tuo indirizzo reale. Ulteriori messaggi dopo il terzo saranno graziosamente bloccati senza pietà </p>
+
+<p>Se preferisci più opzioni, scegli la linguetta "modalità avanzata" in alto.</p>
+<p>A proposito, noi non inviamo *mai* email con allegati -- se ne ricevi una con allegato che sembra provenire da noi, non aprirla! È probabilmente un virus.</p>

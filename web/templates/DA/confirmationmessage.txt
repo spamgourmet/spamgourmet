@@ -1,0 +1,12 @@
+<%url%>
+Du bedte spamgourmet om at videresende dine emails til adressen <%newaddress%>
+Du må bekræfte dette. For at bekræfte:
+
+* Klik på linket
+<%url%>
+(eller indsæt det i din browsers adressefelt og tryk Enter)
+
+* Hvis det ikke virke for dig, så besvar denne email for at kontakte os (bevar linket i svaret).
+
+Hvis du har modtaget denne besked helt uventet, så er det fordi en anden indtastede
+din adresse i spamgourmet ved et fejl - du kan bare slette denne besked.

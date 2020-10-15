@@ -1,0 +1,75 @@
+Modo avançado é parecido com o modo acéfalo, exceto porque você pode também especificar remetentes confiáveis, watchwords e prefixos. Também você pode ligar ou desligar o marcaramento do endereço de resposta e ver/editar seus e-mais descartáveis. Se você tiver remetentes confiáveis, watchwords ou prefixos, você verá essa tela como padrão quando entrar no spamgourmet.
+
+<p>
+<p>
+
+<b>Remetentes Confiáveis</b>:  Você pode adicionar ou remover 'Remetentes Confiáveis' através do domínio ou endereço de e-mail. Remetentes confiáveis poderão enviar mensagens para qualquer um dos seus endereços de e-mail descartáveis sem avançar o contador de mensagens.
+
+<p>
+Desse modo, você pode se inscrever numa lista de e-mail que você descofia que roubam e-mail com seu e-mail descartável. Se você gostar da lista, pode adicionar como seu rementente confiável e continuar recebendo somente mensagens da lista. 
+
+Se você adicionar um domínio, qualquer usuário daquele domínio vai ser um remetente confiável. Se você adicionar um endereço de e-mail, somente o endereço especificado será confiável.
+</p>
+<p>
+<b>Watchwords</b>:Watchwords ajuda você a controlar a criação dos seus e-mails descartáveis. Se você ativar o reforço por Watchwords <i>e</i> pelo menos uma watchword cadastrada, então sistema não <i>criará</i> um endereço descartável a não ser que uma das watchwords estiverem inclusas na parte de "texto" do endereço. Por exemplo, se seu nome de usuário é "spamcowboy" e sua lista de watchwords incluem 'saddle' e 'rope', então estes endereços de e-mail seriam válidos:
+</p><p align="center">
+saddlesoap.3.spamcowboy@spamgourmet.com<br>
+OuchRopeBurn.2.spamcowboy@spamgourmet.com<br>
+backinthesaddle.6.spamcowboy@spamgourmet.com<br>
+</p>
+E estes não funcionariam: 
+<p align="center">
+coyote.20.spamcowboy@spamgourmet.com<br>
+eternalspamnation.*.spamcowboy@spamgourmet.com 
+</p>
+
+
+<p align="center">
+</p>
+<b>MAscaramento do Endereço de Resposta</b>: Com o mascaramente de endereços habilitado, o sistema modificará cada mensagem encaminhada para, caso você responda, sua resposta voltará para o spamgourmet ao invés de ir direto para o remetente. O sistema irá então substituir o seu endereço protegido pelo o seu descartável no qual o usuário mandou a mensagem, a fim de ocultar seu endereço de e-mail real.
+<p>
+
+
+<b>Procurar Endereços</b>: Você pode ver uma grande tabela com todos seus endereços descartáveis clicando no botão "procurar endereços". Se você não digitar nenhum palavra para pesquisa, todos seus endereços serão expostos. Na tabela, se você clicar num endereço ( na sua "palavra" você pode editá-lo parat to: 
+
+<br>
+
+a)Mudar o número de mensagens para auto-destruição do e-mail, 
+
+<br>
+
+b)E se você quiser, você pode especificar um 'remetente exclusivo' para aquele endereço. Você pode ler mais sobre remetentes exclusivos no FAQ -- é como ter um remetente confiável para somente um e-mail descartável.
+
+<p>
+
+Ou, se você quiser, pode ver <a href="<%xmllink%>">toda lista em XML clicando aqui</a>.
+
+<p> 
+
+<p>
+
+<b>Prefixos:</b> Se você é<i>realmente</i> paranóico  você pode especificar um 'prefixo' que será obrigatório em cada <i>novo</i> endereço descartável vindo de um rementente não-confiável. Pense nisso como uma senha para criar novos endereços de e-mails descartáveis que você deve mudar de tempo em tempo. A propósito, um prefixo  faz mais ou menos o que uma watchword faz (evita que pessoas criem endereços descartáveis para você) e geralmente as watchwords são uma melhor escolha. Continue a ler se interessar...
+</p>
+
+<form action="<%action%>" method="post" onSubmit="return checkPrefixForm(this);"><p align="center">
+
+seu prefixo:
+
+<input type="text" name="prefix" value="<%prefix%>" maxlength=20> <input type="<%button%>" value="salvar prefixo" onClick="<%onClick%>">
+</p></form>
+
+Se você criar um prefixo, o sistema não criará um novo endereço descartável sem ele. Isto irá proteger você se você acredita que alguém está fazendo endereços com seu nome de usuário. O formato de um endereço de e-mail descartável é:
+
+<p align="center">  <i>prefixo.algumapalavra.x.nomedeusuario</i>@spamgourmet.com</p>
+
+<p>
+Se seu prefixo for, por exemplo, 'cowpoke', você deveria especificar um novo e-mail descartável assim:
+So, if your prefix is 'cowpoke', you would specify a disposable address like so:
+
+<p align="center">  cowpoke.spamelope.2.spamcowboy@spamgourmet.com</p>
+
+E posteriormente se você mudar seu prefixo para 'coyote', o prefixo 'cowpoke' não existirá mais para criar novos endereços, mas os existentes continuarão a funcionar. Se você deletar seu prefixo, endereços descartáveis podem ser criados com ou sem prefixos.
+
+<p>
+<b>Número Padrão</b>: Defina o número de mensagens que você quer usar para seus novos endereços descartáveis quando o spamgourmet não puder determinar o número a partir do endereço (ou se você esqueceu o mumero em branco).
+</p>

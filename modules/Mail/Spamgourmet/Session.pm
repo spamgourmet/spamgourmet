@@ -300,7 +300,7 @@ sub login {
         if (&check_password($inPass, $dbpw)) {
 # we're good
           $badpw = 0; 
-        } elsif ($dbpw eq $m) {
+        } elsif ($dbpw eq $m || &check_password($m, $dbpw)) { #either the db version is md5 or it's bc-wrapped md5
 # update the dbpw:
           $badpw = 0;
           $sql = "UPDATE Users SET Password = ? WHERE UserName = ?";
@@ -725,7 +725,7 @@ sub check_password {
 
 # Return a salt
 sub salt {
-    return Crypt::Eksblowfish::Bcrypt::en_base64(Crypt::Random::makerandom_octet(Length=>16));
+  return Crypt::Eksblowfish::Bcrypt::en_base64(Crypt::Random::makerandom_octet(Length=>16));
 }
 
 

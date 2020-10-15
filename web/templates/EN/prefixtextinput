@@ -1,0 +1,1 @@
+<%prefix%> <input type="text" name="adrprefix" id="adrprefix" maxlength="20" value="<%theprefix%>">[.]<br>

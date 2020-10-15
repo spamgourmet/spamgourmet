@@ -1,0 +1,88 @@
+La modalità avanzata funziona come quella semplificata, solo che qui puoi anche specificare mittenti affidabili, parole di controllo e  prefisso. Puoi anche attivare o disattivare il mascheramento dell'indirizzo in risposta, e visualizzare e/o modificare i tuoi indirizzi usa e getta.
+Se hai già mittenti affidabili, parole di controllo o un prefisso, di default vedrai questa schermata appena esegui il log-in.
+
+<p>
+<p>
+
+<b>Mittenti Affidabili</b>: Puoi aggiungere o rimuovere un 'mittente affidabile' da qui specificando un dominio o un indirizzo email.  I mittenti affidabili saranno autorizzati a inviarti email su qualunque indirizzo usa e getta senza alcun limite, nonostante ci sia un numero massimo di messaggi prefissato per tutti gli altri.
+
+<p>
+In questo modo, puoi iscriverti a una mailing list o a un forum di cui non ti fidi totalmente usando un indirizzo usa e getta. In un secondo momento, se vedi che il forum è affidabile, torni qui e ne aggiungi l'indirizzo come mittente affidabile. 
+Se aggiungi un dominio, qualunque utente in quel dominio conterà come affidabile. Se aggiungi un indirizzo, solo quell'indirizzo email risulterà affidabile per spamgourmet.
+
+<p>
+<b>Parole di controllo</b>: Le parole di controllo ti aiutano appunto a controllare la creazione di un indirizzo usa e getta. Se hai la modalità "parola di controllo imprescindibile" attiva <i>e</i> almeno una parola di controllo, il sistema non genererà un indirizzo nuovo a meno che tu non includa una delle parole di controllo all'interno dell'indirizzo. Per esempio, se il tuo username è "torta", e la lista delle tue parole di controllo contiene "latte" e  "cacao", combinazioni come queste qui di seguito sono valide per la creazione di un indirizzo nuovo: 
+
+</p><p align="center">
+cremadilatte.3.torta@spamgourmet.com<br>
+spruzzamidicacao.3.torta@spamgourmet.com<br>
+lattecaldo.2.torta@spamgourmet.com<br>
+fantasiadicacao.6.torta@spamgourmet.com<br>
+</p>
+mentre queste non funzionerebbero: 
+<p align="center">
+zucchero.20.torta@spamgourmet.com<br>
+dolce.*.torta@spamgourmet.com 
+</p>
+È quindi consigliabile che tu torni a questa pagina web di tanto in tanto per cambiare le parole di controllo-- questo è un esempio di quella  "poca manutenzione" richiesta -- Ciò per prevenire che qualcuno, capito il meccanismo, possa aggiungere una parola a sua scelta ad un tuo usa&getta esistente e così generarne uno nuovo autonomamente.
+
+<p align="center">
+</p>
+<b>Mascheramento indirizzo in risposta</b>: Con il Mascheramento dell'Indirizzo in Risposta, il sistema modifica l'indirizzo del mittente di ogni messaggio da te ricevuto in modo che, quando tu rispondi, la tua risposta va prima a spamgourmet invece che andare direttamente al mittente. Spamgourmet sostituirà il tuo indirizzo email reale, per tenerlo nascosto, con  il corrispondente usa&getta, quindi invierà la posta al destinatario (cioè al mittente originale).
+
+<p>
+
+ 
+<b>Cerca Indirizzi</b>:Puoi visualizzare una tabella con tutti i tuoi indirizzi usa&getta cliccando il bottone che dice "cerca indirizzi". Se non specifichi nessuna chiave di ricerca, saranno mostrati tutti gli indirizzi. 
+<p>Per ordinare gli indirizzi nella tabella, clicca sull'intestazione della colonna.
+<p>
+Nella tabella, cliccando sul link dell'indirizzo usa&getta, puoi modificare: 
+
+<br>
+
+a) il numero massimo di messaggi rimanenti, e 
+
+<br>
+
+b)se lo desideri, puoi specificare un "mittente esclusivo" per l'indirizzo. Puoi leggere di più su i mittenti esclusivi nella FAQ  -- è come avere un mittente affidabile per un indirizzo particolare.
+<p>
+
+O ancora, se vuoi,puoi <a href="<%xmllink%>">visualizzare la lista in XML cliccando qui</a>.
+
+
+<p>
+
+<b>Prefisso:</b> Se sei <i>proprio</i> paranoico, puoi specificare un 'prefisso' senza il quale i nuovi messaggi che non provengano da un mittente affidabile  non creeranno la casella usa&getta.  Intendilo come un contrassegno (tipo una parola di controllo) per creare nuovi usa&getta che puoi cambiare di tanto in tanto.  A proposito, il prefisso ha più o meno lo stesso scopo delle parole di controllo (evita che le persone possano creare nuovi usa&getta contro il tuo volere), e generalmente,  le parole di controllo sono una scelta migliore. Continua a leggere, se ti va..... 
+</p>
+
+<form action="<%action%>" method="post" onSubmit="return checkPrefixForm(this);"><p align="center">
+
+prefisso corrente:
+
+<input type="text" name="prefix" value="<%prefix%>" maxlength=20> <input type="<%button%>" value="salva prefisso" onClick="<%onClick%>">
+</p></form>
+
+Se specifichi un prefisso, il sistema non creerà nessuna casella usa&getta senza di questo. Questo ti proteggerà se pensi che qualcun altro oltre a te stia inventando nuovi indirizzi usando il tuo username. 
+Il formato di un indirizzo email usa&getta col prefisso è:
+
+<p align="center">  <i>prefisso.parolaqualsiasi.x.user</i>@spamgourmet.com</p>
+
+<p>
+
+Cioè, se il tuo prefisso è  'zompavacche', specificheresti un usa&getta di questo tipo:
+
+<p align="center">  zompavacche.semprepronto.2.spamdistelle@spamgourmet.com</p>
+
+E se in seguito cambi prefisso in  'coyote', il prefisso 'zompavacche' non potrà più creare nuove caselle email usa&getta, ma gli indirizzi già esistenti continueranno a funzionare. Se elimini il tuo prefisso, gli indirizzi usa&getta si creeranno secondo le regole standard, con o senza prefisso.
+
+  <br><br><br>
+
+------TRANSLATION IN PROGRESS --------<br><br>
+
+
+<p>
+<b>Default Number</b>: Set this to be the number of messages you want to use for a new disposable address when spamgourmet can't figure out what you intended from looking at the address itself (for instance, if you left the number out).  Note that some things you put in place of the number will have other effects -- read the FAQ (painful as that task may be) for details.
+</p>
+<p><b>Eaten Message Log</b>: If this feature is enabled, the system will keep track of the last three messages that were eaten and show you information about them (who they were from, when they came in, and which address they were addressed to).  You can enable the option to not log for hidden addresses if you want the system to ignore addresses that you've designated as hidden.  This can all be useful, but if you don't think you'll use it, please don't enable it, because it makes the system work harder.  For the same reason, we found that we really can't keep track of more than three eaten messages.</p>
+
+<p><b>Nacondi Tag nell'Oggetto dell'Email</b>: Se non ti price quel testo extra che spamgourmet aggiunge  all'oggetto dei tuoi messaggiIf you don't like the extra text that spamgourmet adds to the subject of your messages (cioè., che ti informa di quanti messaggi ancora rimangono, o lo status di mittente affidabile), attiva l'opzione "nascondi tag nell'oggetto dell'email" -- la stessa informazione sarà messa nell'intestazione del messaggio che tu potrai o non potrai visualizzare con il tuo client di posta.</p>

@@ -1,0 +1,12 @@
+<%url%>
+Você solicitou para o Spamgourmet para encaminhar mensagens de e-mail para este endereço <%newaddress%>.
+Você deve confirmar. Para confirmar, por favor:
+
+
+* Clique no endereço (URL) 
+<%url%>
+(ou copie/cole na barra de endereços do seu navegador e pressione Enter)
+
+* Se não funcionar, simplesmente responda este e-mail -- certifique-se de deixar o endereço (URL) na resposta.
+
+Se você não esperava receber esta mensagem, é porque alguem colocou seu endereço no Spamgourmet por engano - você pode simplesmente apagar esta mensagem.

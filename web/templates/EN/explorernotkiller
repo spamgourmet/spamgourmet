@@ -1,0 +1,203 @@
+
+
+<script type="text/javascript">
+<!--
+
+var hasIE_phone_home = 0;
+
+function doNotBugMe() {
+  var cookies = document.cookie;
+  document.cookie = "doNotBugMe=true;expires=Wed, 31 Dec 2036 00:00:00 UTC";
+  hasIE_hideLayer("hasIE_level1");
+}
+
+function getCookie(name) {
+    var dc = document.cookie;
+    var prefix = name + "=";
+    var begin = dc.indexOf("; " + prefix);
+    if (begin == -1) {
+        begin = dc.indexOf(prefix);
+        if (begin != 0) return null;
+    } else {
+        begin += 2;
+    }
+    var end = document.cookie.indexOf(";", begin);
+    if (end == -1) {
+        end = dc.length;
+    }
+    return unescape(dc.substring(begin + prefix.length, end));
+}
+
+
+
+// This function does the actual browser detection
+function hasIE_hasIE() {
+  var ua = navigator.userAgent.toLowerCase();
+  return ((ua.indexOf('msie') != -1) && (ua.indexOf('opera') == -1) &&
+          (ua.indexOf('webtv') == -1) &&
+          (location.href.indexOf('seenIEPage') == -1));
+}
+
+function hasIE_showOnlyLayer(whichLayer)
+{
+  if (document.getElementById)
+    {
+      var style2 = document.getElementById(whichLayer);
+    }
+  else if (document.all)
+    {
+      var style2 = document.all[whichLayer];
+    }
+  else if (document.layers)
+    {
+      var style2 = document.layers[whichLayer];
+    }
+  var body = document.getElementsByTagName('body');
+  body[0].innerHTML = style2.innerHTML;
+}
+
+function hasIE_showLayer(whichLayer)
+{
+  if (document.getElementById)
+    {
+      var style2 = document.getElementById(whichLayer).style;
+      style2.display = "block";
+    }
+  else if (document.all)
+    {
+      var style2 = document.all[whichLayer].style;
+      style2.display = "block";
+    }
+  else if (document.layers)
+    {
+      var style2 = document.layers[whichLayer].style;
+      style2.display = "block";
+    }
+}
+
+function hasIE_hideLayer(whichLayer)
+{
+  if (document.getElementById)
+    {
+      var style2 = document.getElementById(whichLayer).style;
+      style2.display = "none";
+    }
+  else if (document.all)
+    {
+      var style2 = document.all[whichLayer].style;
+      style2.display = "none";
+    }
+  else if (document.layers)
+    {
+      var style2 = document.layers[whichLayer].style;
+      style2.display = "none";
+    }
+}
+
+
+
+function hasIE_moveAd(adid) {
+  if (document.getElementById)
+    {
+      var ad = document.getElementById('hasIE_ad');
+      var adloc = document.getElementById(adid);
+    }
+  else if (document.all)
+    {
+      var ad = document.all['hasIE_ad'];
+      var adloc = document.all[adid];
+    }
+  else if (document.layers)
+    {
+      var ad = document.layers['hasIE_ad'];
+      var adloc = document.layers[adid];
+    }
+  adloc.innerHTML = ad.innerHTML;
+}
+
+// Hides and shows sections of the page based on whether or not it's
+// running in IE
+function hasIE_hideAndShow() {
+  if (hasIE_hasIE() && getCookie("doNotBugMe") != "true") {
+    hasIE_showLayer("hasIE_level1");
+          if (hasIE_phone_home == 1)
+            hasIE_phoneHome('getIE_pingimage1');
+  } else {
+    if (hasIE_phone_home == 1)
+      hasIE_phoneHome('getIE_pingimage0');
+  }
+}
+
+function hasIE_phoneHome(image) {
+  if (document.getElementById)
+    {
+      var img = document.getElementById(image);
+    }
+  else if (document.all)
+    {
+      var img = document.all[image];
+    }
+  else if (document.layers)
+    {
+      var img = document.layers[image];
+    }
+  img.setAttribute('src','http://getunder50.com/ping.php?host='+location.host);
+
+}
+
+function hasIE_ContinueWithoutFF() {
+    if (location.href.indexOf('?') != -1)
+        location.href += '&seenIEPage=1';
+    else
+        location.href += '?seenIEPage=1';
+}
+
+
+-->
+</script>
+
+<span style="position:absolute; width: 0px; height:0px; left:-1000px; top: -1000px"><img id="getIE_pingimage0"/></span>
+
+<!-- LEVEL 1: SWITCH BAR ON TOP OF PAGE -->
+
+<div id="hasIE_level1" style="display: none;">
+<span style="position:absolute; width: 0px; height:0px; left:-1000px; top: -1000px"><img id="getIE_pingimage1"/></span>
+
+<div style="padding: 20px; background-color: #ffffbb; font-family: arial; font-size: 15px; font-weight: normal; color: #111111; line-height: 17px;">
+
+<div style="width: 650px; margin: 0 auto 0 auto;">
+
+<div style="padding-left: 8px; padding-top: 0px; float: right;">
+<form action="javascript:doNotBugMe();">
+<script type="text/javascript"><!--
+google_ad_client = "pub-1156791582605100";
+google_ad_width = 120;
+google_ad_height = 60;
+google_ad_format = "120x60_as_rimg";
+google_cpa_choice = "CAAQ2eOZzgEaCD4zuVkdzt_CKI-293M";
+//--></script>
+<script type="text/javascript" src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="submit" value="don't bug me about this">
+</form>
+
+</div>
+
+
+<strong>We see you're using Internet Explorer.  Try Firefox, you'll like it better.</strong>
+<br /><br />
+      <strong>·</strong> Firefox blocks pop-up windows.
+<br />
+      <strong>·</strong> It stops viruses and spyware.
+<br />
+      <strong>·</strong> It prevents trojans that send spam from your PC.
+<br /><br />
+Click the button on the right to download Firefox.  It's free.
+
+</div>
+
+</div>
+</div>
+
+
+
