@@ -254,7 +254,7 @@ foreach $for (keys %deliveryAddresses) {
    $RecThrottleTime,$RecThrottleCount,$DefaultNumber,
    $EmailID,$InitialCount,$Count,$Sender,$PrivateHash,$Hidden,
    $ExpireTime,$trusted,@Watchwords) =
-   (0,'','','',0,0,0,0,0,0,0,'','',0,'',0,());
+   (0,'','','',0,0,0,0,0,0,0,'','',0,0,0,());
 
   ($mprefix,$mword,$mcount,$musername,$mexpiretime) = ('','','','','');
 
