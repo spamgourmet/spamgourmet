@@ -126,7 +126,7 @@ function mainInstall {
 	echo '##########################################################################'
 	echo '### download and patch spamgourmet code'
 	echo '##########################################################################'
-	svn co https://svn.code.sf.net/p/spamgourmet/code/ code
+	git clone https://github.com/spamgourmet/spamgourmet.git code
 
 	cd code
 	OLDIFS=$IFS;IFS=$'\n'
@@ -233,7 +233,7 @@ function mainInstall {
 	cat <<-EOF >/etc/systemd/system/captchasrv.service
 	[Unit]
 	Description=spamgourmet captcha service
-	Documentation=https://sourceforge.net/p/spamgourmet/code/HEAD/tree/captchasrv/
+	Documentation=https://github.com/spamgourmet/spamgourmet/tree/master/captchasrv
 
 	[Service]
 	ExecStart=/usr/local/lib/spamgourmet/captchasrv/captchasrv.pl
