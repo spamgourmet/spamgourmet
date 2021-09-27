@@ -34,4 +34,4 @@ At the end you should hopefully have a working clone of spamgourmet.com
 
 This is out of scope but do not forget to ensure that you have a proper firewall on the host, and that you set up regular backups.
 
-FYI my private spamgourmet clone runs very well on a KVM VM with 1vCPU, 256MB RAM and 7GB disk (1.51GB used at the end of the script). The VM runs Debian 9.3 on **zfs** root.
+FYI my private spamgourmet clone runs very well on a KVM VM with 1vCPU, 512MB RAM and 7GB disk (1.51GB used at the end of the script). The VM runs Debian 10.10 on **zfs** root.
