@@ -9,6 +9,7 @@ Everything below is built on the shoulders of:
 I and you owe them many thanks.
 
 NB. This is very brittle, the script does absolutely no error checking.
+
 NB. Although Spamgourmet runs on **apache**, because I wanted my clone to use as few resources as possible, I replaced it with **lighttpd** in this install script.
 
 **You WILL have problems running it :-)** if you do not follow the instructions to the letter (and probably even if you do).
