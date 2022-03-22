@@ -326,7 +326,7 @@ EOF
 	service lighttpd restart
 }
 
-manadatory_packages
+mandatory_packages
 download_spamgourmet
 create_folders
 install_spamgourmet
