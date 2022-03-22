@@ -1,6 +1,6 @@
 #!/bin/bash
 echo '========================= remote-install start'
-source sg-server-config.sh
+source ./sg-server-config.sh
 
 THISDIR=$(dirname "$(readlink -f "$0")")
 cd $THISDIR
@@ -14,7 +14,7 @@ function setupLetsEncrypt {
 ### main installation - always required
 ##########################################################################
 function mainInstall {
-	,./scripts/install-spamgoumet.sh
+	./scripts/install-spamgoumet.sh
 }
 
 if [ SETUP_ENCRYPT="true" ]
