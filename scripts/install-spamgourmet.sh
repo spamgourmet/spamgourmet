@@ -2,7 +2,9 @@
 echo '========================= spamgourmet server installation start'
 source sg-server-config.sh
 
-	cd $THISDIR
+cd $THISDIR
+
+function mandatory_packages {
 	echo '##########################################################################'
 	echo '### install mandatory packages'
 	echo '##########################################################################'
@@ -12,7 +14,10 @@ source sg-server-config.sh
 		imagemagick lighttpd \
 		libcrypt-eksblowfish-perl libdigest-bcrypt-perl \
 		unzip make gcc bash-completion ca-certificates
+}
 
+
+function download_spamgourmet {
 	echo '##########################################################################'
 	echo '### download and patch spamgourmet code'
 	echo '##########################################################################'
@@ -43,7 +48,9 @@ source sg-server-config.sh
 	done
 	IFS=$OLDIFS
 	cd $THISDIR
+}
 
+function create_folders {
 	echo '##########################################################################'
 	echo '### create necessary folder structure'
 	echo '##########################################################################'
@@ -52,7 +59,10 @@ source sg-server-config.sh
 	mkdir -p /var/www-spamgourmet/captcha
 	mkdir -p /var/log/spamgourmet
 	mkdir -p /etc/spamgourmet
+}
 
+
+function install_spamgourmet {
 	echo '##########################################################################'
 	echo '### move stuff where it belongs'
 	echo '##########################################################################'
@@ -62,7 +72,10 @@ source sg-server-config.sh
 	cp conf/spamgourmet.config /etc/spamgourmet
 	wget www.spamgourmet.com/stuff/flagmap.png
 	mv flagmap.png /var/www-spamgourmet/stuff/
+}
 
+
+function mysql_setup {
 	cd $THISDIR
 	echo '##########################################################################'
 	echo '### configure mysql'
@@ -89,7 +102,9 @@ source sg-server-config.sh
 	sed -i 's/Password` varchar.50./Password` varchar(80)/' ./code/conf/db.sql
 	mysql -s -u sguser -p$MARIADBINTERACTIVEPWD -Dsg <./code/conf/db.sql
 	mysql -s -u sguser -p$MARIADBINTERACTIVEPWD -Dsg <./code/conf/dialogs.sql
+}
 
+function exim4_setup {
 	echo '##########################################################################'
 	echo '### configure exim4'
 	echo '##########################################################################'
@@ -112,7 +127,9 @@ source sg-server-config.sh
 	sed -i "s/dc_localdelivery=.*$/dc_localdelivery='mail_spool'/" /etc/exim4/update-exim4.conf.conf
 	echo $DOMAIN >/etc/mailname
 	update-exim4.conf
+}
 
+function create_captcha {
 	echo '##########################################################################'
 	echo '### captcha creation'
 	echo '##########################################################################'
@@ -135,7 +152,9 @@ source sg-server-config.sh
 	EOF
 	systemctl enable captchasrv.service
 	systemctl start captchasrv.service
+}
 
+function configure_exim_tls {
 	if [ -e /var/lib/dehydrated/certs/$DOMAIN/fullchain.pem ]; then
 		echo '##########################################################################'
 		echo '### configure exim for TLS because dehydrated certificate exists'
@@ -154,7 +173,9 @@ source sg-server-config.sh
 		echo '### could not find dehydrated certificates'
 		echo '##########################################################################'
 	fi
+}
 
+function install_perl_modules {
 	echo '##########################################################################'
 	echo '### add spamgourmet required perl modules'
 	echo '##########################################################################'
@@ -184,7 +205,9 @@ source sg-server-config.sh
 	echo '##########################################################################'
 	lighty-enable-mod cgi
 	lighty-enable-mod expire
+}
 
+function configure_lighhttpd {
 	cat <<-EOF >/etc/lighttpd/conf-enabled/spamgourmet.conf
 	cgi.assign      = (
 	    ".pl"  => "/usr/bin/perl",
@@ -208,7 +231,9 @@ source sg-server-config.sh
 	    expire.url = ( "" => "access plus 0 seconds" )
 	}
 	EOF
+}
 
+function configure_website {
 	echo '##########################################################################'
 	echo '### configure spamgourmet website'
 	echo '##########################################################################'
@@ -299,3 +324,16 @@ source sg-server-config.sh
 	/var/lib/dehydrated/renewAllCerts.sh
 	service exim4 restart
 	service lighttpd restart
+}
+
+manadatory_packages
+download_spamgourmet
+create_folders
+install_spamgourmet
+mysql_setup
+exim4_setup
+create_captcha
+configure_exim_tls
+install_perl_modules
+configure_lighhttpd
+configure_website
