@@ -13,7 +13,7 @@ function mandatory_packages {
 		mariadb-server libdbd-mysql-perl libclass-loader-perl exim4 \
 		imagemagick lighttpd \
 		libcrypt-eksblowfish-perl libdigest-bcrypt-perl \
-		unzip make gcc bash-completion ca-certificates
+		unzip make gcc bash-completion ca-certificates wget
 }
 
 
@@ -91,14 +91,14 @@ function mysql_setup {
 	y
 	y
 	y
-	EOF
+EOF
 
 	mysqladmin -u root -p$MARIADBROOTPWD create sguser
 	mysql -s -u root -p$MARIADBROOTPWD <<-EOF
 	create database sg;
 	grant all privileges on sg.* to sguser identified by "$MARIADBINTERACTIVEPWD" with grant option;
 	flush privileges;
-	EOF
+EOF
 	# too short field for the entire bcrypted password
 	sed -i 's/Password` varchar.50./Password` varchar(80)/' ./code/conf/db.sql
 	mysql -s -u sguser -p$MARIADBINTERACTIVEPWD -Dsg <./code/conf/db.sql
@@ -150,7 +150,7 @@ function create_captcha {
 
 	[Install]
 	WantedBy=multi-user.target
-	EOF
+EOF
 	systemctl enable captchasrv.service
 	systemctl start captchasrv.service
 }
@@ -164,7 +164,7 @@ function configure_exim_tls {
 			MAIN_TLS_ENABLE = yes
 			# renaming the startssl certs to names used by default by exim4
 			# so no other change to exim4 config
-		EOF
+EOF
 		cp /var/lib/dehydrated/certs/$DOMAIN/fullchain.pem /etc/exim4/exim.crt
 		cp /var/lib/dehydrated/certs/$DOMAIN/privkey.pem /etc/exim4/exim.key
 		service exim4 restart
@@ -187,9 +187,7 @@ function install_perl_modules {
 	unzip Math-Pari-2.01080900.zip
     (
         cd Math-Pari-2.01080900/
-        perl Makefile.PL <<-EOF
-        y
-        EOF
+        PERL_MM_USE_DEFAULT=1 perl Makefile.PL
         sed -i 's/CLK_TCK/CLOCKS_PER_SEC/g' pari-2.1.7/src/language/init.c
         make
         make install
@@ -232,7 +230,7 @@ function configure_lighhttpd {
 	\$HTTP["url"] =~ ".*" {
 	    expire.url = ( "" => "access plus 0 seconds" )
 	}
-	EOF
+EOF
 }
 
 function configure_website {
@@ -275,7 +273,7 @@ function configure_website {
 	      driver = accept
 	      transport = sg_from_user_pipe
 	      domains = ob.$DOMAIN
-	EOF
+EOF
 
 	cat <<-EOF >>/etc/exim4/conf.d/transport/00_exim4-config_header
 	sg_to_user_pipe:
@@ -297,7 +295,7 @@ function configure_website {
 	  command = /usr/local/lib/spamgourmet/mailhandler/outbound
 	  # user = "spamgourmet"
 	  #group = "spamgourmet"
-	EOF
+EOF
 	# registration emails should not use spamgourmet website
 	sed -i "s/www.spamgourmet.com/$DOMAIN/g" /usr/local/lib/spamgourmet/modules/Mail/Spamgourmet/WebMessages.pm
 	# reply address masking uses # so let it pass
@@ -317,7 +315,7 @@ function configure_website {
 		DKIM_DOMAIN = \${sender_address_domain}
 		DKIM_PRIVATE_KEY = CONFDIR/dkim.private
 		DKIM_SELECTOR = $DKIM_SELECTOR
-		EOF
+EOF
 	else
 		echo '##########################################################################'
 		echo '### WARNING! CANNOT configure exim4 for dkim, missing dkim keys'

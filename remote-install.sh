@@ -14,7 +14,7 @@ function setupLetsEncrypt {
 ### main installation - always required
 ##########################################################################
 function mainInstall {
-	./scripts/install-spamgoumet.sh
+	./scripts/install-spamgourmet.sh
 }
 
 if [ SETUP_ENCRYPT="true" ]

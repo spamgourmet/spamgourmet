@@ -34,11 +34,11 @@ source sg-server-config.sh
 	chown root:root /etc/lighttpd/web.pem
 	service exim4 restart
 	service lighttpd restart
-	EOF
+EOF
 	chmod +x /var/lib/dehydrated/renewAllCerts.sh
 	cat <<-EOF >>/etc/crontab
 	17 5,17    * * *   root    /var/lib/dehydrated/renewAllCerts.sh
-	EOF
+EOF
 	echo '##########################################################################'
 	echo '### run dehydrated to generate/update the certs, with visible output'
 	echo '### to visually check that dehydrated works'
