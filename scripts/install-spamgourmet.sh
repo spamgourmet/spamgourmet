@@ -2,7 +2,7 @@
 echo '========================= spamgourmet server installation start'
 source sg-server-config.sh
 
-cd $THISDIR
+cd $SCRIPT_BASE_DIR
 
 function mandatory_packages {
 	echo '##########################################################################'
@@ -22,32 +22,32 @@ function download_spamgourmet {
 	echo '### download and patch spamgourmet code'
 	echo '##########################################################################'
 	git clone https://github.com/spamgourmet/spamgourmet.git code
-
-	cd code
-	OLDIFS=$IFS;IFS=$'\n'
-	for f in `grep -rl /path/to/modules .`; do
-	sed -i 's/\/path\/to\/modules/\/usr\/local\/lib\/spamgourmet\/modules/g' $f
-	done
-	for f in `grep -rl /path/to/spamgourmet.config .`; do
-		sed -i 's/\/path\/to\/spamgourmet.config/\/etc\/spamgourmet\/spamgourmet.config/g' $f
-	done
-	for f in `grep -rl %imagefilename% .`; do
-		sed -i 's/http:\/\/captcha.spamgourmet.com/https:\/\/'$DOMAIN'\/captcha/g' $f
-	done
-	for f in `grep -rl /path/to/outbound.log .`; do
-	sed -i 's/\/path\/to\/outbound.log/\/var\/log\/spamgourmet\/outbound.log/g' $f
-	done
-	for f in `grep -rl /path/to/debug.txt .`; do
-		sed -i 's/\/path\/to\/debug.txt/\/var\/log\/spamgourmet\/spamgourmet.config/g' $f
-	done
-	for f in `grep -rl /home/mora/src/spamgourmet/captcha .`; do
-		sed -i 's/\/home\/mora\/src\/spamgourmet\/captcha/\/usr\/local\/lib\/spamgourmet\/captchasrv/g' $f
-	done
-	for f in `grep -rl /tmp/sg/captcha .`; do
-		sed -i 's/\/tmp\/sg\/captcha/\/var\/www-spamgourmet\/captcha/g' $f
-	done
-	IFS=$OLDIFS
-	cd $THISDIR
+    (
+        cd code
+        OLDIFS=$IFS;IFS=$'\n'
+        for f in `grep -rl /path/to/modules .`; do
+        sed -i 's/\/path\/to\/modules/\/usr\/local\/lib\/spamgourmet\/modules/g' $f
+        done
+        for f in `grep -rl /path/to/spamgourmet.config .`; do
+            sed -i 's/\/path\/to\/spamgourmet.config/\/etc\/spamgourmet\/spamgourmet.config/g' $f
+        done
+        for f in `grep -rl %imagefilename% .`; do
+            sed -i 's/http:\/\/captcha.spamgourmet.com/https:\/\/'$DOMAIN'\/captcha/g' $f
+        done
+        for f in `grep -rl /path/to/outbound.log .`; do
+        sed -i 's/\/path\/to\/outbound.log/\/var\/log\/spamgourmet\/outbound.log/g' $f
+        done
+        for f in `grep -rl /path/to/debug.txt .`; do
+            sed -i 's/\/path\/to\/debug.txt/\/var\/log\/spamgourmet\/spamgourmet.config/g' $f
+        done
+        for f in `grep -rl /home/mora/src/spamgourmet/captcha .`; do
+            sed -i 's/\/home\/mora\/src\/spamgourmet\/captcha/\/usr\/local\/lib\/spamgourmet\/captchasrv/g' $f
+        done
+        for f in `grep -rl /tmp/sg/captcha .`; do
+            sed -i 's/\/tmp\/sg\/captcha/\/var\/www-spamgourmet\/captcha/g' $f
+        done
+        IFS=$OLDIFS
+    )
 }
 
 function create_folders {
@@ -66,17 +66,18 @@ function install_spamgourmet {
 	echo '##########################################################################'
 	echo '### move stuff where it belongs'
 	echo '##########################################################################'
-	cd code
-	cp -R captchasrv mailhandler modules /usr/local/lib/spamgourmet
-	cp -R web/graphs.cgi web/html/* web/templates /var/www-spamgourmet
-	cp conf/spamgourmet.config /etc/spamgourmet
-	wget www.spamgourmet.com/stuff/flagmap.png
-	mv flagmap.png /var/www-spamgourmet/stuff/
+    (
+        cd code
+        cp -R captchasrv mailhandler modules /usr/local/lib/spamgourmet
+        cp -R web/graphs.cgi web/html/* web/templates /var/www-spamgourmet
+        cp conf/spamgourmet.config /etc/spamgourmet
+        wget www.spamgourmet.com/stuff/flagmap.png
+        mv flagmap.png /var/www-spamgourmet/stuff/
+    )
 }
 
 
 function mysql_setup {
-	cd $THISDIR
 	echo '##########################################################################'
 	echo '### configure mysql'
 	echo '### this is a nasty hack - watch closely that it succeeds'
@@ -184,22 +185,23 @@ function install_perl_modules {
 	#apt-get install -y unzip make gcc
 	wget http://search.cpan.org/CPAN/authors/id/I/IL/ILYAZ/modules/Math-Pari-2.01080900.zip
 	unzip Math-Pari-2.01080900.zip
-	cd Math-Pari-2.01080900/
-	perl Makefile.PL <<-EOF
-	y
-	EOF
-	sed -i 's/CLK_TCK/CLOCKS_PER_SEC/g' pari-2.1.7/src/language/init.c
-	make
-	make install
-	cd $THISDIR
+    (
+        cd Math-Pari-2.01080900/
+        perl Makefile.PL <<-EOF
+        y
+        EOF
+        sed -i 's/CLK_TCK/CLOCKS_PER_SEC/g' pari-2.1.7/src/language/init.c
+        make
+        make install
+    )
 	wget http://search.cpan.org/CPAN/authors/id/V/VI/VIPUL/Crypt-Random-1.25.tar.gz
 	tar zxvf Crypt-Random-1.25.tar.gz
-	cd Crypt-Random-1.25
-	perl Makefile.PL
-	make
-	make install
-	cd $THISDIR
-
+    (
+        cd Crypt-Random-1.25
+        perl Makefile.PL
+        make
+        make install
+    )
 	echo '##########################################################################'
 	echo '### enable cgi for lighttpd'
 	echo '##########################################################################'
@@ -300,7 +302,7 @@ function configure_website {
 	sed -i "s/www.spamgourmet.com/$DOMAIN/g" /usr/local/lib/spamgourmet/modules/Mail/Spamgourmet/WebMessages.pm
 	# reply address masking uses # so let it pass
 	sed -i '/^CHECK_RCPT_/ s/\#//g' /etc/exim4/conf.d/main/01_exim4-config_listmacrosdefs
-	cd $THISDIR
+	cd $SCRIPT_BASE_DIR
 	if [ -e ./dkim.private ]; then
 		echo '##########################################################################'
 		echo '### configure exim4 for dkim since there are dkim keys in the folder'

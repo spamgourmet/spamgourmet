@@ -2,8 +2,8 @@
 echo '========================= remote-install start'
 source ./sg-server-config.sh
 
-THISDIR=$(dirname "$(readlink -f "$0")")
-cd $THISDIR
+export SCRIPT_BASE_DIR=$(dirname "$(readlink -f "$0")")
+cd $SCRIPT_BASE_DIR
 
 
 function setupLetsEncrypt {

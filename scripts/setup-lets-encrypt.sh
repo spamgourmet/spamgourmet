@@ -9,12 +9,12 @@ source sg-server-config.sh
 	echo '##########################################################################'
 	echo '### set up LetsEncrypt'
 	echo '##########################################################################'
-	cd $THISDIR
+	cd $SCRIPT_BASE_DIR
 	apt-get install -y dehydrated
 
 	./scripts/config-lets-encrypt.sh
 
-	cd $THISDIR
+	cd $SCRIPT_BASE_DIR
 	echo '##########################################################################'
 	echo '### configure dehydrated autorenew and automatic provisioning'
 	echo '###   for exim4 and lighttpd'
@@ -43,6 +43,7 @@ source sg-server-config.sh
 	echo '### run dehydrated to generate/update the certs, with visible output'
 	echo '### to visually check that dehydrated works'
 	echo '##########################################################################'
-	cd /var/lib/dehydrated
-	dehydrated -c
-	cd $THISDIR
+	(
+        cd /var/lib/dehydrated
+	    dehydrated -c
+    )
