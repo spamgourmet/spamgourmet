@@ -24,7 +24,7 @@ function mainInstall {
 	./scripts/install-spamgourmet.sh
 }
 
-if [ SETUP_ENCRYPT="true" ]
+if [ SETUP_LETSENCRYPTOVH="true" ]
 then
     setupLetsEncrypt
 fi
