@@ -30,7 +30,7 @@ Before you attempt to run this script **from a root shell on the target host** y
 1. have copied the `dkim.private` and `dkim.public` keys generated for the **DKIM** DNS records next to the `remote-install.sh`
 1. make sure you have a large enough scrollback buffer for your terminal to not lose any output
 ## HowTo
-The LetsEncrypt configuration is quite OVH specific. If you are running in OVH you can run the install command as `SETUP_LETSENCRYPTOVH=true remote-install.sh` - otherwise you are on your own with the configuration.
+The LetsEncrypt configuration is quite OVH specific. If you host your domain with OVH you can run the install command as `SETUP_LETSENCRYPTOVH=true remote-install.sh` - otherwise you are on your own with the configuration.
 
 Just ssh as root (passwordless please) to the target host and run the `remote-install.sh` script (with OVH setup as above if you want). Then closely scrutinize the output for any errors.
 
