@@ -1,3 +1,4 @@
+#!/bin/bash
 #This script expects to be run from the spamgourmet-clone main directory
 echo '========================= spamgourmet server installation start'
 source sg-server-config.sh
@@ -78,10 +79,14 @@ function install_spamgourmet {
 
 
 function mysql_setup {
+    #ensure that mysqld is running, - what about init systems?
+    mysqld_safe --no-watch
+
 	echo '##########################################################################'
 	echo '### configure mysql'
 	echo '### this is a nasty hack - watch closely that it succeeds'
 	echo '##########################################################################'
+
 	mysql_secure_installation <<-EOF
 
 	y

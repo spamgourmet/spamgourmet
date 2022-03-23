@@ -38,7 +38,6 @@ EOF
 	chmod +x /var/lib/dehydrated/renewAllCerts.sh
     mkdir -p /etc/cron.daily
 	cp /var/lib/dehydrated/renewAllCerts.sh /etc/cron.daily
-EOF
 	echo '##########################################################################'
 	echo '### run dehydrated to generate/update the certs, with visible output'
 	echo '### to visually check that dehydrated works'
