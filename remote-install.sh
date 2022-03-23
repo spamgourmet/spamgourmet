@@ -19,6 +19,8 @@ function setupLetsEncrypt {
 ### main installation - always required
 ##########################################################################
 function mainInstall {
+	./scripts/install-sg-mariadb.sh
+	./scripts/install-sg-exim.sh
 	./scripts/install-spamgourmet.sh
 }
 

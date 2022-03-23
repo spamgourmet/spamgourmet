@@ -10,9 +10,8 @@ function mandatory_packages {
 	echo '### install mandatory packages'
 	echo '##########################################################################'
 	apt-get update; apt-get upgrade; apt-get autoremove
-	apt-get install -y subversion libdbd-mysql-perl libclass-loader-perl \
-		mariadb-server libdbd-mysql-perl libclass-loader-perl exim4 \
-		imagemagick lighttpd \
+	apt-get install -y git libdbd-mysql-perl libclass-loader-perl \
+		libdbd-mysql-perl libclass-loader-perl imagemagick lighttpd \
 		libcrypt-eksblowfish-perl libdigest-bcrypt-perl \
 		unzip make gcc bash-completion ca-certificates wget
 }
@@ -78,63 +77,6 @@ function install_spamgourmet {
 }
 
 
-function mysql_setup {
-    #ensure that mysqld is running, - what about init systems?
-    mysqld_safe --no-watch
-
-	echo '##########################################################################'
-	echo '### configure mysql'
-	echo '### this is a nasty hack - watch closely that it succeeds'
-	echo '##########################################################################'
-
-	mysql_secure_installation <<-EOF
-
-	y
-	$MARIADBROOTPWD
-	$MARIADBROOTPWD
-	y
-	y
-	y
-	y
-EOF
-
-	mysqladmin -u root -p$MARIADBROOTPWD create sguser
-	mysql -s -u root -p$MARIADBROOTPWD <<-EOF
-	create database sg;
-	grant all privileges on sg.* to sguser identified by "$MARIADBINTERACTIVEPWD" with grant option;
-	flush privileges;
-EOF
-	# too short field for the entire bcrypted password
-	sed -i 's/Password` varchar.50./Password` varchar(80)/' ./code/conf/db.sql
-	mysql -s -u sguser -p$MARIADBINTERACTIVEPWD -Dsg <./code/conf/db.sql
-	mysql -s -u sguser -p$MARIADBINTERACTIVEPWD -Dsg <./code/conf/dialogs.sql
-}
-
-function exim4_setup {
-	echo '##########################################################################'
-	echo '### configure exim4'
-	echo '##########################################################################'
-	# need fix to work if has multiple IP addresses
-	# also do not know if this will work on ipv6-only servers
-	IPADDRESS=$(hostname -I | head -1)
-
-	sed -i "s/dc_eximconfig_configtype=.*$/dc_eximconfig_configtype='internet'/" /etc/exim4/update-exim4.conf.conf
-	sed -i "s/dc_other_hostnames=.*$/dc_other_hostnames='$DOMAIN'/" /etc/exim4/update-exim4.conf.conf
-	sed -i "s/dc_local_interfaces=.*$/dc_local_interfaces='$IPADDRESS'/" /etc/exim4/update-exim4.conf.conf
-	sed -i "s/dc_readhost=.*$/dc_readhost=''/" /etc/exim4/update-exim4.conf.conf
-	sed -i "s/dc_relay_domains=.*$/dc_relay_domains='ob."$DOMAIN"'/" /etc/exim4/update-exim4.conf.conf
-	sed -i "s/dc_minimaldns=.*$/dc_minimaldns='false'/" /etc/exim4/update-exim4.conf.conf
-	sed -i "s/dc_relay_nets=.*$/dc_relay_nets=''/" /etc/exim4/update-exim4.conf.conf
-	sed -i "s/dc_smarthost=.*$/dc_smarthost=''/" /etc/exim4/update-exim4.conf.conf
-	sed -i "s/CFILEMODE=.*$/CFILEMODE='644'/" /etc/exim4/update-exim4.conf.conf
-	sed -i "s/dc_use_split_config=.*$/dc_use_split_config='true'/" /etc/exim4/update-exim4.conf.conf
-	sed -i "s/dc_hide_mailname=.*$/dc_hide_mailname=''/" /etc/exim4/update-exim4.conf.conf
-	sed -i "s/dc_mailname_in_oh=.*$/dc_mailname_in_oh='true'/" /etc/exim4/update-exim4.conf.conf
-	sed -i "s/dc_localdelivery=.*$/dc_localdelivery='mail_spool'/" /etc/exim4/update-exim4.conf.conf
-	echo $DOMAIN >/etc/mailname
-	update-exim4.conf
-}
-
 function create_captcha {
 	echo '##########################################################################'
 	echo '### captcha creation'
@@ -158,27 +100,6 @@ function create_captcha {
 EOF
 	systemctl enable captchasrv.service
 	systemctl start captchasrv.service
-}
-
-function configure_exim_tls {
-	if [ -e /var/lib/dehydrated/certs/$DOMAIN/fullchain.pem ]; then
-		echo '##########################################################################'
-		echo '### configure exim for TLS because dehydrated certificate exists'
-		echo '##########################################################################'
-		cat <<-EOF >/etc/exim4/conf.d/main/00_exim4-config_myvalues
-			MAIN_TLS_ENABLE = yes
-			# renaming the startssl certs to names used by default by exim4
-			# so no other change to exim4 config
-EOF
-		cp /var/lib/dehydrated/certs/$DOMAIN/fullchain.pem /etc/exim4/exim.crt
-		cp /var/lib/dehydrated/certs/$DOMAIN/privkey.pem /etc/exim4/exim.key
-		service exim4 restart
-	else
-		echo '##########################################################################'
-		echo '### WARNING! Could NOT configure exim for TLS because'
-		echo '### could not find dehydrated certificates'
-		echo '##########################################################################'
-	fi
 }
 
 function install_perl_modules {
@@ -331,14 +252,24 @@ EOF
 	service lighttpd restart
 }
 
+function configure_sg_db_connection_and_data {
+	#ensure that mysqld is running, - what about init systems?
+	#    mysqld_safe --no-watch
+	service mysql start
+	# too short field for the entire bcrypted password
+	sed -i 's/Password` varchar.50./Password` varchar(80)/' ./code/conf/db.sql
+	mysql -s -u sguser -p$MARIADBINTERACTIVEPWD -Dsg <./code/conf/db.sql
+	mysql -s -u sguser -p$MARIADBINTERACTIVEPWD -Dsg <./code/conf/dialogs.sql
+	# want to stop the MySQL service if we are building a docker container to ensure that no pending changes remain.
+	service mysql stop
+}
+
 mandatory_packages
 download_spamgourmet
 create_folders
 install_spamgourmet
-mysql_setup
-exim4_setup
 create_captcha
-configure_exim_tls
 install_perl_modules
 configure_lighhttpd
 configure_website
+configure_sg_db_connection_and_data
