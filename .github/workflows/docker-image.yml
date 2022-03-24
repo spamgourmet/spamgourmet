@@ -1,18 +1,12 @@
-name: Docker Image CI
-
 on:
   push:
-    branches: [ master ]
   pull_request:
-    branches: [ master ]
 
 jobs:
 
-  build:
-
-    runs-on: ubuntu-latest
-
+  Build-Spamgouret-Clone-Container:
+    runs-on: unbuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - name: Build the Docker image
-      run: echo dummy action to allow triggering on other branches
+    - name: Build Spamgourmet Clone Docker image
+      run: make build-spamgourmet-clone
