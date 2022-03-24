@@ -1,14 +1,14 @@
-on:
-  push:
-  pull_request:
+name: Docker Image CI
+
+on: [push, pull_request ]
 
 jobs:
 
-  Build-Spamgouret-Clone-Container:
-    runs-on: unbuntu-latest
+  build:
+
+    runs-on: ubuntu-latest
+
     steps:
     - uses: actions/checkout@v2
-    - name: Build Spamgourmet Clone Docker image
-      run: make build-spamgourmet-clone
-    - name: deploy up
-      run: echo  not complete
+    - name: Build the Docker image
+      run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
