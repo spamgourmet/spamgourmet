@@ -19,15 +19,15 @@ source sg-server-config.sh
 echo '##########################################################################'
 echo "### configure dehydrated for $DOMAIN with DNS managed by OVH"
 echo '##########################################################################'
-apt-get install -y git python-pip
+apt-get install -y git python3-pip dehydrated
 mkdir -p /var/lib/dehydrated/hooks
 cd /var/lib/dehydrated/
 git clone https://github.com/rbeuque74/letsencrypt-ovh-hook hooks/ovh
 pip install -r hooks/ovh/requirements.txt
 cp hooks/ovh/ovh.conf.dist ./ovh.conf
-sed -i "s/YOUR_APPLICATION_KEY/$OVHAPPKEY/" /var/lib/dehydrated/ovh.conf
-sed -i "s/YOUR_APPLICATION_SECRET/$OVHAPPSECRET/" /var/lib/dehydrated/ovh.conf
-sed -i "s/YOUR_CONSUMER_KEY/$OVHCONSKEY/" /var/lib/dehydrated/ovh.conf
+sed -i "s/YOUR_APPLICATION_KEY/$LETSENCRYPT_OVH_APPKEY/" /var/lib/dehydrated/ovh.conf
+sed -i "s/YOUR_APPLICATION_SECRET/$LETSENCRYPT_OVH_APPSECRET/" /var/lib/dehydrated/ovh.conf
+sed -i "s/YOUR_CONSUMER_KEY/$LETSENCRYPT_OVH_CONSUMERKEY/" /var/lib/dehydrated/ovh.conf
 cat <<-EOF >/etc/dehydrated/domains.txt
 $DOMAIN ob.$DOMAIN
 EOF
@@ -37,3 +37,6 @@ CHALLENGETYPE="dns-01"
 HOOK="\${BASEDIR}/hooks/ovh/hook.py"
 CONTACT_EMAIL=$ADMINEMAIL
 EOF
+
+/usr/bin/dehydrated --register --accept-terms
+dehydrated -c
