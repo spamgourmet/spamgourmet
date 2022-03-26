@@ -26,7 +26,7 @@ Before you attempt to run this script **from a root shell on the target host** y
     1. **MX** record for *example.com* pointing to *example.com*
     1. **MX** record for *ob.example.com* pointing to *example.com*
     1. **DMARC** and **DKIM** for *example.com* set up as instructed [here](https://www.geekrant.org/2017/04/25/trustworthy-email-authentication-using-exim4-spf-dkim-and-dmarc/).
-1. have recursively copied the `dehydrated` folder (including its subdirectories `accounts`, `certs` and `chains` in the same folder as the one where you copied `remote-install.sh` (normally in `/root`)
+1. have updated `sg-server-config.sh` with your confidential settings
 1. have copied the `dkim.private` and `dkim.public` keys generated for the **DKIM** DNS records next to the `remote-install.sh`
 1. make sure you have a large enough scrollback buffer for your terminal to not lose any output
 ## HowTo
@@ -38,4 +38,4 @@ At the end you should hopefully have a working clone of spamgourmet.com
 
 This is out of scope but do not forget to ensure that you have a proper firewall on the host, and that you set up regular backups.
 
-FYI my private spamgourmet clone runs very well on a KVM VM with 1vCPU, 512MB RAM and 7GB disk (1.51GB used at the end of the script). The VM runs Debian 10.10 on **zfs** root.
+FYI my private spamgourmet clone runs very well on a KVM VM with 1vCPU, 512MB RAM and 7GB disk (1.51GB used at the end of the script). The VM runs Debian Bullseye on **zfs** root.
