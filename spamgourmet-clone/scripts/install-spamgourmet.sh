@@ -109,19 +109,19 @@ function install_perl_modules {
 	#https://www.geekrant.org/2017/04/23/how-to-to-install-the-crypteksblowfishbcrypt-module-and-cryptrandom/
 	#apt-get install -y libcrypt-eksblowfish-perl libdigest-bcrypt-perl
 	#apt-get install -y unzip make gcc
-	wget http://search.cpan.org/CPAN/authors/id/I/IL/ILYAZ/modules/Math-Pari-2.01080900.zip
-	unzip Math-Pari-2.01080900.zip
+	wget https://cpan.metacpan.org/authors/id/I/IL/ILYAZ/modules/Math-Pari-2.03052103.tar.gz
+	# wget http://search.cpan.org/CPAN/authors/id/I/IL/ILYAZ/modules/Math-Pari-2.01080900.zip
+	tar xzf Math-Pari-2.03052103.tar.gz
     (
-        cd Math-Pari-2.01080900/
+        cd Math-Pari-2.03052103/
         PERL_MM_USE_DEFAULT=1 perl Makefile.PL
-        sed -i 's/CLK_TCK/CLOCKS_PER_SEC/g' pari-2.1.7/src/language/init.c
         make
         make install
     )
-	wget http://search.cpan.org/CPAN/authors/id/V/VI/VIPUL/Crypt-Random-1.25.tar.gz
-	tar zxvf Crypt-Random-1.25.tar.gz
+	wget https://cpan.metacpan.org/authors/id/V/VI/VIPUL/Crypt-Random-1.54.tar.gz
+	tar xzf Crypt-Random-1.54.tar.gz
     (
-        cd Crypt-Random-1.25
+        cd Crypt-Random-1.54
         perl Makefile.PL
         make
         make install
@@ -227,27 +227,13 @@ EOF
 	# reply address masking uses # so let it pass
 	sed -i '/^CHECK_RCPT_/ s/\#//g' /etc/exim4/conf.d/main/01_exim4-config_listmacrosdefs
 	cd $SCRIPT_BASE_DIR
-	if [ -e ./dkim.private ]; then
-		echo '##########################################################################'
-		echo '### configure exim4 for dkim since there are dkim keys in the folder'
-		echo '### where this script is'
-		echo '##########################################################################'
-		mv dkim.* /etc/exim4/
-		chown root:Debian-exim /etc/exim4/dkim.*
-		chmod 640 /etc/exim4/dkim.*
-		cat <<-EOF >>/etc/exim4/conf.d/main/01_exim4-config_listmacrosdefs
-		#DKIM loading
-		DKIM_CANON = relaxed
-		DKIM_DOMAIN = \${sender_address_domain}
-		DKIM_PRIVATE_KEY = CONFDIR/dkim.private
-		DKIM_SELECTOR = $DKIM_SELECTOR
+	cat <<-EOF >>/etc/exim4/conf.d/main/01_exim4-config_listmacrosdefs
+	#DKIM loading
+	DKIM_CANON = relaxed
+	DKIM_DOMAIN = \${sender_address_domain}
+	DKIM_PRIVATE_KEY = CONFDIR/dkim.pem
+	DKIM_SELECTOR = $DKIM_SELECTOR
 EOF
-	else
-		echo '##########################################################################'
-		echo '### WARNING! CANNOT configure exim4 for dkim, missing dkim keys'
-		echo '##########################################################################'
-	fi
-	/var/lib/dehydrated/renewAllCerts.sh
 	service exim4 restart
 	service lighttpd restart
 }
@@ -256,8 +242,6 @@ function configure_sg_db_connection_and_data {
 	#ensure that mysqld is running, - what about init systems?
 	#    mysqld_safe --no-watch
 	service mysql start
-	# too short field for the entire bcrypted password
-	sed -i 's/Password` varchar.50./Password` varchar(80)/' ./code/conf/db.sql
 	mysql -s -u sguser -p$MARIADBINTERACTIVEPWD -Dsg <./code/conf/db.sql
 	mysql -s -u sguser -p$MARIADBINTERACTIVEPWD -Dsg <./code/conf/dialogs.sql
 	# want to stop the MySQL service if we are building a docker container to ensure that no pending changes remain.

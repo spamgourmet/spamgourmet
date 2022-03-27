@@ -21,7 +21,7 @@ function exim4_setup {
 	echo '##########################################################################'
 	# need fix to work if has multiple IP addresses
 	# also do not know if this will work on ipv6-only servers
-	IPADDRESS=$(hostname -I | head -1)
+	IPADDRESS=`ip -4 route get 8.8.8.8 | head -1 | awk '{print $7}'`
 
 	sed -i "s/dc_eximconfig_configtype=.*$/dc_eximconfig_configtype='internet'/" /etc/exim4/update-exim4.conf.conf
 	sed -i "s/dc_other_hostnames=.*$/dc_other_hostnames='$DOMAIN'/" /etc/exim4/update-exim4.conf.conf
@@ -41,17 +41,15 @@ function exim4_setup {
 }
 
 function configure_exim_tls {
-	if [ -e /var/lib/dehydrated/certs/$DOMAIN/fullchain.pem ]; then
+	if [ -e /etc/exim4/exim.key ]; then
 		echo '##########################################################################'
-		echo '### configure exim for TLS because dehydrated certificate exists'
+		echo '### configure exim for TLS because certificate exists'
 		echo '##########################################################################'
 		cat <<-EOF >/etc/exim4/conf.d/main/00_exim4-config_myvalues
 			MAIN_TLS_ENABLE = yes
-			# renaming the startssl certs to names used by default by exim4
+			# renaming the certs to names used by default by exim4
 			# so no other change to exim4 config
 EOF
-		cp /var/lib/dehydrated/certs/$DOMAIN/fullchain.pem /etc/exim4/exim.crt
-		cp /var/lib/dehydrated/certs/$DOMAIN/privkey.pem /etc/exim4/exim.key
 		service exim4 restart
 	else
 		echo '##########################################################################'

@@ -14,6 +14,10 @@ cp /etc/ssl/certs/$DOMAIN.crt   /etc/exim4/exim.crt
 cp /etc/ssl/private/$DOMAIN.pem /etc/exim4/exim.key
 chown root:Debian-exim /etc/exim4/exim.*
 chmod 640 /etc/exim4/exim.*
+cp /etc/ssl/private/dkim.pem /etc/exim4/
+cp /etc/ssl/certs/dkim.crt   /etc/exim4/
+chown root:Debian-exim /etc/exim4/dkim.*
+chmod 640 /etc/exim4/dkim.*
 service exim4 restart
 # lighttpd certificates
 cat /etc/ssl/certs/$DOMAIN.pem /etc/ssl/private/$DOMAIN.pem >/etc/lighttpd/web.pem

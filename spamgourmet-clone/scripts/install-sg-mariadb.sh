@@ -16,8 +16,8 @@ function mysql_packages {
 
 
 function mysql_setup {
-    #ensure that mysqld is running, - what about init systems?
-	#    mysqld_safe --no-watch
+	# ensure that mysqld is running, - what about init systems?
+	# mysqld_safe --no-watch
 	service mysql start
 
 
