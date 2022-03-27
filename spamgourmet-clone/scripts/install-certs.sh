@@ -29,9 +29,11 @@ DOMAIN_CERT_FILE=/etc/ssl/certs/$DOMAIN.crt
 DKIM_PRIVKEY_GIVEN=dkim.private
 DKIM_PUBKEY_GIVEN=dkim.public
 
-
-if [ -e "$DKIM_PRIVKEY_FILE" ]
-then
+if [ -e "$DKIM_PRIVKEY_GIVEN" ]; then
+  echo "installing supplied  DKIM key"
+  mv "$DKIM_PRIVKEY_GIVEN" "$DKIM_PRIVKEY_FILE"
+  mv "$DKIM_PUBKEY_GIVEN"  "$DKIM_PUBKEY_FILE"
+elif [ -e "$DKIM_PRIVKEY_FILE" ]; then
   echo "skipping DKIM key creation as the file already exists"
 else
   # adapted from https://www.mailhardener.com/kb/how-to-create-a-dkim-record-with-openssl
@@ -43,14 +45,8 @@ if [ -e "$DOMAIN_PRIVKEY_FILE" ]
 then
   echo "skipping SSL certificate creation as the file already exists"
 else
-  if [ -e "$DKIM_PRIVKEY_GIVEN" ]
-  then
-    mv "$DKIM_PRIVKEY_GIVEN" "$DOMAIN_PRIVKEY_FILE"
-    mv "$DKIM_PUBKEY_GIVEN"  "$DOMAIN_CERT_FILE"
-  else
-    # after https://stackoverflow.com/questions/10175812/how-to-generate-a-self-signed-ssl-certificate-using-openssl
-    openssl req -subj "/CN=$DOMAIN" -x509 -newkey rsa:4096 -keyout "$DOMAIN_PRIVKEY_FILE" -out "$DOMAIN_CERT_FILE" -sha256 -days 365
-  fi
+  # after https://stackoverflow.com/questions/10175812/how-to-generate-a-self-signed-ssl-certificate-using-openssl
+  openssl req -subj "/CN=$DOMAIN" -x509 -newkey rsa:4096 -keyout "$DOMAIN_PRIVKEY_FILE" -out "$DOMAIN_CERT_FILE" -sha256 -days 365
 fi
 
 # access rights must be ensured so this is unconditional
