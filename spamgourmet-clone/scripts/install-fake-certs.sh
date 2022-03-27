@@ -11,4 +11,13 @@ source sg-server-config.sh
 ###   - /etc/ssl/certs/dkim.crt
 ###   - /etc/ssl/private/$DOMAIN.pem
 ###   - /etc/ssl/certs/$DOMAIN.crt
+###
+###
+### NOTE: if the above certificates already exist, the script will NOT
+###       overwrite them because the assumption is that there's already
+###       a mechanism to create and keep them up to date
+###
 ##########################################################################
+
+[ -e /etc/ssl/private/dkim.pem ]    && exit
+[ -e /etc/ssl/private/$DOMAIN.pem ] && exit
