@@ -9,9 +9,9 @@ function mandatory_packages {
 	echo '##########################################################################'
 	echo '### install mandatory packages'
 	echo '##########################################################################'
-	apt-get update; apt-get upgrade; apt-get autoremove
+	apt-get update; apt-get upgrade -y; apt-get autoremove
 	apt-get install -y git libdbd-mysql-perl libclass-loader-perl \
-		libdbd-mysql-perl libclass-loader-perl imagemagick lighttpd \
+		libdbd-mysql-perl libclass-loader-perl imagemagick \
 		libcrypt-eksblowfish-perl libdigest-bcrypt-perl \
 		unzip make gcc bash-completion ca-certificates wget
 }

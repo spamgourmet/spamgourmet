@@ -9,7 +9,7 @@ function mysql_packages {
 	echo '##########################################################################'
 	echo '### install mandatory packages'
 	echo '##########################################################################'
-	apt-get update; apt-get upgrade; apt-get autoremove
+	apt-get update; apt-get upgrade -y; apt-get autoremove
 	apt-get install -y mariadb-server \
 			unzip make gcc bash-completion ca-certificates wget
 }

@@ -31,8 +31,8 @@ DKIM_PUBKEY_GIVEN=dkim.public
 
 if [ -e "$DKIM_PRIVKEY_GIVEN" ]; then
   echo "installing supplied  DKIM key"
-  mv "$DKIM_PRIVKEY_GIVEN" "$DKIM_PRIVKEY_FILE"
-  mv "$DKIM_PUBKEY_GIVEN"  "$DKIM_PUBKEY_FILE"
+  cp "$DKIM_PRIVKEY_GIVEN" "$DKIM_PRIVKEY_FILE"
+  cp "$DKIM_PUBKEY_GIVEN"  "$DKIM_PUBKEY_FILE"
 elif [ -e "$DKIM_PRIVKEY_FILE" ]; then
   echo "skipping DKIM key creation as the file already exists"
 else

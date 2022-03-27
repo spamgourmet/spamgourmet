@@ -9,9 +9,8 @@ function exim4_packages {
 	echo '##########################################################################'
 	echo '### install mandatory packages'
 	echo '##########################################################################'
-	apt-get update; apt-get upgrade; apt-get autoremove
-	apt-get install -y exim4 \
-		unzip make gcc bash-completion ca-certificates wget
+	apt-get update; apt-get upgrade -y; apt-get autoremove
+	apt-get install -y unzip make gcc bash-completion ca-certificates wget
 }
 
 
@@ -41,22 +40,15 @@ function exim4_setup {
 }
 
 function configure_exim_tls {
-	if [ -e /etc/exim4/exim.key ]; then
-		echo '##########################################################################'
-		echo '### configure exim for TLS because certificate exists'
-		echo '##########################################################################'
-		cat <<-EOF >/etc/exim4/conf.d/main/00_exim4-config_myvalues
-			MAIN_TLS_ENABLE = yes
-			# renaming the certs to names used by default by exim4
-			# so no other change to exim4 config
+	echo '##########################################################################'
+	echo '### configure exim for TLS because certificate exists'
+	echo '##########################################################################'
+	cat <<-EOF >/etc/exim4/conf.d/main/00_exim4-config_myvalues
+	MAIN_TLS_ENABLE = yes
+	# renaming the certs to names used by default by exim4
+	# so no other change to exim4 config
 EOF
-		service exim4 restart
-	else
-		echo '##########################################################################'
-		echo '### WARNING! Could NOT configure exim for TLS because'
-		echo '### could not find dehydrated certificates'
-		echo '##########################################################################'
-	fi
+	service exim4 restart
 }
 
 exim4_packages
