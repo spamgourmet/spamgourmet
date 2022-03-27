@@ -26,6 +26,10 @@ DKIM_PUBKEY_FILE=/etc/ssl/certs/dkim.crt
 DOMAIN_PRIVKEY_FILE=/etc/ssl/private/$DOMAIN.pem
 DOMAIN_CERT_FILE=/etc/ssl/certs/$DOMAIN.crt
 
+DKIM_PRIVKEY_GIVEN=dkim.private
+DKIM_PUBKEY_GIVEN=dkim.public
+
+
 if [ -e "$DKIM_PRIVKEY_FILE" ]
 then
   echo "skipping DKIM key creation as the file already exists"
@@ -39,12 +43,18 @@ if [ -e "$DOMAIN_PRIVKEY_FILE" ]
 then
   echo "skipping SSL certificate creation as the file already exists"
 else
-  # after https://stackoverflow.com/questions/10175812/how-to-generate-a-self-signed-ssl-certificate-using-openssl
-  openssl req -subj "/CN=$DOMAIN" -x509 -newkey rsa:4096 -keyout "$DOMAIN_PRIVKEY_FILE" -out "$DOMAIN_CERT_FILE" -sha256 -days 365
+  if [ -e "$DKIM_PRIVKEY_GIVEN" ]
+  then
+    mv "$DKIM_PRIVKEY_GIVEN" "$DOMAIN_PRIVKEY_FILE"
+    mv "$DKIM_PUBKEY_GIVEN"  "$DOMAIN_CERT_FILE"
+  else
+    # after https://stackoverflow.com/questions/10175812/how-to-generate-a-self-signed-ssl-certificate-using-openssl
+    openssl req -subj "/CN=$DOMAIN" -x509 -newkey rsa:4096 -keyout "$DOMAIN_PRIVKEY_FILE" -out "$DOMAIN_CERT_FILE" -sha256 -days 365
+  fi
 fi
 
 # access rights must be ensured so this is unconditional
-chmod 0600 /etc/ssl/private/dkim.pem
-chmod 0644 /etc/ssl/certs/dkim.crt
-chmod 0600 /etc/ssl/private/$DOMAIN.pem
-chmod 0644 /etc/ssl/certs/$DOMAIN.crt
+chmod 0600 "$DKIM_PRIVKEY_FILE"
+chmod 0644 "$DKIM_PUBKEY_FILE"
+chmod 0600 "$DOMAIN_PRIVKEY_FILE"
+chmod 0644 "$DOMAIN_CERT_FILE"
