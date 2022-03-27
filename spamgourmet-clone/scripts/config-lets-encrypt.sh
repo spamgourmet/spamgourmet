@@ -19,7 +19,7 @@ source sg-server-config.sh
 echo '##########################################################################'
 echo "### configure dehydrated for $DOMAIN with DNS managed by OVH"
 echo '##########################################################################'
-apt-get install -y git python3-pip dehydrated
+apt-get install -y git python3-pip
 mkdir -p /var/lib/dehydrated/hooks
 cd /var/lib/dehydrated/
 git clone https://github.com/rbeuque74/letsencrypt-ovh-hook hooks/ovh
