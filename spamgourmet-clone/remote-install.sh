@@ -1,6 +1,7 @@
 #!/bin/bash
-echo '========================= remote-install start'
-source ./sg-server-config.sh
+echo '##########################################################################
+echo '### remote-install start'
+echo '##########################################################################
 
 export SCRIPT_BASE_DIR=$(dirname "$(readlink -f "$0")")
 cd $SCRIPT_BASE_DIR
@@ -11,24 +12,13 @@ then
 	export RUNLEVEL=3
 fi
 
-function setupLetsEncrypt {
-	./scripts/setup-lets-encrypt.sh
-}
+source ./sg-server-config.sh
 
-##########################################################################
-### main installation - always required
-##########################################################################
-function mainInstall {
-	./scripts/install-sg-mariadb.sh
-	./scripts/install-sg-exim.sh
-	./scripts/install-spamgourmet.sh
-}
-
-if [ SETUP_LETSENCRYPTOVH="true" ]
-then
-    setupLetsEncrypt
-fi
-mainInstall
+./scripts/install-fake-certs.sh
+./scripts/config-certs-provisioning.sh
+./scripts/install-sg-mariadb.sh
+./scripts/install-sg-exim.sh
+./scripts/install-spamgourmet.sh
 
 echo '##########################################################################'
 echo "### install finished. please go to $DOMAIN,"

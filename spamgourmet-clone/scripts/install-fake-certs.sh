@@ -21,3 +21,9 @@ source sg-server-config.sh
 
 [ -e /etc/ssl/private/dkim.pem ]    && exit
 [ -e /etc/ssl/private/$DOMAIN.pem ] && exit
+
+### change this to generate real certs
+touch /etc/ssl/private/dkim.pem;    chmod 0600 /etc/ssl/private/dkim.pem
+touch /etc/ssl/certs/dkim.crt;      chmod 0644 /etc/ssl/certs/dkim.crt
+touch /etc/ssl/private/$DOMAIN.pem; chmod 0600 /etc/ssl/private/$DOMAIN.pem
+touch /etc/ssl/certs/$DOMAIN.crt;   chmod 0644 /etc/ssl/certs/$DOMAIN.crt
