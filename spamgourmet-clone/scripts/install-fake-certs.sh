@@ -17,33 +17,34 @@ source sg-server-config.sh
 ###       overwrite them because the assumption is that there's already
 ###       a mechanism to create and keep them up to date
 ###
+### NOTE #2: dkim.crt except the first and last line is actually the key
+###       part of the DKIM DNS record (or should be)
 ##########################################################################
 
-DOMAIN=spamgourmet.test
-
-DKIM_KEY_FILE=/etc/ssl/private/dkim.pem
-DKIM_DNS_FILE=/etc/ssl/certs/dkim_dns_data.txt
-DOMAIN_KEY_FILE=/etc/ssl/private/$DOMAIN.pem
+DKIM_PRIVKEY_FILE=/etc/ssl/private/dkim.pem
+DKIM_PUBKEY_FILE=/etc/ssl/certs/dkim.crt
+DOMAIN_PRIVKEY_FILE=/etc/ssl/private/$DOMAIN.pem
 DOMAIN_CERT_FILE=/etc/ssl/certs/$DOMAIN.crt
 
-
-if [ -e "$DKIM_KEY_FILE" -o -e "$DOMAIN_KEY_FILE" ]
+if [ -e "$DKIM_PRIVKEY_FILE" ]
 then
-   echo "Aborting since key file already exists" >&2
-   ls -l /etc/ssl/private > &2 
-   exit 5
+  echo "skipping DKIM key creation as the file already exists"
+else
+  # adapted from https://www.mailhardener.com/kb/how-to-create-a-dkim-record-with-openssl
+  openssl genrsa -out "$DKIM_PRIVKEY_FILE" 2048
+  openssl rsa -in "$DKIM_PRIVKEY_FILE" -pubout -outform pem >"$DKIM_PUBKEY_FILE"
 fi
 
+if [ -e "$DOMAIN_PRIVKEY_FILE" ]
+then
+  echo "skipping SSL certificate creation as the file already exists"
+else
+  # after https://stackoverflow.com/questions/10175812/how-to-generate-a-self-signed-ssl-certificate-using-openssl
+  openssl req -subj "/CN=$DOMAIN" -x509 -newkey rsa:4096 -keyout "$DOMAIN_PRIVKEY_FILE" -out "$DOMAIN_CERT_FILE" -sha256 -days 365
+fi
 
-# after https://stackoverflow.com/questions/10175812/how-to-generate-a-self-signed-ssl-certificate-using-openssl
-openssl req -subj "/CN=$TEST_DOMAIN" -x509 -newkey rsa:4096 -keyout "$DOMAIN_KEY_FILE" -out "$DOMAIN_CERT_FILE" -sha256 -days 365
-
-# after https://www.mailhardener.com/kb/how-to-create-a-dkim-record-with-openssl
-openssl genrsa -out "$DKIM_KEY_FILE" 2048
-openssl rsa -in "$DKIM_KEY_FILE" -pubout -outform der 2>/dev/null | openssl base64 -A > "$DKIM_DNS_FILE"
-
-
-touch /etc/ssl/private/dkim.pem;    chmod 0600 /etc/ssl/private/dkim.pem
-touch /etc/ssl/certs/dkim.crt;      chmod 0644 /etc/ssl/certs/dkim.crt
-touch /etc/ssl/private/$DOMAIN.pem; chmod 0600 /etc/ssl/private/$DOMAIN.pem
-touch /etc/ssl/certs/$DOMAIN.crt;   chmod 0644 
+# access rights must be ensured so this is unconditional
+chmod 0600 /etc/ssl/private/dkim.pem
+chmod 0644 /etc/ssl/certs/dkim.crt
+chmod 0600 /etc/ssl/private/$DOMAIN.pem
+chmod 0644 /etc/ssl/certs/$DOMAIN.crt

@@ -1,3 +1,4 @@
 **/dkim.private
 **/dkim.public
 **/sg-server-config-secrets
+.swp
