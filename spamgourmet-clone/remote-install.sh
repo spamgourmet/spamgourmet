@@ -14,7 +14,7 @@ fi
 
 source ./sg-server-config.sh
 
-./scripts/install-fake-certs.sh
+./scripts/install-default-test-certs.sh
 ./scripts/config-certs-provisioning.sh
 ./scripts/install-sg-mariadb.sh
 ./scripts/install-sg-exim.sh
