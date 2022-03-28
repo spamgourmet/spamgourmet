@@ -21,6 +21,9 @@ source sg-server-config.sh
 ###       part of the DKIM DNS record (or should be)
 ##########################################################################
 
+apt-get update; apt-get upgrade -y ; apt-get autoremove
+apt-get install -y openssl
+
 DKIM_PRIVKEY_FILE=/etc/ssl/private/dkim.pem
 DKIM_PUBKEY_FILE=/etc/ssl/certs/dkim.crt
 DOMAIN_PRIVKEY_FILE=/etc/ssl/private/$DOMAIN.pem
@@ -46,7 +49,7 @@ then
   echo "skipping SSL certificate creation as the file already exists"
 else
   # after https://stackoverflow.com/questions/10175812/how-to-generate-a-self-signed-ssl-certificate-using-openssl
-  openssl req -subj "/CN=$DOMAIN" -x509 -newkey rsa:4096 -keyout "$DOMAIN_PRIVKEY_FILE" -out "$DOMAIN_CERT_FILE" -sha256 -days 365
+  openssl req -nodes -subj "/CN=$DOMAIN" -x509 -newkey rsa:4096 -keyout "$DOMAIN_PRIVKEY_FILE" -out "$DOMAIN_CERT_FILE" -sha256 -days 824
 fi
 
 # access rights must be ensured so this is unconditional
