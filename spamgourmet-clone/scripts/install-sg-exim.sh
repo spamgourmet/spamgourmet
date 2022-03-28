@@ -10,7 +10,7 @@ function exim4_packages {
 	echo '### install mandatory packages'
 	echo '##########################################################################'
 	apt-get update; apt-get upgrade -y; apt-get autoremove
-	apt-get install -y exim unzip make gcc bash-completion ca-certificates wget
+	apt-get install -y exim4 unzip make gcc bash-completion ca-certificates wget
 }
 
 
