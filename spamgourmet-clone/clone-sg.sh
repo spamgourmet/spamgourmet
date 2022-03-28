@@ -1,6 +1,6 @@
 #!/bin/bash
 echo '##########################################################################'
-echo '### remote-install start'
+echo '### Start Setup of Spamgourmet Clone'
 echo '##########################################################################'
 
 export SCRIPT_BASE_DIR=$(dirname "$(readlink -f "$0")")

@@ -27,12 +27,12 @@ Before you attempt to run this script **from a root shell on the target host** y
     1. **MX** record for *ob.example.com* pointing to *example.com*
     1. **DMARC** and **DKIM** for *example.com* set up as instructed [here](https://www.geekrant.org/2017/04/25/trustworthy-email-authentication-using-exim4-spf-dkim-and-dmarc/).
 1. have updated `sg-server-config.sh` with your confidential settings
-1. have copied the `dkim.private` and `dkim.public` keys generated for the **DKIM** DNS records next to the `remote-install.sh`
+1. have copied the `dkim.private` and `dkim.public` keys generated for the **DKIM** DNS records next to the `clone-sg.sh`
 1. make sure you have a large enough scrollback buffer for your terminal to not lose any output
 ## HowTo
-The LetsEncrypt configuration is quite OVH specific. If you host your domain with OVH you can run the install command as `SETUP_LETSENCRYPTOVH=true remote-install.sh` - otherwise you are on your own with the configuration.
+The LetsEncrypt configuration is quite OVH specific. If you host your domain with OVH you can run the install command as `SETUP_LETSENCRYPTOVH=true clone-sg.sh` - otherwise you are on your own with the configuration.
 
-Just ssh as root (passwordless please) to the target host and run the `remote-install.sh` script (with OVH setup as above if you want). Then closely scrutinize the output for any errors.
+Just ssh as root (passwordless please) to the target host and run the `clone-sg.sh` script (with OVH setup as above if you want). Then closely scrutinize the output for any errors.
 
 At the end you should hopefully have a working clone of spamgourmet.com
 
