@@ -28,7 +28,7 @@ sub mkquizworddict {
   ##########
   # Constant section - Personnalize here
   ## Installation dir of this program - IMPORTANT
-  *InstallDir=\ "/home/mora/src/spamgourmet/captcha";
+  *InstallDir=\ "/home/spamgourmet/sgserv/captchasrv";
   ## Dictionary file (1 word per line)
   *DictFn=\ "$InstallDir/dictionary";
   #
