@@ -110,7 +110,6 @@ function install_perl_modules {
 	#apt-get install -y libcrypt-eksblowfish-perl libdigest-bcrypt-perl
 	#apt-get install -y unzip make gcc
 	wget https://cpan.metacpan.org/authors/id/I/IL/ILYAZ/modules/Math-Pari-2.03052103.tar.gz
-	# wget http://search.cpan.org/CPAN/authors/id/I/IL/ILYAZ/modules/Math-Pari-2.01080900.zip
 	tar xzf Math-Pari-2.03052103.tar.gz
     (
         cd Math-Pari-2.03052103/
@@ -186,7 +185,7 @@ function configure_website {
 	echo '##########################################################################'
 	echo '### link to exim4'
 	echo '##########################################################################'
-	cat <<-EOF >>/etc/exim4/conf.d/router/00_exim4-config_header
+	cat <<-EOF >>/etc/exim4/conf.d/router/010_exim4_router_spamgourmet
 	    spamgourmet_address:
 	      debug_print = "R: spamgourmet_address \$local_part@\$domain"
 	      driver = accept
@@ -201,7 +200,7 @@ function configure_website {
 	      domains = ob.$DOMAIN
 EOF
 
-	cat <<-EOF >>/etc/exim4/conf.d/transport/00_exim4-config_header
+	cat <<-EOF >>/etc/exim4/conf.d/transport/05_exim4_transport_spamgourmet
 	sg_to_user_pipe:
 	  debug_print = "T: sg_to_user_pipe for \$local_part@\$domain"
 	  driver = pipe
@@ -224,16 +223,6 @@ EOF
 EOF
 	# registration emails should not use spamgourmet website
 	sed -i "s/www.spamgourmet.com/$DOMAIN/g" /usr/local/lib/spamgourmet/modules/Mail/Spamgourmet/WebMessages.pm
-	# reply address masking uses # so let it pass
-	sed -i '/^CHECK_RCPT_/ s/\#//g' /etc/exim4/conf.d/main/01_exim4-config_listmacrosdefs
-	cd $SCRIPT_BASE_DIR
-	cat <<-EOF >>/etc/exim4/conf.d/main/01_exim4-config_listmacrosdefs
-	#DKIM loading
-	DKIM_CANON = relaxed
-	DKIM_DOMAIN = \${sender_address_domain}
-	DKIM_PRIVATE_KEY = CONFDIR/dkim.pem
-	DKIM_SELECTOR = $DKIM_SELECTOR
-EOF
 	service exim4 restart
 	service lighttpd restart
 }

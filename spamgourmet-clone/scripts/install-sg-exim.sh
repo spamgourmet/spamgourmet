@@ -39,6 +39,7 @@ function exim4_setup {
 
 	# "#" is valid for local parts of spamgourmet email addresses so make it valid for exim
 	mv scripts/10_from_rewrite_spamgourmet /etc/exim4/conf.d/rewrite/
+        sed -i "s/example.com/$DOMAIN/g" /etc/exim4/conf.d/rewrite/10_from_rewrite_spamgourmet
 	mv scripts/11_transport_spamgourmet    /etc/exim4/conf.d/transport/
 	update-exim4.conf
 }
@@ -47,11 +48,16 @@ function configure_exim_tls {
 	echo '##########################################################################'
 	echo '### configure exim for TLS because certificate exists'
 	echo '##########################################################################'
-	cat <<-EOF >/etc/exim4/conf.d/main/00_exim4-config_myvalues
+	cat <<-EOF >/etc/exim4/conf.d/main/00_exim4-config_myvalues_spamgourmet
 	MAIN_TLS_ENABLE = yes
-	# renaming the certs to names used by default by exim4
-	# so no other change to exim4 config
+	# DKIM loading
+	DKIM_CANON = relaxed
+	DKIM_DOMAIN = \${sender_address_domain}
+	DKIM_PRIVATE_KEY = CONFDIR/dkim.pem
+	DKIM_SELECTOR = $DKIM_SELECTOR
 EOF
+	# reply address masking uses # so let it pass
+	cp scripts/10_acl_spamgourmet /etc/exim4/conf.d/acl/
 	service exim4 restart
 }
 
