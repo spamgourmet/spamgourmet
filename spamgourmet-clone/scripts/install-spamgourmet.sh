@@ -244,8 +244,7 @@ function configure_sg_db_connection_and_data {
 	service mysql start
 	mysql -s -u sguser -p$MARIADBINTERACTIVEPWD -Dsg <./code/conf/db.sql
 	mysql -s -u sguser -p$MARIADBINTERACTIVEPWD -Dsg <./code/conf/dialogs.sql
-	# want to stop the MySQL service if we are building a docker container to ensure that no pending changes remain.
-	service mysql stop
+	service mysql restart
 }
 
 mandatory_packages
@@ -257,3 +256,4 @@ install_perl_modules
 configure_lighhttpd
 configure_website
 configure_sg_db_connection_and_data
+
