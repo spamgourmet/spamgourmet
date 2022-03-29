@@ -36,6 +36,13 @@ function exim4_setup {
 	sed -i "s/dc_mailname_in_oh=.*$/dc_mailname_in_oh='true'/" /etc/exim4/update-exim4.conf.conf
 	sed -i "s/dc_localdelivery=.*$/dc_localdelivery='mail_spool'/" /etc/exim4/update-exim4.conf.conf
 	echo $DOMAIN >/etc/mailname
+
+	# "#" is valid for local parts of spamgourmet email addresses so make it valid for exim
+	cat <<-EOF >/etc/exim4/conf.d/acl/10_exim4_spamgourmet
+	CHECK_RCPT_LOCAL_LOCALPARTS = ^[.] : ^.*[@%!/|`&?]
+	CHECK_RCPT_REMOTE_LOCALPARTS = ^[./|] : ^.*[@%!`&?] : ^.*/\\.\\./
+EOF
+
 	update-exim4.conf
 }
 
