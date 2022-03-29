@@ -619,6 +619,8 @@ $config->debug('actually not... the account is disabled.');
             if ($config->isLocalDomain($todomain)) {
               $for =~ s/\@.*/\@$todomain/;
             }
+            # otherwise new addresses are not created because mariadb rejects '' as number
+            if ($ExpireTime eq '') { undef $ExpireTime; }
             $sql = "INSERT INTO Emails 
              (UserID,Prefix,Word,InitialCount,Count,TimeAdded,
               Sender,Address,PrivateHash,NumForwarded,ExpireTime) 
