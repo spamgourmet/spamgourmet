@@ -1,0 +1,2 @@
+CHECK_RCPT_LOCAL_LOCALPARTS = ^[.] : ^.*[@%!/|`&?]
+CHECK_RCPT_REMOTE_LOCALPARTS = ^[./|] : ^.*[@%!`&?] : ^.*/\\.\\./
