@@ -38,11 +38,8 @@ function exim4_setup {
 	echo $DOMAIN >/etc/mailname
 
 	# "#" is valid for local parts of spamgourmet email addresses so make it valid for exim
-	cat <<-EOF >/etc/exim4/conf.d/acl/10_exim4_spamgourmet
-	CHECK_RCPT_LOCAL_LOCALPARTS = ^[.] : ^.*[@%!/|`&?]
-	CHECK_RCPT_REMOTE_LOCALPARTS = ^[./|] : ^.*[@%!`&?] : ^.*/\\.\\./
-EOF
-
+	mv scripts/10_from_rewrite_spamgourmet /etc/exim4/conf.d/rewrite/
+	mv scripts/11_transport_spamgourmet    /etc/exim4/conf.d/transport/
 	update-exim4.conf
 }
 
