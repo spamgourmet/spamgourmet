@@ -1,7 +1,7 @@
 Feature: forward incoming mail to protected email addresses
 In order to allow users to avoid exposing their own ("protected")
 email addresses, spamgourmet accepts emails on public email addresses
-("spamgourmet address") and forards them to the protected address. 
+("spamgourmet address") and forwards them to the protected address. 
 
     @live_system_future
     Scenario: forward a mail and get it accepted by Google
