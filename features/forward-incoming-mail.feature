@@ -6,11 +6,11 @@ email addresses, spamgourmet accepts emails on public email addresses
     @live_system_future
     Scenario: forward a mail and get it accepted by Google
     Given that I have a configured gmail account
-    And that I have a working spamgourmet address that will forward
+        And that I have a working spamgourmet address that will forward
     When I send an email to that address
     Then after some time it should come to my Google address
-    And that email should pass Google's SPF tests
-    And that email should pass Google's DKIM tests
-    And that email should pass Google's DKIM tests
+        And that email should pass Google's SPF tests
+        And that email should pass Google's DKIM tests
+        And that email should pass Google's DMARC tests
 
 
