@@ -7,3 +7,10 @@ In order to help administrators configure their email systems
     When I run the spamgourmet configuration scripts
     Then I should have DNS records configured for DKIM
     and I should have DNS records configured for SPF
+
+
+No idea where to post this comment but this won't work.
+
+Configurig SPF and DMARC are simply a matter of configuring DNS zone entries
+and configuring DKIM requires changes to exim configuration that must match 
+certain records that need to be added to the domain DNS zone
