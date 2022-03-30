@@ -121,7 +121,7 @@ while (defined($line = <STDIN>)) {
     }
 
     if (!$for || $for eq $config->getOtherDomainEmail()) {
-      $line =~ /^.*for <*(.+)>*/;
+      $line =~ /^ for <*(.+)>*/;
       $for = $1;
       if (!$for || $for eq $config->getOtherDomainEmail()) {
         $line =~ /^Delivered\-To\:\s+\w+\-\w{3}\-(.*)/;
@@ -254,7 +254,7 @@ foreach $for (keys %deliveryAddresses) {
    $RecThrottleTime,$RecThrottleCount,$DefaultNumber,
    $EmailID,$InitialCount,$Count,$Sender,$PrivateHash,$Hidden,
    $ExpireTime,$trusted,@Watchwords) =
-   (0,'','','',0,0,0,0,0,0,0,'','',0,'',0,());
+   (0,'','','',0,0,0,0,0,0,0,'','',0,0,0,());
 
   ($mprefix,$mword,$mcount,$musername,$mexpiretime) = ('','','','','');
 
@@ -619,8 +619,6 @@ $config->debug('actually not... the account is disabled.');
             if ($config->isLocalDomain($todomain)) {
               $for =~ s/\@.*/\@$todomain/;
             }
-            # otherwise new addresses are not created because mariadb rejects '' as number
-            if ($ExpireTime eq '') { undef $ExpireTime; }
             $sql = "INSERT INTO Emails 
              (UserID,Prefix,Word,InitialCount,Count,TimeAdded,
               Sender,Address,PrivateHash,NumForwarded,ExpireTime) 
