@@ -1,0 +1,5 @@
+**/dkim.private
+**/dkim.public
+**/sg-server-config-secrets
+**/certs-letsencrypt-ovh-secrets
+.swp
