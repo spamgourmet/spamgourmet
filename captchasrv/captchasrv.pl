@@ -50,8 +50,10 @@ use IO::Socket::INET;
 ##########
 # Constant section - Personnalize here
 # Beware: constant module means don't put a $ in front of name!
-## Installation dir of this program - IMPORTANT
-use constant InstallDir => "/home/spamgourmet/sgserv/captchasrv";
+
+# Used to find data files in same dir as this script
+use constant InstallDir => dirname(__FILE__);
+
 ## Path of executable for "convert" prog, from the ImageMagick package
 use constant ConvertExec => "/usr/bin/convert";
 ## Default local port (on which the server listens)
@@ -334,6 +336,7 @@ sub str2captcha {
 ## usage() - Display usage message and exits.
 
 sub usage {
+  my $port = LocalPortDef;
   print STDERR << "EOF";
     
 usage: $Progname [-h] [-t tracelevel]  [-p port] [-o outputfile]
@@ -343,7 +346,7 @@ usage: $Progname [-h] [-t tracelevel]  [-p port] [-o outputfile]
   -o outputfile : (optional) Sets name of file where trace output will be
                    written. Default is standard output.
   -p port       : (optional) Sets IP port where daemon will listen.
-                  Default = $LocalPortDef.
+                  Default = $port.
 
  Example:
 $Progname  -t 1 -o /tmp/mytrace.txt -p 12345
