@@ -50,8 +50,10 @@ use IO::Socket::INET;
 ##########
 # Constant section - Personnalize here
 # Beware: constant module means don't put a $ in front of name!
-## Installation dir of this program - IMPORTANT
-use constant InstallDir => "/home/mora/src/spamgourmet/captcha";
+
+# Used to find data files in same dir as this script
+use constant InstallDir => dirname(__FILE__);
+
 ## Path of executable for "convert" prog, from the ImageMagick package
 use constant ConvertExec => "/usr/bin/convert";
 ## Default local port (on which the server listens)
@@ -82,7 +84,6 @@ sub usage;
 my $Progname = basename($0);
 my $quizword = "";
 my $LocalPort = LocalPortDef; # No $ in front of name!
-my $Version = '$Revision: 1.1.1.1 $' ; # RCS tag goes here
 my ($fh, $fname, $bname); # File handle, full name and base name of captcha
 
 # Command-line options processing
@@ -110,7 +111,7 @@ if ($opt_p ne "") {
   $LocalPort = $opt_p;
 }
 
-PrintTrace(1, "Starting $Progname v $Version with options:\n" .
+PrintTrace(1, "Starting $Progname with options:\n" .
  "-t $TraceLvl -o " . ($opt_o eq ""? "STDOUT" : $Logfile) .
  " -p $LocalPort");
 
@@ -138,6 +139,7 @@ my $socket = IO::Socket::INET
     or die "captchasrv: cannot open server socket on port $LocalPort: $@\n";
 
 while ($client = $socket->accept()) {
+    $quizword=""; # To ensure we don't use word from previous loop
     PrintTrace(2, "Accepted client connection"); ### DEBUG
     while (my $line = <$client>) {
 	# print $line; ###DEBUG
@@ -147,27 +149,31 @@ while ($client = $socket->accept()) {
 
 	# Looks for a line of the form GET /q=xyzt HTTP/1.1
 	# corresponding to URL http://host:port/q=xyzt
-	# Word can contain alphanum (\w) and apostrophe.
-	if ($line =~ 'GET /q=([\w\']+) HTTP/1.1') {
+	# Word can contain alphanum (\w) and apostrophe. Max 12 chars
+	if ($line =~ 'GET /q=([\w\']{1,12}) HTTP/1.1') {
 	    $quizword=$1;
 	}
 	last if ($line eq ""); # end of HTTP header
     }
-    #print "-------End client data\n";  ###DEBUG
-    # Now send data to the browser
-    PrintTrace(2, "quizword=$quizword\n");
-    # Create temp file for captcha, don't delete it after use
-    ($fh, $fname) = tempfile(TmpltCi, SUFFIX=>".jpg", UNLINK=>0);
-    PrintTrace(3, "captcha file: $fname");
-    &str2captcha($quizword,  $fh);
-    # Make the captcha file world-readable
-    chmod 0644, $fname;
-    # Send base name of captcha file to client
-    $bname = basename($fname);
-    print $client "$bname";
+    print "-------End client data\n";  ###DEBUG
+    # Create an image only if a quizzword was found
+    if ($quizword ne "") {
+        # Now send data to the browser
+        PrintTrace(2, "quizword=$quizword\n");
+        # Create temp file for captcha, don't delete it after use
+        ($fh, $fname) = tempfile(TmpltCi, SUFFIX=>".jpg", UNLINK=>0);
+        PrintTrace(3, "captcha file: $fname");
+        &str2captcha($quizword,  $fh);
+        # Make the captcha file world-readable
+        chmod 0644, $fname;
+        # Send base name of captcha file to client
+        $bname = basename($fname);
+        print $client "$bname";
+        close $fh;
+        PrintTrace(3, "sent name \"$bname\" to client\n");
+    }
     close $client;
-    close $fh;
-    PrintTrace(3, "sent name \"$bname\" to client, closed client connection\n");
+    PrintTrace(2, "Closed client connection\n");
 }
 
 close $socket;
@@ -330,6 +336,7 @@ sub str2captcha {
 ## usage() - Display usage message and exits.
 
 sub usage {
+  my $port = LocalPortDef;
   print STDERR << "EOF";
     
 usage: $Progname [-h] [-t tracelevel]  [-p port] [-o outputfile]
@@ -339,7 +346,7 @@ usage: $Progname [-h] [-t tracelevel]  [-p port] [-o outputfile]
   -o outputfile : (optional) Sets name of file where trace output will be
                    written. Default is standard output.
   -p port       : (optional) Sets IP port where daemon will listen.
-                  Default = $LocalPortDef.
+                  Default = $port.
 
  Example:
 $Progname  -t 1 -o /tmp/mytrace.txt -p 12345

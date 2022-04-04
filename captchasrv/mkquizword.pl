@@ -22,13 +22,14 @@
 #   - English dictionary file, 1 word per line, see constant DictFn.
 # Returns: quizword string
 ###
+use File::Basename;
 
 sub mkquizworddict {
 
   ##########
   # Constant section - Personnalize here
-  ## Installation dir of this program - IMPORTANT
-  *InstallDir=\ "/home/mora/src/spamgourmet/captcha";
+  ## Installation dir of this program - Used to find data files in same dir as this scrupt
+  *InstallDir=\ dirname(__FILE__);;
   ## Dictionary file (1 word per line)
   *DictFn=\ "$InstallDir/dictionary";
   #
