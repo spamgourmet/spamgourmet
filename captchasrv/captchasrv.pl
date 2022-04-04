@@ -173,7 +173,7 @@ while ($client = $socket->accept()) {
         PrintTrace(3, "sent name \"$bname\" to client\n");
     }
     close $client;
-     PrintTrace(2, "Closed client connection\n");
+    PrintTrace(2, "Closed client connection\n");
 }
 
 close $socket;
