@@ -38,10 +38,10 @@ Additional documentation:
 
 	The following commands should be entered at the mysql prompt
   ```
-	create database <sguser>
-	grant all privileges on <sguser>.* to <sguser> identified by '<sgpass>' with grant option
-	mysql -u<sguser> -p<sgpass> <db.sql
-	mysql -u<sguser> -p<sgpass> <dialogs.sql
+	create database sg 
+	grant all privileges on sg.* to <sguser> identified by '<sgpass>' with grant option
+	mysql -u<sguser> -p<sgpass> -Dsg <db.sql
+	mysql -u<sguser> -p<sgpass> -Dsg <dialogs.sql
 	```
 
 - Apache
