@@ -9,6 +9,11 @@ build-spamgourmet-clone:
 # starting top down
 .PHONY: sanity_test
 
+SERVICES = captchasrv apache2 exim4
+
 sanity_test: # first check that services are running
-	systemctl status captchasrv apache2 exim4
+	set -e ; \
+	for i in $(SERVICES); do \
+		systemctl is-active $$i; \
+	done
 
