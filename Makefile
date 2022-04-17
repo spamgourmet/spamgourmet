@@ -4,3 +4,11 @@
 
 build-spamgourmet-clone:
 	docker build spamgourmet-clone
+
+# list of components: server, web, configuration
+# starting top down
+.PHONY: sanity_test
+
+sanity_test: # first check that services are running
+	systemctl status captchasrv apache2 exim4
+
