@@ -1,13 +1,13 @@
--- MySQL dump 10.14  Distrib 5.5.59-MariaDB, for debian-linux-gnu (x86_64)
+-- MySQL dump 10.18  Distrib 10.3.27-MariaDB, for debian-linux-gnu (x86_64)
 --
 -- Host: localhost    Database: spamgourmet
 -- ------------------------------------------------------
--- Server version	5.5.59-MariaDB-1~wheezy
+-- Server version	10.3.27-MariaDB-0+deb10u1
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
+/*!40101 SET NAMES utf8mb4 */;
 /*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
 /*!40103 SET TIME_ZONE='+00:00' */;
 /*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
@@ -58,13 +58,13 @@ DROP TABLE IF EXISTS `Counter`;
 CREATE TABLE `Counter` (
   `CounterID` int(20) NOT NULL AUTO_INCREMENT,
   `CountDate` date NOT NULL DEFAULT '0000-00-00',
-  `NumForwarded` bigint(20) NOT NULL DEFAULT '0',
-  `NewUsers` bigint(20) NOT NULL DEFAULT '0',
-  `WeekDay` tinyint(4) NOT NULL DEFAULT '0',
-  `NumDeleted` bigint(20) NOT NULL DEFAULT '0',
+  `NumForwarded` bigint(20) NOT NULL DEFAULT 0,
+  `NewUsers` bigint(20) NOT NULL DEFAULT 0,
+  `WeekDay` tinyint(4) NOT NULL DEFAULT 0,
+  `NumDeleted` bigint(20) NOT NULL DEFAULT 0,
   PRIMARY KEY (`CounterID`),
   KEY `CountDate` (`CountDate`)
-) ENGINE=MyISAM AUTO_INCREMENT=6938 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=8558 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -76,11 +76,11 @@ DROP TABLE IF EXISTS `Dialogs`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `Dialogs` (
   `DialogID` bigint(20) NOT NULL AUTO_INCREMENT,
-  `DialogNumber` bigint(20) NOT NULL DEFAULT '0',
+  `DialogNumber` bigint(20) NOT NULL DEFAULT 0,
   `DialogName` varchar(200) NOT NULL DEFAULT '',
   `LanguageCode` char(2) NOT NULL DEFAULT '',
-  `DialogText` text,
-  `DialogType` smallint(6) NOT NULL DEFAULT '0',
+  `DialogText` text DEFAULT NULL,
+  `DialogType` smallint(6) NOT NULL DEFAULT 0,
   `Updated` int(11) DEFAULT NULL,
   PRIMARY KEY (`DialogID`),
   UNIQUE KEY `DialogID_2` (`DialogID`),
@@ -98,25 +98,24 @@ DROP TABLE IF EXISTS `Emails`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `Emails` (
   `EmailID` bigint(20) NOT NULL AUTO_INCREMENT,
-  `UserID` bigint(20) NOT NULL DEFAULT '0',
+  `UserID` bigint(20) NOT NULL DEFAULT 0,
   `Prefix` varchar(20) DEFAULT NULL,
   `Word` varchar(20) NOT NULL DEFAULT '',
-  `InitialCount` tinyint(4) NOT NULL DEFAULT '0',
-  `Count` tinyint(4) NOT NULL DEFAULT '0',
+  `InitialCount` tinyint(4) NOT NULL DEFAULT 0,
+  `Count` tinyint(4) NOT NULL DEFAULT 0,
   `TimeAdded` bigint(20) DEFAULT NULL,
   `Sender` varchar(254) DEFAULT NULL,
-  `Address` text,
-  `DeliveryAddress` varchar(255) DEFAULT '',
-  `Hidden` tinyint(4) NOT NULL DEFAULT '0',
+  `Address` text DEFAULT NULL,
+  `Hidden` tinyint(4) NOT NULL DEFAULT 0,
   `Note` varchar(254) DEFAULT NULL,
   `PrivateHash` varchar(50) NOT NULL DEFAULT '',
-  `NumForwarded` bigint(20) NOT NULL DEFAULT '0',
-  `NumDeleted` bigint(20) NOT NULL DEFAULT '0',
+  `NumForwarded` bigint(20) NOT NULL DEFAULT 0,
+  `NumDeleted` bigint(20) NOT NULL DEFAULT 0,
   `ExpireTime` bigint(20) unsigned DEFAULT NULL,
   PRIMARY KEY (`EmailID`),
   KEY `UserID` (`UserID`,`Word`,`Count`),
   KEY `Word` (`Word`)
-) ENGINE=MyISAM AUTO_INCREMENT=8443939 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=9212076 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -128,11 +127,11 @@ DROP TABLE IF EXISTS `Permitted`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `Permitted` (
   `PermittedID` bigint(20) NOT NULL AUTO_INCREMENT,
-  `UserID` bigint(20) NOT NULL DEFAULT '0',
+  `UserID` bigint(20) NOT NULL DEFAULT 0,
   `Sender` varchar(512) DEFAULT NULL,
   PRIMARY KEY (`PermittedID`),
   KEY `UserID` (`UserID`,`Sender`)
-) ENGINE=MyISAM AUTO_INCREMENT=252017 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=310474 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -149,14 +148,14 @@ CREATE TABLE `Users` (
   `Password` varchar(100) DEFAULT NULL,
   `Prefix` varchar(20) NOT NULL DEFAULT '',
   `TimeAdded` bigint(20) DEFAULT NULL,
-  `NumDeleted` bigint(20) NOT NULL DEFAULT '0',
-  `NumForwarded` bigint(20) NOT NULL DEFAULT '0',
+  `NumDeleted` bigint(20) NOT NULL DEFAULT 0,
+  `NumForwarded` bigint(20) NOT NULL DEFAULT 0,
   `IPAddress` varchar(20) NOT NULL DEFAULT '',
   `SpamEmail` varchar(255) DEFAULT NULL,
   `PendingEmail` varchar(254) DEFAULT NULL,
   `PendingHashCode` varchar(40) DEFAULT '',
   `LanguageCode` char(2) NOT NULL DEFAULT '',
-  `Features` bigint(20) NOT NULL DEFAULT '1',
+  `Features` bigint(20) NOT NULL DEFAULT 1,
   `EatenMessageLog` varchar(255) DEFAULT NULL,
   `SessionToken` varchar(16) NOT NULL DEFAULT '',
   `LastCommand` bigint(20) DEFAULT NULL,
@@ -164,13 +163,13 @@ CREATE TABLE `Users` (
   `RecThrottleCount` smallint(6) DEFAULT NULL,
   `SendThrottleTime` bigint(20) unsigned DEFAULT NULL,
   `SendThrottleCount` smallint(6) DEFAULT NULL,
-  `DefaultNumber` tinyint(4) DEFAULT '3',
+  `DefaultNumber` tinyint(4) DEFAULT 3,
   `APIKey` varchar(512) DEFAULT NULL,
   PRIMARY KEY (`UserID`),
   KEY `UserName` (`UserName`,`Password`,`Prefix`),
   KEY `SessionToken` (`SessionToken`),
   KEY `PendingHashCode` (`PendingHashCode`)
-) ENGINE=MyISAM AUTO_INCREMENT=307962 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=318557 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -183,7 +182,7 @@ DROP TABLE IF EXISTS `Versions`;
 CREATE TABLE `Versions` (
   `VersionID` int(10) NOT NULL AUTO_INCREMENT,
   `VersionName` varchar(20) DEFAULT NULL,
-  `VersionNumber` bigint(20) NOT NULL DEFAULT '0',
+  `VersionNumber` bigint(20) NOT NULL DEFAULT 0,
   PRIMARY KEY (`VersionID`),
   KEY `VersionName` (`VersionName`)
 ) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
@@ -198,11 +197,11 @@ DROP TABLE IF EXISTS `Watchwords`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `Watchwords` (
   `WatchwordID` bigint(20) NOT NULL AUTO_INCREMENT,
-  `UserID` bigint(20) NOT NULL DEFAULT '0',
+  `UserID` bigint(20) NOT NULL DEFAULT 0,
   `Watchword` varchar(20) NOT NULL DEFAULT '',
   PRIMARY KEY (`WatchwordID`),
   KEY `UserID` (`UserID`,`Watchword`)
-) ENGINE=MyISAM AUTO_INCREMENT=38791 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=42203 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -214,4 +213,4 @@ CREATE TABLE `Watchwords` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-02-25 21:04:51
+-- Dump completed on 2022-07-31  0:29:37
