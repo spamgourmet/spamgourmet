@@ -50,6 +50,48 @@ CREATE TABLE `AdminEmail` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `AlternativeDeliveryAddressLookUp`
+--
+
+DROP TABLE IF EXISTS `AlternativeDeliveryAddressLookUp`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `AlternativeDeliveryAddressLookUp` (
+  `AlternativeDeliveryAddressLookUpID` bigint(20) NOT NULL AUTO_INCREMENT,
+  `UserID` bigint(20) NOT NULL DEFAULT 0,
+  `EmailID` bigint(20) NOT NULL DEFAULT 0,
+  `AlternativeDeliveryAddressID` bigint(20) NOT NULL DEFAULT 0,
+  PRIMARY KEY (`AlternativeDeliveryAddressLookUpID`),
+  KEY `DoubleID` (`EmailID`,`AlternativeDeliveryAddressID`),
+  KEY `UserID` (`UserID`),
+  KEY `EmailID` (`EmailID`),
+  KEY `AlternativeDeliveryAddressID` (`AlternativeDeliveryAddressID`)
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `AlternativeDeliveryAddresses`
+--
+
+DROP TABLE IF EXISTS `AlternativeDeliveryAddresses`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `AlternativeDeliveryAddresses` (
+  `AlternativeDeliveryAddressID` bigint(20) NOT NULL AUTO_INCREMENT,
+  `UserID` bigint(20) NOT NULL DEFAULT 0,
+  `AlternativeDeliveryAddress` varchar(255) DEFAULT '',
+  `PendingHashCode` varchar(40) DEFAULT '',
+  `AlternativeDeliveryAddressState` int(10) DEFAULT 0,
+  `TimeAdded` bigint(20) NOT NULL,
+  PRIMARY KEY (`AlternativeDeliveryAddressID`),
+  KEY `UserIDAlternativeDeliveryAddressID` (`UserID`,`AlternativeDeliveryAddressID`),
+  KEY `UserIDPendingHashCode` (`UserID`,`PendingHashCode`),
+  KEY `PendingHashCode` (`PendingHashCode`),
+  KEY `UserID` (`UserID`)
+) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `Counter`
 --
 
