@@ -41,7 +41,7 @@ $config->debug('spameater started') if $extradebug;
 
 # variables to be used by the main routine (don't change these)
 my (
- $delimiters,$headers,$inHeaders,$line,$msg,$subjecttext,%headerValues,%headerTokens, 
+ $delimiters,$headers,$inHeaders,$line,$msg,$subjecttext,%headerValues,%headerTokens,
  $from,$replyto,$to,$for,$fromdomain,$todomain,$forname,$allRecipients,$returnPath,
  %deliveryAddresses,$subfrom,$subreplyto,$fromname,$replytoname,$trusted,
  $disposable,$disposableID,$PublicHash,$PrivateHash,
@@ -50,7 +50,7 @@ my (
  $Prefix,$EmailID,$InitialCount,$Count,$UserID,$ExpireTime,
  $RealEmail,$SpamEmail,$Sender,$Features,$updatelog,$useXHeader, $Hidden,
  $connected, $connectTries, $interval,$DefaultNumber,
- $RecThrottleTime, $RecThrottleCount, 
+ $RecThrottleTime, $RecThrottleCount,
  $SendThrottleTime, $SendThrottleCount
  );
 
@@ -58,7 +58,7 @@ my (
 $useXHeader = 0; # set this up later, based on features
 
 use constant EX_TEMPFAIL    => 69; # temp failure; user is invited to retry
-# josh: modify to 69 
+# josh: modify to 69
 
 # snarf the message line by line
 # get 'From' data (first occurrence)
@@ -134,7 +134,7 @@ while (defined($line = <STDIN>)) {
   }
 }
 my $msgsize = length($msg);
-$0 = "spameater: $headerValues{'messageid'} ($msgsize)"; #$headerValues{'from'}"; 
+$0 = "spameater: $headerValues{'messageid'} ($msgsize)"; #$headerValues{'from'}";
 
 my ($bcc,$prior);
 my $saferecips = ($headerValues{'to'} . $headerValues{'cc'});
@@ -175,7 +175,7 @@ $mailer = $config->getMailer();
 ($from, $fromname) = $util->getAddressAndDisplay($headerValues{'from'}, 1);
 ($replyto, $replytoname) = $util->getAddressAndDisplay($headerValues{'replyto'}, 1);
 ($headerValues{'namedTo'},undef) = $util->getAddressAndDisplay($headerValues{'namedTo'}, 1);
-    
+
 $allRecipients = $for . ',' . $headerValues{'to'} . ',' . $headerValues{'cc'};
 
 unless ($allRecipients.$bcc =~ /[\.|~].*@/) {
@@ -325,7 +325,7 @@ $config->debug('actually not... the account is disabled.');
     } else {
       $config->debug("skipping an attempted send for disabled user: $musername ($UserID)");
     }
-    next; # move on to the next recipient 
+    next; # move on to the next recipient
   }
 
   ## get the stuff in front of the @ from the for address
@@ -344,7 +344,7 @@ $config->debug('actually not... the account is disabled.');
     ($mprefix,$mword,$mcount,$musername) = ('',$1,'',$2);
   }
   if ($mcount =~ /(\d{4}\-\d{2}\-\d{2})/) {
-    $mexpiretime = $1;  
+    $mexpiretime = $1;
   } else {
     $mexpiretime = '';
   }
@@ -382,7 +382,7 @@ $config->debug('actually not... the account is disabled.');
       next;
     }
   }
-  ## must reject non-word addys - 
+  ## must reject non-word addys -
   next unless $mword;
   next if $mword =~ /^\|/;
 #  if (!$mword) {
@@ -399,7 +399,7 @@ $config->debug('actually not... the account is disabled.');
 
   # now, get the user info, if it's there
   if (!$config->useUnixAccounts()) {
-    $sql = "SELECT UserID, RealEmail, SpamEmail, Prefix, Features, 
+    $sql = "SELECT UserID, RealEmail, SpamEmail, Prefix, Features,
      RecThrottleTime, RecThrottleCount, DefaultNumber
      FROM Users
      WHERE UserName = ?";
@@ -410,14 +410,14 @@ $config->debug('actually not... the account is disabled.');
     $st->fetch();
     # only update log if user has feature and address has "word"
     $updatelog = $mword && $util->hasFeature('EATENMESSAGELOG',
-                                 $Features); 
+                                 $Features);
     $useXHeader = $util->hasFeature('DISABLETAGLINE', $Features);
     $useXHeader ++ if ($useXHeader && $util->hasFeature('DISABLETAGLINETRUSTEDEXCLUSIVE',$Features));
   } else {
     $UserID = getpwnam($musername); # get the unix userID
     $RealEmail = $musername; # we'll be forwarding the message to a local account if at all...
     # optionally deliver to valid unqualified base addresses
-    if ($UserID && $config->useUnixAccounts() == 2) {  
+    if ($UserID && $config->useUnixAccounts() == 2) {
       $for =~ /(.*)\@/;
       # if there was no special syntax (i.e., this is just a plain address)
       if ($musername eq $1) {
@@ -435,7 +435,7 @@ $config->debug('actually not... the account is disabled.');
     $mcount = $util->getNumberFromString($mcount,$DefaultNumber);
   }
   # check rec throttle
-  if ($UserID 
+  if ($UserID
    && ($RecThrottleCount > $config->getMaxRecCount())
    && ($RecThrottleTime > $now - $config->getRecThrottleOffPeriod())
    ) {
@@ -450,12 +450,12 @@ $config->debug('actually not... the account is disabled.');
     next; # skip this one
   }
   # proceed only if a) it's for a real user, b) the user at least might have
-  # a valid forwarding address, and c) the user's forwarding address isn't 
+  # a valid forwarding address, and c) the user's forwarding address isn't
   # a local address (which would cause
   # a ferocious spam loop!)
 
-  if ($UserID && $RealEmail 
-   && !$config->hasLocalDomain($RealEmail) 
+  if ($UserID && $RealEmail
+   && !$config->hasLocalDomain($RealEmail)
    && !$config->hasLocalDomain($SpamEmail)) {
 
     # check to see if the message is from a trusted sender.
@@ -470,7 +470,7 @@ $config->debug('actually not... the account is disabled.');
       }
       if (@parts && @parts < 10) { # we're doing an "in" clause, so we need to protect ourselves from a DOS
         my $placeholders = join ', ', ('?') x @parts;
-        $sql = "SELECT Sender FROM Permitted 
+        $sql = "SELECT Sender FROM Permitted
          WHERE UserID = ? AND (Sender = ? OR Sender IN ($placeholders));";
         $st = $config->db->prepare($sql);
         $st->execute($UserID,$from,@parts);
@@ -480,19 +480,19 @@ $config->debug('actually not... the account is disabled.');
     }
 
     if ($trusted || ($mword && $mcount)) {
-      $sql = "SELECT EmailID, InitialCount, Count, Sender, PrivateHash, Hidden, ExpireTime 
+      $sql = "SELECT EmailID, InitialCount, Count, Sender, PrivateHash, Hidden, ExpireTime
        FROM Emails WHERE UserID = ? AND Word = ?;";
       $st = $config->db->prepare($sql);
       $st->execute($UserID,$mword);
-      $st->bind_columns(\%attr,\$EmailID,\$InitialCount,\$Count, \$Sender, 
+      $st->bind_columns(\%attr,\$EmailID,\$InitialCount,\$Count, \$Sender,
        \$PrivateHash, \$Hidden, \$ExpireTime);
       $st->fetch();
 
       $updatelog = !$Hidden || !$util->hasFeature('DONOTLOGHIDDEN',$Features);
 
-      if ($EmailID 
-       && (!$Count || $Count >=0) 
-       && (!$util->hasFeature('LEGACYPREFIX',$Features) 
+      if ($EmailID
+       && (!$Count || $Count >=0)
+       && (!$util->hasFeature('LEGACYPREFIX',$Features)
         || (!$Prefix || $mprefix eq $Prefix)) 
        ) {
 
@@ -507,11 +507,11 @@ $config->debug('actually not... the account is disabled.');
         }
         my $recipsAndNamed = $allRecipients . $headerValues{'namedTo'};
         if ($trusted) {
-          $subjecttext= " (trusted: $trusted)"; 
+          $subjecttext= " (trusted: $trusted)";
           &sendMail($config,$useXHeader,$RealEmail,\$msg,$subjecttext,$subfrom,$subreplyto,'','',$returnPath);
           &setCount($util,$UserID,$EmailID,1,$RecThrottleTime,$RecThrottleCount);
 
-        } elsif ($Sender && (eval{$from =~ /$Sender/i} 
+        } elsif ($Sender && (eval{$from =~ /$Sender/i}
          || (!$util->hasFeature('DONOTMATCHRECIP',$Features) && eval{$recipsAndNamed =~ /$Sender/i}))) {
           $subjecttext = " ($mword: ";
           if (eval{$from =~ /$Sender/i}) {
@@ -549,7 +549,7 @@ $config->debug('actually not... the account is disabled.');
           &setCount($util,$UserID,$EmailID,0,
            $RecThrottleTime,$RecThrottleCount,$from,$mword,$updatelog);
         }
-      } elsif ((!$Count || $Count >=0 || $mexpiretime) 
+      } elsif ((!$Count || $Count >=0 || $mexpiretime)
        && (!$Prefix || $mprefix eq $Prefix)) {  ## new address for the user
 
         # first, check the new address throttle:
@@ -578,7 +578,7 @@ $config->debug('actually not... the account is disabled.');
             if ($trusted) {
               if (!$mexpiretime) {
                 $mcount = 20 if $mcount > 20;
-                if ($mcount eq '+' || $mcount eq '*' 
+                if ($mcount eq '+' || $mcount eq '*'
                  || $mcount =~ /sender/i || $mcount =~ /domain/i) {
                   $mcount = 0;
                 }
@@ -595,7 +595,7 @@ $config->debug('actually not... the account is disabled.');
             } elsif ($mcount eq '*' || $mcount =~ /domain/i) {
               $mcount = 0;
               $Sender = $fromdomain;
-              $subjecttext = 
+              $subjecttext =
                " ($mword exclusive: $fromdomain)";
             } elsif ($mexpiretime) {
               $ExpireTime = $util->getExpireTime($mexpiretime, $now);
@@ -604,7 +604,7 @@ $config->debug('actually not... the account is disabled.');
                 $subjecttext = " ($mword: expires $displayDate)";
               } else {
                 $subjecttext = " ($mword: invalid date $mcount)";
-              } 
+              }
             } else {
               $mcount = 20 if $mcount > 20;
               $subjecttext = " ($mword: message 1 of $mcount";
@@ -613,15 +613,15 @@ $config->debug('actually not... the account is disabled.');
               $icount = $mcount;
               $mcount --;
             }
-    
+
             $PrivateHash = md5_hex($UserID . rand() . $now . $config->getSecretPhrase());
 
             if ($config->isLocalDomain($todomain)) {
               $for =~ s/\@.*/\@$todomain/;
             }
-            $sql = "INSERT INTO Emails 
+            $sql = "INSERT INTO Emails
              (UserID,Prefix,Word,InitialCount,Count,TimeAdded,
-              Sender,Address,PrivateHash,NumForwarded,ExpireTime) 
+              Sender,Address,PrivateHash,NumForwarded,ExpireTime)
               VALUES (?,?,?,?,?,?,?,?,?,?,?)";
             $st = $config->db->prepare($sql);
             $st->execute($UserID,$mprefix,$mword,$icount,
@@ -656,7 +656,7 @@ $config->debug('actually not... the account is disabled.');
              " ($mword - EATEN by spamgourmet: word does not match watchwords)",
              $subfrom,$subreplyto,'','',$returnPath) if $SpamEmail;
             &setCount($util,$UserID,$EmailID,0,$RecThrottleTime,$RecThrottleCount,
-             $from,$mword,$updatelog);  
+             $from,$mword,$updatelog);
           }
         } else {
 $config->debug("skipping address creaton due to throttle for $musername");
@@ -665,7 +665,7 @@ $config->debug("skipping address creaton due to throttle for $musername");
              $subfrom,$subreplyto,'','',$returnPath) if $SpamEmail;
             &setCount($util,$UserID,$EmailID,0,$RecThrottleTime,$RecThrottleCount,
              $from,$mword,$updatelog);
-        } 
+        }
       } else {
         my $reason = 'missing or invalid prefix';
         $reason = 'address disabled' if $Count < 0;
@@ -715,7 +715,7 @@ sub setCount {  # (databasehandle,UserID,messagetype)
     # if it was spam, we'll upate the "eaten message log"
   my $from = shift;
   my $for = shift;
-  my $updatelog = shift; # whether we should update the EML or not 
+  my $updatelog = shift; # whether we should update the EML or not
 
   my $sql = '';
   my $st = '';
@@ -777,15 +777,15 @@ sub setCount {  # (databasehandle,UserID,messagetype)
       $st->execute($throttleTime, $throttleCount, $UserID);
     } else {
       if ($updatelog) {
-        my $newLog = ''; 
+        my $newLog = '';
         $newLog = $util->getEatenMessageLog($config->getNumberOfEatenMessagesToLog(),
          $from,$for,$oldLog);
-        $sql = "UPDATE Users SET $messagetype = ($messagetype + 1), EatenMessageLog = ?, 
+        $sql = "UPDATE Users SET $messagetype = ($messagetype + 1), EatenMessageLog = ?,
          RecThrottleTime = ?, RecThrottleCount = ? WHERE UserID = ?";
         $st = $config->db->prepare($sql);
         $st->execute($newLog, $throttleTime, $throttleCount, $UserID);
       } else {
-        $sql = "UPDATE Users SET $messagetype = ($messagetype + 1), 
+        $sql = "UPDATE Users SET $messagetype = ($messagetype + 1),
          RecThrottleTime = ?, RecThrottleCount = ? WHERE UserID = ?";
         $st = $config->db->prepare($sql);
         $st->execute($throttleTime, $throttleCount, $UserID);
@@ -794,7 +794,7 @@ sub setCount {  # (databasehandle,UserID,messagetype)
     if ($EmailID) {
       $sql = "UPDATE Emails SET $messagetype = ($messagetype + 1) WHERE EmailID = ?;";
       $st = $config->db->prepare($sql);
-      $st->execute($EmailID);      
+      $st->execute($EmailID);
     }
   }
 }
