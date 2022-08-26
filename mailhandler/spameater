@@ -240,7 +240,6 @@ $config->debug($msg) if $extradebug;
 #}
 
 foreach $for (keys %deliveryAddresses) {
-  $config->debug("handling $for") if $extradebug;
 
   if ($from && lc($for) eq lc($from)) {
     # assume spoof attempt
@@ -248,6 +247,8 @@ foreach $for (keys %deliveryAddresses) {
     $config->die() if $config;
     exit;
   }
+
+  $config->debug("handling $for") if $extradebug;
 
   # initialize the vars:
   ($UserID,$RealEmail,$SpamEmail,$Prefix,$Features,
