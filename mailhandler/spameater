@@ -814,7 +814,7 @@ sub sendMail {
   return if !$rcpt;
   $config->debug("sending...") if $extradebug;
   if ((!$useXHeader || $useXHeader==2 && $subjecttext =~ /message/) && $subjecttext) {
-    my $check = $$msgref =~ s/(^Subject\:.*$)/$1$subjecttext/mi;
+    my $check = $$msgref =~ s/(^Subject\:(.|(\n\s))*$)/$1$subjecttext/mi;
     if (!$check) {
       $$msgref =~ s/(Date: )/Subject: $subjecttext\n$1/;
     }
