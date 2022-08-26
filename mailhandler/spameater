@@ -494,7 +494,7 @@ $config->debug('actually not... the account is disabled.');
       if ($EmailID
        && (!$Count || $Count >=0)
        && (!$util->hasFeature('LEGACYPREFIX',$Features)
-        || (!$Prefix || $mprefix eq $Prefix)) 
+        || (!$Prefix || lc($mprefix) eq lc($Prefix)))
        ) {
 
         # if the user has the address masking feature enabled,get that ready
@@ -551,7 +551,7 @@ $config->debug('actually not... the account is disabled.');
            $RecThrottleTime,$RecThrottleCount,$from,$mword,$updatelog);
         }
       } elsif ((!$Count || $Count >=0 || $mexpiretime)
-       && (!$Prefix || $mprefix eq $Prefix)) {  ## new address for the user
+       && (!$Prefix || lc($mprefix) eq lc($Prefix))) {  ## new address for the user
 
         # first, check the new address throttle:
         my $natt = $now - $config->getNewAddressThrottleTime();
