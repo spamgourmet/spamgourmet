@@ -25,7 +25,8 @@ DROP TABLE IF EXISTS `AddressAudit`;
 CREATE TABLE `AddressAudit` (
   `AddressAuditID` int(11) NOT NULL AUTO_INCREMENT,
   `UserID` int(11) NOT NULL DEFAULT '0',
-  `Address` varchar(255) DEFAULT NULL,
+  `OldAddress` varchar(255) DEFAULT NULL,
+  `NewAddress` varchar(255) DEFAULT NULL,
   `ChangeTime` int(11) NOT NULL DEFAULT '0',
   `IPAddress` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`AddressAuditID`)

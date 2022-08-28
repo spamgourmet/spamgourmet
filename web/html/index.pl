@@ -163,9 +163,9 @@ sub confirmemailchange {
       $msg = $session->getDialog('confirmationsuccessful','address',$address); 
       $session->{'RealEmail'} = $address;
       my $now = time();
-      $sql = "INSERT INTO AddressAudit (UserID,Address,ChangeTime,IPAddress) VALUES (?,?,?,?);";
+      $sql = "INSERT INTO AddressAudit (UserID,OldAddress,NewAddress,ChangeTime,IPAddress) VALUES (?,?,?,?,?);";
       $st = $config->db->prepare($sql);
-      $st->execute($UserID,$address,$now,$ENV{'REMOTE_ADDR'});
+      $st->execute($UserID,$realaddress,$address,$now,$ENV{'REMOTE_ADDR'});
 
 ########### send changed email message to old address
       my $wm = Mail::Spamgourmet::WebMessages->new(config=>$config);
