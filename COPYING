@@ -1,0 +1,6 @@
+The source code of Spamgourmet is mostly placed under the Artistic License. See the file "ARTISTIC LICENSE" included in the distribution.
+
+Other licenses such as the GPL are used for some included code.  This will either be noted in the directory which the code is contained
+or in the headers of the individual files.
+
+Exceptions to the Arttistic License include the captchasrv which is under the GPL as covered in the file "captchasrv/GPL_LICENSE.txt"
