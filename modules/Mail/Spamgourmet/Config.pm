@@ -367,8 +367,13 @@ sub prepare {
   return $self->db->prepare($sql);
 }
 
-
-
+sub debugstderr {
+    my $self = shift;
+    if (@_) {
+        $self->{debugstderr} = shift;
+    }
+    return $self->{debugstderr};
+}
 
 sub debug {
   my $self = shift;
