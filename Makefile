@@ -7,6 +7,9 @@
 build-spamgourmet-clone:
 	git checkout-index -f -a --prefix=spamgourmet-clone/code-export/
 	docker build --tag spamgourmet-testenv spamgourmet-clone
+	@RED='\033[0;31m' ; \
+	NC='\033[0m' ; \
+	test -z "$$(git status --porcelain)" || ( echo "\n  $${RED}UNCLEAN GIT WORKING DIRECTORY UNCLEAN$${NC} \n"; git status ) 
 
 test:
 	@echo "there are no tests so you can't prove it isn't working"
