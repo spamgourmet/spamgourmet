@@ -1,4 +1,5 @@
 FROM perl:5.30.3-slim-threaded-buster
+COPY code-export /code/
 COPY scripts sg-server-config.sh /
 COPY scripts/* /scripts/
 RUN apt-get update && apt-get install -y --no-install-recommends apt-utils

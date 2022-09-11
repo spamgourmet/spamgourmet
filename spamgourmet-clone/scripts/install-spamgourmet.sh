@@ -22,6 +22,9 @@ function download_spamgourmet {
 	echo '### download and patch spamgourmet code'
 	echo '##########################################################################'
 	git clone https://github.com/spamgourmet/spamgourmet.git code
+}
+
+function customize_spamgourmet {
     (
         cd code
         OLDIFS=$IFS;IFS=$'\n'
@@ -237,7 +240,14 @@ function configure_sg_db_connection_and_data {
 }
 
 mandatory_packages
-download_spamgourmet
+if [ ! -f "/code/README.md" ]
+then
+    echo "****************************************************************************"
+    echo "*    No spamgourmet code present - downloading from internet archive       *"
+    echo "****************************************************************************"
+    download_spamgourmet
+fi
+customize_spamgourmet
 create_folders
 install_spamgourmet
 create_captcha

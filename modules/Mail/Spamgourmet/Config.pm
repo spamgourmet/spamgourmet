@@ -381,7 +381,14 @@ sub debug {
     print FILE $chunk;
     print FILE "\n";
     close FILE;
-    #print $chunk . "\n";
+  }
+  #FIXME: merge with previous lines - possibly switch to more standard debug?
+  if ($self->{'debugstderr'}) {
+    my $now = $self->formatNumDate(time());
+    my $file = $self->{'debugfilename'};
+    print STDERR "$now [$$]: ";
+    print STDERR $chunk;
+    print STDERR "\n";
   }
 }
 

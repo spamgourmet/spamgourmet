@@ -36,7 +36,8 @@ my $configfile = "/path/to/spamgourmet.config";
 use vars qw {$config $util $mailer $checker};
 $config = Mail::Spamgourmet::Config->new(configfile=>$configfile,mode=>0);
 
-my $extradebug = 0;
+$extradebug //= 0;
+$debugstderr //= 0;
 $config->debug('spameater started') if $extradebug;
 
 # variables to be used by the main routine (don't change these)
