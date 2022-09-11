@@ -1,0 +1,19 @@
+name: Spamgourmet Overall Test
+
+on:
+  push:
+    branches:
+      - master
+      - mdd-initial-test-setup
+  pull_request:
+    branches: [master]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Run the tests
+        run: make test
+        working-directory: ./spamgourmet-clone

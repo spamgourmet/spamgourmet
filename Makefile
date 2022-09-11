@@ -4,3 +4,6 @@
 
 build-spamgourmet-clone:
 	docker build spamgourmet-clone
+
+test:
+	@echo "there are no tests so you can't prove it isn't working"

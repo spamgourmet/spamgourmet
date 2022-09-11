@@ -3,3 +3,5 @@
 **/sg-server-config-secrets
 **/certs-letsencrypt-ovh-secrets
 .swp
+*.bak
+*~
