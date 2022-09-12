@@ -4,6 +4,9 @@
 
 # we export the index to ensure that we match code to be
 # committed and not files that might not get committed.
+docker-test: build-spamgourmet-clone
+	docker run -i spamgourmet-testenv /usr/bin/perl -s code/mailhandler/spameater  -extradebug=5 -debugstderr=5 <   test/fixture/reject_wrong_domain.email
+
 build-spamgourmet-clone:
 	git checkout-index -f -a --prefix=spamgourmet-clone/code-export/
 	docker build --tag spamgourmet-testenv spamgourmet-clone
