@@ -1,0 +1,6 @@
+From: reject_wrong_domain@example.com
+To: test@example.com
+Subject: this is a mail which should be rejected
+
+This mail is sento to a domain which should not be registered for
+spamgourmet so should be thrown away.

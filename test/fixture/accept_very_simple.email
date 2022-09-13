@@ -1,0 +1,7 @@
+From: accept_imple@example.com
+To: junkword.test@spamgourmet.test
+Subject: this is a mail which should be accepted
+
+Simple acceptable mail. We assume that the "test" account is created,
+has no watchwords (or matches word) and hasn't had mails come into
+junkword.
