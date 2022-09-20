@@ -1,11 +1,11 @@
 oneTimeSetUp () {
-    #FIXME - change the way we handle path substitution and then get
-    #rid of this. Bad because it forces test to run in docker container
-    mkdir /path
-    if [ ! -e /path/to ]
-    then
-        ln -s $PWD/conf /path/to
-    fi
+    service mysql start
+    mkdir -p /path/to
+
+    sed -e 's/dbuser/sguser/' \
+        -e 's/dbname/sg/' \
+        conf/spamgourmet.config > /path/to/spamgourmet.config
+
     mv /usr/sbin/sendmail /usr/sbin/sendmail.disabled
 
     if [ -e sendmail ]
@@ -17,13 +17,15 @@ oneTimeSetUp () {
           echo 'cat >> $SENDMAIL_OUT' ) > /usr/sbin/sendmail
         chmod +x /usr/sbin/sendmail
     fi
+
 }
 
-oneTimeTeardown () {
+oneTimeTearDown () {
     rm /path/to
     rmdir /path
     mv /usr/sbin/sendmail.disabled /usr/sbin/sendmail 
 
+    service mysql stop
 }
 
 testMailEaterShouldRejectBadMail () {
