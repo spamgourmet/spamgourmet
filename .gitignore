@@ -119,3 +119,5 @@ tags
 .swp
 *.bak
 *~
+#directory for exporting to when building docker container with spamgourmet-clone
+spamgourmet-clone/code-export

@@ -19,6 +19,7 @@ source ./sg-server-config.sh
 ./scripts/install-sg-mariadb.sh
 ./scripts/install-sg-exim.sh
 ./scripts/install-spamgourmet.sh
+./scripts/install-dev-tools.sh
 
 echo '##########################################################################'
 echo "### install finished. please go to $DOMAIN,"
