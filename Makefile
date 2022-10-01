@@ -2,7 +2,7 @@
 # this file may be distributed either under the Artistic License (version 2 or greater)
 # or under the GNU General Public License (version 2.0 or greater) at your choice.
 
-DEV_MOUNT := --mount type=bind,source="$(PWD)",target=/code-live
+DEV_MOUNT := --volume $(CURDIR):/code-live
 
 .PHONY: help
 help: ## list all goals in makefile with brief docmentation
