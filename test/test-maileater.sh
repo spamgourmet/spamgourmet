@@ -6,6 +6,8 @@ oneTimeSetUp () {
         -e 's/dbname/sg/' \
         conf/spamgourmet.config > /path/to/spamgourmet.config
 
+    /usr/bin/perl -Imodules test/create-test-user.pl
+
     mv /usr/sbin/sendmail /usr/sbin/sendmail.disabled
 
     if [ -e sendmail ]
@@ -46,6 +48,19 @@ testMailEaterShouldAcceptMail () {
     /usr/bin/perl -Imodules  -s mailhandler/spameater  -extradebug=5 -debugstderr=5 <   test/fixture/accept_very_simple.email
 
     assertTrue "valid mail not accepted" '[ -s SENDMAIL_OUT ]'
+}
+
+
+testMailEaterShouldRejectExceededCount () {
+    # FIXME we should check that the email has been recorded in appropriate statistics. 
+
+    SENDMAIL_OUT=`tempfile -d $SHUNIT_TMPDIR`
+    #
+    #FIXME start stuff for spameater
+
+    /usr/bin/perl -Imodules -s mailhandler/spameater  -extradebug=5 -debugstderr=5 <   test/fixture/reject_exeeded_count.email
+
+    assertFalse "exceeded mail accepted" '[ -s SENDMAIL_OUT ]'
 }
 
 # Load shUnit2

@@ -1,0 +1,8 @@
+From: accept_imple@example.com
+To: exceeded.test@example.net
+Subject: this is a mail which should be rejected due to count
+
+Simple acceptable mail that gets rejected due to too high count on the
+temporary address. We assume that the "test" account is created, has
+no watchwords (or matches word) and has had too many emails on the
+exceeded address
