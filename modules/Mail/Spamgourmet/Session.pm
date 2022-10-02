@@ -528,7 +528,6 @@ sub newuser {
     } else {
 # come back here
       ($p,undef) = &encrypt($p);
-      my $t = time();
       my $activeLC = $self->{'query'}->param('languageCode');
       $activeLC = "" if !$activeLC;
       $newToken = &getNewToken($u);
@@ -536,10 +535,10 @@ sub newuser {
       $sql = "INSERT INTO Users (UserName,Password,TimeAdded,IPAddress,LanguageCode,SessionToken,LastCommand) 
        VALUES (?, ?, ?, ?, ?, ?, ?);";
       $st = $self->{'config'}->db->prepare($sql);
-      $st->execute($u, $p, $t, 0, $activeLC, $IPToken, $now);
+      $st->execute($u, $p, $now, 0, $activeLC, $IPToken, $now);
       $sql = "SELECT UserID FROM Users WHERE UserName = ? AND TimeAdded = ?;";
       $st = $self->{'config'}->db->prepare($sql);
-      $st->execute($u,$t);
+      $st->execute($u,$now);
       $st->bind_columns(\%attr,\$self->{'UserID'});
       $st->fetch();
 
