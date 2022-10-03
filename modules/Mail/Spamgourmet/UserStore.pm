@@ -34,11 +34,12 @@ sub setup_test_user {
            VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
     my $st = $self->{'config'}->db->prepare($sql);
     $st->execute("test", 'testprotected@example.org', "dud-password", $now, 0, $activeLC, "junktoken", $now);
+
+    $self->create_email_address("test")
 }
 
 
 sub create_email_address {
-    die("This function is WIP ; not working yet") ;
 
     # now find the user's ID
     my $self = shift; 
@@ -51,7 +52,9 @@ sub create_email_address {
     my %attr;
     my $uid;
     my $dbpw;
+
     $st->bind_columns(\%attr,\$uid,\$dbpw);
+    $st->fetch();
 
     my $now = time();
 
@@ -62,7 +65,13 @@ sub create_email_address {
        (UserID,Word,InitialCount,Count,TimeAdded,Address,PrivateHash,Sender)
        VALUES (?,?,?,?,?,?,?,?);";
     my $st = $self->{'config'}->db->prepare($sql);
-    $st->execute($uid,"word",0,0,$now,'fakeaddress@example.com',"fakehash",'fakesender@example.com');
+    $st->execute($uid,"junkword",10,10,$now,'junkword.test@example.com',"fakehash",'fakesender@example.org');
+
+    my $sql = "INSERT INTO Emails
+       (UserID,Word,InitialCount,Count,TimeAdded,Address,PrivateHash,Sender)
+       VALUES (?,?,?,?,?,?,?,?);";
+    my $st = $self->{'config'}->db->prepare($sql);
+    $st->execute($uid,"exceeded",10,0,$now,'exceeded.test@example.net',"fakehash",'fakesender@example.org');
 
 
 }

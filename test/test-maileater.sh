@@ -12,9 +12,6 @@
 
 
 oneTimeSetUp () {
-    export SENDMAIL_OUT=`tempfile -d $SHUNIT_TMPDIR`
-
-
     service mysql start
     mkdir -p /path/to
 
@@ -26,22 +23,7 @@ oneTimeSetUp () {
 
     mv /usr/sbin/sendmail /usr/sbin/sendmail.disabled
 
-    if [ -z "$SENDMAIL_OUT" ]
-    then
-        echo "test setup failure, no sendmail file"
-        exit 9
-    fi
 
-    if [ -e sendmail ]
-    then
-        echo "sendmail not disabled ; aborting"
-        exit 9
-    else
-        ( echo '#!/bin/bash'
-          echo "echo writing mail to $SENDMAIL_OUT >&2" 
-          echo "cat >> $SENDMAIL_OUT" ) > /usr/sbin/sendmail
-        chmod +x /usr/sbin/sendmail
-    fi
 
 }
 
@@ -55,6 +37,37 @@ oneTimeTearDown () {
     fi
     mv /usr/sbin/sendmail.disabled /usr/sbin/sendmail 
 }
+
+setUp () {
+    export SENDMAIL_OUT=`tempfile -d $SHUNIT_TMPDIR`
+
+    if [ -e sendmail ]
+    then
+        echo "sendmail not disabled ; aborting"
+        exit 9
+    else
+        ( echo '#!/bin/bash'
+          echo "echo writing mail to $SENDMAIL_OUT >&2" 
+          echo "cat >> $SENDMAIL_OUT" ) > /usr/sbin/sendmail
+        chmod +x /usr/sbin/sendmail
+    fi
+
+    if [ -z "$SENDMAIL_OUT" ]
+    then
+        echo "test setup failure, no sendmail file"
+        exit 9
+    fi
+
+}
+
+tearDown () {
+    rm /usr/sbin/sendmail
+    if [ -z "$SHTEST_DONT_CLEAN_UP" ]
+    then
+        rm $SENDMAIL_OUT
+    fi
+}
+
 
 testMailEaterShouldRejectBadMail () {
     /usr/bin/perl -Imodules -s mailhandler/spameater  -extradebug=5 -debugstderr=5 <   test/fixture/reject_wrong_domain.email

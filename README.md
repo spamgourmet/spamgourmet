@@ -19,7 +19,7 @@ Additional documentation:
 
 ### HELPING WITH DEVELOPMENT
 
-See the files in the `docs` directory, especially `dev-notes.md`
+See the files in the `docs` directory, especially `dev-notes.md` 
 
 
 ### INSTALLATION NOTES
