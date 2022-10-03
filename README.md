@@ -7,7 +7,7 @@ Additional documentation:
 - [spamgourmet home][spam-home] ([archived][spam-home-arch])
     - [spamgourmet bulletin board][spam-bbs] ([archived][spam-bbs-arch])
         - [Developers forum][spam-bbs-dev] ([archived][spam-bbs-dev-arch])
-- [an alternative: erine.email](https://gitlab.com/mdavranche/erine.email) is open source and a very close match to spamgourmet versus [others](https://bbs.spamgourmet.com/viewtopic.php?f=7&t=1786) ([archived](https://web.archive.org/web/20190821185327/https://bbs.spamgourmet.com/viewtopic.php?f=7&t=1786))  
+- [an alternative: erine.email](https://gitlab.com/mdavranche/erine.email) is open source and a very close match to spamgourmet versus [others](https://bbs.spamgourmet.com/viewtopic.php?f=7&t=1786) ([archived](https://web.archive.org/web/20190821185327/https://bbs.spamgourmet.com/viewtopic.php?f=7&t=1786)) 
 
 [clone-script]: https://github.com/vasile-gh/spamgourmet-clone
 [spam-home]: https://www.spamgourmet.com/index.pl
@@ -16,6 +16,11 @@ Additional documentation:
 [spam-bbs-arch]: https://web.archive.org/web/*/https://bbs.spamgourmet.com/index.php
 [spam-bbs-dev]: https://bbs.spamgourmet.com/viewforum.php?f=2
 [spam-bbs-dev-arch]: https://web.archive.org/web/*/https://bbs.spamgourmet.com/viewforum.php?f=2
+
+### HELPING WITH DEVELOPMENT
+
+See the files in the `docs` directory, especially `dev-notes.md`
+
 
 ### INSTALLATION NOTES
 ------------------

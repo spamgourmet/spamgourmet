@@ -1,4 +1,20 @@
+# SHUNIT tests for spamgourmet
+#
+# these tests are designed to test the full functionality of the
+# programs included in spamgourmet in a more or less correct running
+# environment and so they are really integration tests.
+#
+# beware that these tests manipulate the environmnet on the system
+# they are running on including messing around with the sendmail
+# binary. They should not be run on a production system and are
+# normally expected to be run inside docker.
+#
+
+
 oneTimeSetUp () {
+    export SENDMAIL_OUT=`tempfile -d $SHUNIT_TMPDIR`
+
+
     service mysql start
     mkdir -p /path/to
 
@@ -10,58 +26,56 @@ oneTimeSetUp () {
 
     mv /usr/sbin/sendmail /usr/sbin/sendmail.disabled
 
+    if [ -z "$SENDMAIL_OUT" ]
+    then
+        echo "test setup failure, no sendmail file"
+        exit 9
+    fi
+
     if [ -e sendmail ]
     then
         echo "sendmail not disabled ; aborting"
         exit 9
     else
         ( echo '#!/bin/bash'
-          echo 'cat >> $SENDMAIL_OUT' ) > /usr/sbin/sendmail
+          echo "echo writing mail to $SENDMAIL_OUT >&2" 
+          echo "cat >> $SENDMAIL_OUT" ) > /usr/sbin/sendmail
         chmod +x /usr/sbin/sendmail
     fi
 
 }
 
 oneTimeTearDown () {
-    rm /path/to
-    rmdir /path
+    if [ -z "$SHTEST_DONT_CLEAN_UP" ]
+    then
+        rm /path/to/spamgourmet.config
+        rmdir /path/to
+        rmdir /path
+        service mysql stop
+    fi
     mv /usr/sbin/sendmail.disabled /usr/sbin/sendmail 
-
-    service mysql stop
 }
 
 testMailEaterShouldRejectBadMail () {
-    SENDMAIL_OUT=`tempfile -d $SHUNIT_TMPDIR`
-    #
-    #FIXME start stuff for spameater
-
     /usr/bin/perl -Imodules -s mailhandler/spameater  -extradebug=5 -debugstderr=5 <   test/fixture/reject_wrong_domain.email
 
-    assertFalse "incorrect mail accepted" '[ -s SENDMAIL_OUT ]'
+    assertFalse "incorrect mail accepted" "[ -s $SENDMAIL_OUT]"
 }
 
 testMailEaterShouldAcceptMail () {
-    SENDMAIL_OUT=`tempfile -d $SHUNIT_TMPDIR`
-    #
-    #FIXME start stuff for spameater
-
     /usr/bin/perl -Imodules  -s mailhandler/spameater  -extradebug=5 -debugstderr=5 <   test/fixture/accept_very_simple.email
 
-    assertTrue "valid mail not accepted" '[ -s SENDMAIL_OUT ]'
+    assertTrue "valid mail not accepted" "[ -s $SENDMAIL_OUT ]"
 }
 
 
 testMailEaterShouldRejectExceededCount () {
-    # FIXME we should check that the email has been recorded in appropriate statistics. 
-
-    SENDMAIL_OUT=`tempfile -d $SHUNIT_TMPDIR`
-    #
-    #FIXME start stuff for spameater
-
+    # TODO we should check that the email has been recorded in appropriate statistics. 
     /usr/bin/perl -Imodules -s mailhandler/spameater  -extradebug=5 -debugstderr=5 <   test/fixture/reject_exeeded_count.email
 
-    assertFalse "exceeded mail accepted" '[ -s SENDMAIL_OUT ]'
+    assertFalse "exceeded mail accepted" "[ -s $SENDMAIL_OUT ]"
 }
 
 # Load shUnit2
 . /usr/bin/shunit2
+SENDMAIL_OUT=`tempfile -d $SHUNIT_TMPDIR`

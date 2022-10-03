@@ -36,7 +36,7 @@ my $configfile = "/path/to/spamgourmet.config";
 use vars qw {$config $util $mailer $checker $extradebug $debugstderr};
 $config = Mail::Spamgourmet::Config->new(configfile=>$configfile,mode=>0);
 
-$extradebug //= 0;
+$extradebug //= 1;
 $debugstderr //= 0;
 
 $config->debugstderr($debugstderr);
@@ -308,6 +308,7 @@ $config->debug('actually not... the account is disabled.');
              ($replyto, $replytoname) = $util->getAddressAndDisplay($headerValues{'replyto'}, 0);
              ($senderdisplay,$replytodisplay) = ($fromname,$replytoname);
           }
+          $config->debug("attempting mail forward to $subfrom") if $extradebug;
           @rcpts = ($subfrom);
           &sendMail($config,$useXHeader,\@rcpts,\$msg,'',$disposable,$disposable,$senderdisplay,$replytodisplay,$returnPath);
 
@@ -417,6 +418,7 @@ $config->debug('actually not... the account is disabled.');
     $st->bind_columns(\%attr,\$UserID,\$RealEmail,\$SpamEmail,\$Prefix,\$Features,
      \$RecThrottleTime,\$RecThrottleCount,\$DefaultNumber);
     $st->fetch();
+    $config->debug("found real email to deliver to $RealEmail with userid $UserID") if $extradebug;
     # only update log if user has feature and address has "word"
     $updatelog = $mword && $util->hasFeature('EATENMESSAGELOG',
                                  $Features);
@@ -676,6 +678,7 @@ $config->debug("fetched alt sql") if $extradebug;
                                                           $replytoname);
               }
             }
+            $config->debug("forwarding email to $musername") if $extradebug;
             &sendMail($config,$useXHeader,\@rcpts,\$msg,$subjecttext,$subfrom,$subreplyto,'','',$returnPath);
             &setCount($util,$UserID,$EmailID,1,$RecThrottleTime,$RecThrottleCount);
           } else {
@@ -683,6 +686,8 @@ $config->debug("fetched alt sql") if $extradebug;
 ## If here, the user has watchwords enabled AND
 ## the email is not sent because its address does not match a watchword
 ## Turn off logging if we don't log for hidden
+
+            $config->debug("watch word match failed, rejecting mail") if $extradebug;
 
             $updatelog = ! $util->hasFeature('DONOTLOGHIDDEN',$Features);
 
@@ -796,7 +801,7 @@ sub setCount {  # (databasehandle,UserID,messagetype)
   }
   $config->db->do($sql);
 
-# and the User & Email counter, if appropriate
+# and the User & Email counter, if propriate
   if ($UserID) {
     my $now = time();
     if ($throttleTime < $now - $config->getRecThrottleInterval()) {
