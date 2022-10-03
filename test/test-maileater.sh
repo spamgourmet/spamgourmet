@@ -81,12 +81,18 @@ testMailEaterShouldAcceptMail () {
     assertTrue "valid mail not accepted" "[ -s $SENDMAIL_OUT ]"
 }
 
-
 testMailEaterShouldRejectExceededCount () {
     # TODO we should check that the email has been recorded in appropriate statistics. 
     /usr/bin/perl -Imodules -s mailhandler/spameater  -extradebug=5 -debugstderr=5 <   test/fixture/reject_exeeded_count.email
 
     assertFalse "exceeded mail accepted" "[ -s $SENDMAIL_OUT ]"
+}
+
+testMailEaterShouldRejectExceededCount () {
+    # TODO we should check that the email has been recorded in appropriate statistics. 
+    /usr/bin/perl -Imodules -s mailhandler/spameater  -extradebug=5 -debugstderr=5 <   test/fixture/reject_to_address_in_body.email
+
+    assertFalse "malformatted email accepted" "[ -s $SENDMAIL_OUT ]"
 }
 
 # Load shUnit2
