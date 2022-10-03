@@ -25,6 +25,12 @@ See the files in the `docs` directory, especially `dev-notes.md`
 ### INSTALLATION NOTES
 ------------------
 
+The standard installation used in testing and so on is based on the
+scripts in the directory spamgourmet-clone. That's probably a good
+place to start for doing an instalation.
+
+
+
 - Pre-requisites
 
 	* Linux
