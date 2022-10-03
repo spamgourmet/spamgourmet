@@ -49,6 +49,7 @@ my (
  $db,$sql,$st,%attr,$now,$nowcount,@Watchwords,
  $Prefix,$EmailID,$InitialCount,$Count,$UserID,$ExpireTime,
  $RealEmail,$SpamEmail,$Sender,$Features,$updatelog,$useXHeader, $Hidden,
+ @rcpts,@spamrcpt,
  $connected, $connectTries, $interval,$DefaultNumber,
  $RecThrottleTime, $RecThrottleCount,
  $SendThrottleTime, $SendThrottleCount
@@ -270,6 +271,7 @@ foreach $for (keys %deliveryAddresses) {
     $st->execute($musername);
     $st->bind_columns(\%attr,\$UserID,\$Features,\$RealEmail, \$SendThrottleTime,\$SendThrottleCount);
     $st->fetch();
+
 $config->debug('sending on old style redir addr for user ' . $musername);
     if (!$util->hasFeature('ACCOUNTDISABLED', $Features)) {
 $config->debug('actually not... the account is disabled.');
@@ -302,7 +304,8 @@ $config->debug('actually not... the account is disabled.');
              ($replyto, $replytoname) = $util->getAddressAndDisplay($headerValues{'replyto'}, 0);
              ($senderdisplay,$replytodisplay) = ($fromname,$replytoname);
           }
-          &sendMail($config,$useXHeader,$subfrom,\$msg,'',$disposable,$disposable,$senderdisplay,$replytodisplay,$returnPath);
+          @rcpts = ($subfrom);
+          &sendMail($config,$useXHeader,\@rcpts,\$msg,'',$disposable,$disposable,$senderdisplay,$replytodisplay,$returnPath);
 
           if ($SendThrottleTime < $now - $config->getSendThrottleInterval()) {
             $SendThrottleTime = $now;
@@ -378,7 +381,8 @@ $config->debug('actually not... the account is disabled.');
       my $admdmn = $config->getAdminDomain();
       if ($todomain =~ /$admdmn/i) {
         # don't advance counter -- this is administrative mail...
-        &sendMail($config,$useXHeader,$config->getAdminEmail(),\$msg,''); 
+        @rcpts = ($config->getAdminEmail());
+        &sendMail($config,$useXHeader,\@rcpts,\$msg,'');
       }
       next;
     }
@@ -422,13 +426,15 @@ $config->debug('actually not... the account is disabled.');
       $for =~ /(.*)\@/;
       # if there was no special syntax (i.e., this is just a plain address)
       if ($musername eq $1) {
-        &sendMail($config,$useXHeader,$RealEmail,\$msg,'');  # just deliver the message
-        next;                      # and skip the rest of the loop 
+        &sendMail($config,$useXHeader,\@rcpts,\$msg,'');  # just deliver the message
+        next;                      # and skip the rest of the loop
       }
     }
   }
   $UserID = 0 if !$UserID || $util->hasFeature('ACCOUNTDISABLED',$Features);
 
+  @rcpts = ($RealEmail);
+  @spamrcpt = ($SpamEmail);
   $mword = substr($mword,0,20); # truncate word to 20 characters..
 
   unless ($mcount eq '+' || $mcount =~ /sender/i || $mcount eq '*' || $mcount =~ /domain/) {
@@ -458,6 +464,30 @@ $config->debug('actually not... the account is disabled.');
   if ($UserID && $RealEmail
    && !$config->hasLocalDomain($RealEmail)
    && !$config->hasLocalDomain($SpamEmail)) {
+
+    # fill rcpts array with alternative delivery addresses if there are any
+    $sql = "SELECT AlternativeDeliveryAddress FROM AlternativeDeliveryAddresses a
+     INNER JOIN AlternativeDeliveryAddressLookUp l on a.AlternativeDeliveryAddressID = l.AlternativeDeliveryAddressID
+     INNER JOIN Emails e on e.EmailID = l.EmailID
+     WHERE e.Word = ?
+     AND e.UserID = ?
+     AND AlternativeDeliveryAddressState > 1";
+    $st = $config->db->prepare($sql);
+$config->debug("about to execute alt sql") if $extradebug;
+    $st->execute($mword, $UserID);
+$config->debug("executed alt sql") if $extradebug;
+    my $AlternativeDeliveryAddress = '';
+
+$config->debug("about to bind columns") if $extradebug;
+    $st->bind_columns(\%attr, \$AlternativeDeliveryAddress);
+$config->debug("about to fetch") if $extradebug;
+    while ($st->fetch()) {
+      if ($AlternativeDeliveryAddress && !$config->hasLocalDomain($AlternativeDeliveryAddress)) {
+        push @rcpts, $AlternativeDeliveryAddress;
+      }
+    }
+
+$config->debug("fetched alt sql") if $extradebug;
 
     # check to see if the message is from a trusted sender.
     if ($from && $fromdomain) {
@@ -509,7 +539,7 @@ $config->debug('actually not... the account is disabled.');
         my $recipsAndNamed = $allRecipients . $headerValues{'namedTo'};
         if ($trusted) {
           $subjecttext= " (trusted: $trusted)";
-          &sendMail($config,$useXHeader,$RealEmail,\$msg,$subjecttext,$subfrom,$subreplyto,'','',$returnPath);
+          &sendMail($config,$useXHeader,\@rcpts,\$msg,$subjecttext,$subfrom,$subreplyto,'','',$returnPath);
           &setCount($util,$UserID,$EmailID,1,$RecThrottleTime,$RecThrottleCount);
 
         } elsif ($Sender && (eval{$from =~ /$Sender/i}
@@ -523,13 +553,13 @@ $config->debug('actually not... the account is disabled.');
             $subjecttext .= 'to';
           }
           $subjecttext .= " exclusive)";
-          &sendMail($config,$useXHeader,$RealEmail,\$msg,$subjecttext,$subfrom,$subreplyto,'','',$returnPath);
+          &sendMail($config,$useXHeader,\@rcpts,\$msg,$subjecttext,$subfrom,$subreplyto,'','',$returnPath);
           &setCount($util,$UserID,$EmailID,1,$RecThrottleTime,$RecThrottleCount);
         } elsif ($ExpireTime && $ExpireTime > $now) {
 
           my $displayDate = $util->formatNumDate($ExpireTime, 1);
           $subjecttext = " ($mword: expires $displayDate)";
-          &sendMail($config,$useXHeader,$RealEmail,\$msg,$subjecttext,$subfrom,$subreplyto,'','',$returnPath);
+          &sendMail($config,$useXHeader,\@rcpts,\$msg,$subjecttext,$subfrom,$subreplyto,'','',$returnPath);
           &setCount($util,$UserID,$EmailID,1,$RecThrottleTime,$RecThrottleCount);
 
         } elsif (!$ExpireTime && $Count > 0) {
@@ -540,11 +570,11 @@ $config->debug('actually not... the account is disabled.');
           $subjecttext = " ($mword: message $nowcount of $InitialCount";
           $subjecttext .= " -last one!-" if $nowcount == $InitialCount;
           $subjecttext .= ")";
-          &sendMail($config,$useXHeader,$RealEmail,\$msg,$subjecttext,$subfrom,$subreplyto,'','',$returnPath);
+          &sendMail($config,$useXHeader,\@rcpts,\$msg,$subjecttext,$subfrom,$subreplyto,'','',$returnPath);
           &setCount($util,$UserID,$EmailID,1,$RecThrottleTime,$RecThrottleCount);
 
         } else {
-          &sendMail($config,$useXHeader,$SpamEmail,\$msg,
+          &sendMail($config,$useXHeader,\@spamrcpt,\$msg,
            " ($mword - EATEN by spamgourmet: count exceeded)",
            $subfrom,$subreplyto,'','',$returnPath) if $SpamEmail;
           &setCount($util,$UserID,$EmailID,0,
@@ -642,7 +672,7 @@ $config->debug('actually not... the account is disabled.');
                                                           $replytoname);
               }
             }
-            &sendMail($config,$useXHeader,$RealEmail,\$msg,$subjecttext,$subfrom,$subreplyto,'','',$returnPath);
+            &sendMail($config,$useXHeader,\@rcpts,\$msg,$subjecttext,$subfrom,$subreplyto,'','',$returnPath);
             &setCount($util,$UserID,$EmailID,1,$RecThrottleTime,$RecThrottleCount);
           } else {
 ###ADDED Syskoll 2008-03-30
@@ -653,7 +683,7 @@ $config->debug('actually not... the account is disabled.');
             $updatelog = ! $util->hasFeature('DONOTLOGHIDDEN',$Features);
 
 ##End ADDED Syskoll 2008-03-30
-            &sendMail($config,$useXHeader,$SpamEmail,\$msg,
+            &sendMail($config,$useXHeader,\@rcpts,\$msg,
              " ($mword - EATEN by spamgourmet: word does not match watchwords)",
              $subfrom,$subreplyto,'','',$returnPath) if $SpamEmail;
             &setCount($util,$UserID,$EmailID,0,$RecThrottleTime,$RecThrottleCount,
@@ -661,7 +691,7 @@ $config->debug('actually not... the account is disabled.');
           }
         } else {
 $config->debug("skipping address creaton due to throttle for $musername");
-            &sendMail($config,$useXHeader,$SpamEmail,\$msg,
+            &sendMail($config,$useXHeader,\@spamrcpt,\$msg,
              " ($mword - EATEN by spamgourmet: new address throttle exceeded)",
              $subfrom,$subreplyto,'','',$returnPath) if $SpamEmail;
             &setCount($util,$UserID,$EmailID,0,$RecThrottleTime,$RecThrottleCount,
@@ -670,7 +700,7 @@ $config->debug("skipping address creaton due to throttle for $musername");
       } else {
         my $reason = 'missing or invalid prefix';
         $reason = 'address disabled' if $Count < 0;
-        &sendMail($config,$useXHeader,$SpamEmail,\$msg,
+        &sendMail($config,$useXHeader,\@spamrcpt,\$msg,
          " ($mword - EATEN by spamgourmet: $reason)",$subfrom,$subreplyto,'','',$returnPath) if $SpamEmail;
         &setCount($util,$UserID,$EmailID,0,$RecThrottleTime,$RecThrottleCount,
          $from,$mword,$updatelog);
@@ -679,9 +709,9 @@ $config->debug("skipping address creaton due to throttle for $musername");
       if ($config->useUnixAccounts() && !$mprefix && !$mword && !$mcount) {
         # if the message came in for an unadorned unix account...
         # business as usual - let it through...
-        &sendMail($config,$useXHeader,$RealEmail,\$msg,$subjecttext,'',''); 
+        &sendMail($config,$useXHeader,\@rcpts,\$msg,$subjecttext,'','');
       } else {
-        &sendMail($config,$useXHeader,$SpamEmail,\$msg,
+        &sendMail($config,$useXHeader,\@spamrcpt,\$msg,
          " ($mword - EATEN BY spamgourmet: improper format)") if $SpamEmail;
         &setCount($util,$UserID,$EmailID,0,$RecThrottleTime,$RecThrottleCount,
          $from,$mword,$updatelog);
@@ -803,7 +833,7 @@ sub setCount {  # (databasehandle,UserID,messagetype)
 sub sendMail {
   my $config = shift;
   my $useXHeader = shift;
-  my $rcpt = shift;
+  my $rcpts = shift; # this should be a ref to an array
   my $msgref = shift;
   my $subjecttext = shift;
   my $sender = shift;
@@ -811,7 +841,7 @@ sub sendMail {
   my $senderdisplay = shift;
   my $replytodisplay = shift;
   my $returnpath = shift;
-  return if !$rcpt;
+  return if !$rcpts;
   $config->debug("sending...") if $extradebug;
   if ((!$useXHeader || $useXHeader==2 && $subjecttext =~ /message/) && $subjecttext) {
     my $check = $$msgref =~ s/(^Subject\:(.|(\n\s))*$)/$1$subjecttext/mi;
@@ -888,6 +918,8 @@ sub sendMail {
 #  $config->debug("rp after: $returnpath");
 
   $config->debug($$msgref) if $extradebug;
-  $config->getMailer()->sendMail($msgref,$rcpt,$returnpath);
+  foreach my $rcpt (@$rcpts) {
+    $config->getMailer()->sendMail($msgref,$rcpt,$returnpath) if $rcpt;
+  }
   $$msgref =~ s/\Q$subjecttext//mi if $subjecttext; #now get rid of the subject text for the next iteration
 }
