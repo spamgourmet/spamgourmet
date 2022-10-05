@@ -42,10 +42,10 @@ cp hooks/ovh/ovh.conf.dist ./ovh.conf
 sed -i "s/YOUR_APPLICATION_KEY/$LETSENCRYPT_OVH_APPKEY/" /var/lib/dehydrated/ovh.conf
 sed -i "s/YOUR_APPLICATION_SECRET/$LETSENCRYPT_OVH_APPSECRET/" /var/lib/dehydrated/ovh.conf
 sed -i "s/YOUR_CONSUMER_KEY/$LETSENCRYPT_OVH_CONSUMERKEY/" /var/lib/dehydrated/ovh.conf
-cat <<-EOF >/etc/dehydrated/domains.txt
+cat <<- EOF > /etc/dehydrated/domains.txt
 $DOMAIN ob.$DOMAIN
 EOF
-cat <<-EOF >>/etc/dehydrated/config
+cat <<- EOF >> /etc/dehydrated/config
 IP_VERSION=4
 CHALLENGETYPE="dns-01"
 HOOK="\${BASEDIR}/hooks/ovh/hook.py"
@@ -56,7 +56,7 @@ EOF
 
 mkdir -p /etc/cron.weekly
 
-cat <<-EOF >/etc/cron.weekly/letsencrypt-ovh-renew.sh
+cat <<- EOF > /etc/cron.weekly/letsencrypt-ovh-renew.sh
 #!/bin/bash
 cd /var/lib/dehydrated
 dehydrated -c >/tmp/dehydrated.log 2>&1
