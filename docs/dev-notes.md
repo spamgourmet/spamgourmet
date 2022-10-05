@@ -1,5 +1,4 @@
 Make
-
 ####
 
 We're currently using GNU Make as the primary tool for builds. We're
@@ -27,7 +26,8 @@ should get you a shell inside a docker container with all of
 spamgourmet set up and with all of the spamgourmet code visible to
 allow you to test code you are working on.
 
-## GitHub setup
+Git and Git Branching
+#####################
 
 We use Git as our source code repository management system. This is quite
 powerful and sophisticated and so sometimes a little intimidating to start
@@ -83,7 +83,6 @@ testing.
 If we change the way spamgourmet is deployed we expect this to change.
 
 TESTS
-
 #####
 
 One of the most important areas for development now for spamgourmet is
@@ -131,4 +130,3 @@ give you warnings before committing your code to git.
 3. run
 
 pre-commit install
-
