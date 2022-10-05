@@ -3,8 +3,6 @@ in your spamgourmet account from <%oldaddress%> to <%newaddress%>
 
 If this was you, you may disregard this message.
 
-Otherwise, please go to spamgourmet and change it back, 
+Otherwise, please go to spamgourmet and change it back,
 and also change your password, because maybe someone has your
 password.
-
-

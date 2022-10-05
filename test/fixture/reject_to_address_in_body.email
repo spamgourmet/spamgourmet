@@ -5,4 +5,4 @@ To: junkword.test@example.net
 
 An email where the subject looks like it continues but actually it
 doesn't because the line after the subject is empty without any
-whitespace. This should be rejected due to lack of address. 
+whitespace. This should be rejected due to lack of address.

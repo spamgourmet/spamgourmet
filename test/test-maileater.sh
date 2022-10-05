@@ -35,7 +35,7 @@ oneTimeTearDown () {
         rmdir /path
         service mysql stop
     fi
-    mv /usr/sbin/sendmail.disabled /usr/sbin/sendmail 
+    mv /usr/sbin/sendmail.disabled /usr/sbin/sendmail
 }
 
 setUp () {
@@ -47,7 +47,7 @@ setUp () {
         exit 9
     else
         ( echo '#!/bin/bash'
-          echo "echo writing mail to $SENDMAIL_OUT >&2" 
+          echo "echo writing mail to $SENDMAIL_OUT >&2"
           echo "cat >> $SENDMAIL_OUT" ) > /usr/sbin/sendmail
         chmod +x /usr/sbin/sendmail
     fi
@@ -82,14 +82,14 @@ testMailEaterShouldAcceptMail () {
 }
 
 testMailEaterShouldRejectExceededCount () {
-    # TODO we should check that the email has been recorded in appropriate statistics. 
+    # TODO we should check that the email has been recorded in appropriate statistics.
     /usr/bin/perl -Imodules -s mailhandler/spameater  -extradebug=5 -debugstderr=5 <   test/fixture/reject_exeeded_count.email
 
     assertFalse "exceeded mail accepted" "[ -s $SENDMAIL_OUT ]"
 }
 
 testMailEaterShouldRejectExceededCount () {
-    # TODO we should check that the email has been recorded in appropriate statistics. 
+    # TODO we should check that the email has been recorded in appropriate statistics.
     /usr/bin/perl -Imodules -s mailhandler/spameater  -extradebug=5 -debugstderr=5 <   test/fixture/reject_to_address_in_body.email
 
     assertFalse "malformatted email accepted" "[ -s $SENDMAIL_OUT ]"

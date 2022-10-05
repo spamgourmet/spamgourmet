@@ -1,258 +1,232 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 
 <html>
-
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<meta name="description" content="spamgourmet provides email addresses that get created automatically the first time they are used, forward messages, and then automatically expire.">
-
-<meta name="keywords" content="auto-create email addresses, spam blocking, spam prevention">
-
-<meta http-equiv="pragma" content="no-cache">
-
-<title>spamgourmet</title>
-
-<script language="JavaScript" type="text/javascript"><%mainjavascript%></script>
-
-<style type="text/css"><!--
-
-body{margin-top:0px;margin-left:0px;margin-right:0px;margin-bottom:0px;}
-
-body,td,div,a{font-family:verdana,arial,helvetica,sans-serif; font-size:10pt }
-
-h2{font-size:13pt}
-
-h3{font-size:10pt; font-style:italic}
-
-h4{font-size:8pt}
-
-.tdlink{cursor:pointer;cursor:hand;text-decoration:none}
-
-table{border-style:none;}
-
-//-->
-
-</style>
-
-</head>
-
-<body bgcolor="#FFFFFF" onLoad="<%onload%>">
-
-
-<table cellspacing="0" cellpadding="0" width="100%">
-
- <tr>
-
-  <td valign="middle" colspan="2"><h2><%mainpageintro%></h2></td>
-
-  <td align="center" valign="top" rowspan="4" bgcolor="#FFFFCC">
-
-
-
-  </td>
-
- </tr>
-
- <tr>
-
-  <td valign="bottom" align="center" width="240" rowspan="2">
-
-   <h4><img src="<%imageshost%>stuff/gourmet.png" border="0" width="207" height="200" alt="gourmet" title="gourmet">
-
-   "<%quote%>"</h4>
-
-  </td>
-
-  <td height="100" align="left" valign="middle">
-
-   <table width="100%">
-
-    <tr>
-
-     <td align="center" valign="middle" width=300>
-
-<div id="serverstats"><font size="1"><%serverstats%></font></div>
-
-       <!-- %weekchart% -->
-
-     </td>
-
-     <td align="center" valign="middle"><h3><%motd%></h3>
-
-     </td>
-
-    </tr>
-
-   </table>
-
-  </td>
-
- </tr> 
-
- <tr>
-
-  <td valign="bottom" height="75">
-
-   <table width="100%" cellspacing="2">
-
-    <tr>
-
-     <td valign="bottom" align="center">
-
-      <a href="https://bbs.spamgourmet.com/index.php"><%discuss%>/<%support%></a>
-
-     </td>
-
-     <td valign="bottom" align="center">
-
-          <a href="https://bbs.spamgourmet.com/viewforum.php?f=5"><%whatsnew%></a>
-     </td>
-
-     <td valign="bottom" align="center">
-
-
-<a href="https://twitter.com/intent/follow?screen_name=spamgourmet">twitter</a>
-     </td>
-
-     <td valign="bottom" align="center">
-
-      <a href="<%action%>?printpage=faq.html" onClick="centerPopup('<%action%>?printpage=faq.html','faq',600,500);return false;"><%FAQ%></a>
-
-     </td>
-
-     <td valign="bottom" align="center">
-
-      <a href="<%action%>?printpage=team.html" onClick="centerPopup('<%action%>?printpage=team.html','team',700,500);return false"><%team%></a>
-
-     </td>
-
-     <td valign="bottom" align="center">
-
-      <a href="<%action%>?printpage=donate.html" onClick="centerPopup('<%action%>?printpage=donate.html','faq',600,500); return false;"><%donate%></a>
-
-     </td>
-
-    </tr>
-
-   </table>
-
-
-
-   <%tabs%>
-
-
-
-  </td>
-
- </tr>
-
- <tr>
-
-  <td bgcolor="#993366" valign="top" align="center">
-
-  <b><font color="#FFFFFF"><%loginmsg%></font></b>
-
-
-
-<%loginform%>
-
-<%languagelist%>
-
-<%flags%><br><br>
-
-<br>
-<!-- script language="JavaScript" type="text/javascript">writeMailToWithScrambledDisplayText('nsktExufrltzwrjy3htr','Aktsy%htqtwB\'(KKKKKK\'%xn jB7CnsktExufrltzwrjy3htrA4ktsyC');</script --><a href="/contact.html">contact</a>
-
-
-  </td>
-
-  <td valign="top" bgcolor="#FFFFCC">
-
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta
+      name="description"
+      content="spamgourmet provides email addresses that get created automatically the first time they are used, forward messages, and then automatically expire."
+    />
+
+    <meta
+      name="keywords"
+      content="auto-create email addresses, spam blocking, spam prevention"
+    />
+
+    <meta http-equiv="pragma" content="no-cache" />
+
+    <title>spamgourmet</title>
+
+    <script language="JavaScript" type="text/javascript">
+      <%mainjavascript%>
+    </script>
+
+    <style type="text/css">
+      <!-- body {
+        margin-top: 0px;
+        margin-left: 0px;
+        margin-right: 0px;
+        margin-bottom: 0px;
+      }
+
+      body,
+      td,
+      div,
+      a {
+        font-family: verdana, arial, helvetica, sans-serif;
+        font-size: 10pt;
+      }
+
+      h2 {
+        font-size: 13pt;
+      }
+
+      h3 {
+        font-size: 10pt;
+        font-style: italic;
+      }
+
+      h4 {
+        font-size: 8pt;
+      }
+
+      .tdlink {
+        cursor: pointer;
+        cursor: hand;
+        text-decoration: none;
+      }
+
+      table {
+        border-style: none;
+      }
+
+      //-->
+    </style>
+  </head>
+
+  <body bgcolor="#FFFFFF" onLoad="<%onload%>">
     <table cellspacing="0" cellpadding="0" width="100%">
+      <tr>
+        <td valign="middle" colspan="2"><h2><%mainpageintro%></h2></td>
 
-     <tr>
+        <td align="center" valign="top" rowspan="4" bgcolor="#FFFFCC"></td>
+      </tr>
 
-       <td width=1 bgcolor="#000000"></td>
+      <tr>
+        <td valign="bottom" align="center" width="240" rowspan="2">
+          <h4>
+            <img
+              src="<%imageshost%>stuff/gourmet.png"
+              border="0"
+              width="207"
+              height="200"
+              alt="gourmet"
+              title="gourmet"
+            />
 
-       <td valign="top"><table cellspacing=0 cellpadding=5 width="100%"><tr>
+            "<%quote%>"
+          </h4>
+        </td>
 
-       <td valign="top">
+        <td height="100" align="left" valign="middle">
+          <table width="100%">
+            <tr>
+              <td align="center" valign="middle" width="300">
+                <div id="serverstats">
+                  <font size="1"><%serverstats%></font>
+                </div>
 
-<center>
+                <!-- %weekchart% -->
+              </td>
 
-<b><%message%></b>
+              <td align="center" valign="middle"><h3><%motd%></h3></td>
+            </tr>
+          </table>
+        </td>
+      </tr>
 
-<br><%yourstats%>
+      <tr>
+        <td valign="bottom" height="75">
+          <table width="100%" cellspacing="2">
+            <tr>
+              <td valign="bottom" align="center">
+                <a href="https://bbs.spamgourmet.com/index.php"
+                  ><%discuss%>/<%support%></a
+                >
+              </td>
 
-</center>
+              <td valign="bottom" align="center">
+                <a href="https://bbs.spamgourmet.com/viewforum.php?f=5"
+                  ><%whatsnew%></a
+                >
+              </td>
 
+              <td valign="bottom" align="center">
+                <a
+                  href="https://twitter.com/intent/follow?screen_name=spamgourmet"
+                  >twitter</a
+                >
+              </td>
 
+              <td valign="bottom" align="center">
+                <a
+                  href="<%action%>?printpage=faq.html"
+                  onClick="centerPopup('<%action%>?printpage=faq.html','faq',600,500);return false;"
+                  ><%FAQ%></a
+                >
+              </td>
 
-<!--content start-->
+              <td valign="bottom" align="center">
+                <a
+                  href="<%action%>?printpage=team.html"
+                  onClick="centerPopup('<%action%>?printpage=team.html','team',700,500);return false"
+                  ><%team%></a
+                >
+              </td>
 
-<%content%>
+              <td valign="bottom" align="center">
+                <a
+                  href="<%action%>?printpage=donate.html"
+                  onClick="centerPopup('<%action%>?printpage=donate.html','faq',600,500); return false;"
+                  ><%donate%></a
+                >
+              </td>
+            </tr>
+          </table>
 
-<!--content stop -->
+          <%tabs%>
+        </td>
+      </tr>
 
-       </td>
+      <tr>
+        <td bgcolor="#993366" valign="top" align="center">
+          <b><font color="#FFFFFF"><%loginmsg%></font></b>
 
-      </tr></table>
+          <%loginform%> <%languagelist%> <%flags%><br /><br />
 
-     </td>
+          <br />
+          <!-- script language="JavaScript" type="text/javascript">writeMailToWithScrambledDisplayText('nsktExufrltzwrjy3htr','Aktsy%htqtwB\'(KKKKKK\'%xn jB7CnsktExufrltzwrjy3htrA4ktsyC');</script --><a
+            href="/contact.html"
+            >contact</a
+          >
+        </td>
 
-    </tr>
+        <td valign="top" bgcolor="#FFFFCC">
+          <table cellspacing="0" cellpadding="0" width="100%">
+            <tr>
+              <td width="1" bgcolor="#000000"></td>
 
-   </table>
+              <td valign="top">
+                <table cellspacing="0" cellpadding="5" width="100%">
+                  <tr>
+                    <td valign="top">
+                      <center>
+                        <b><%message%></b>
 
-  </td>
+                        <br /><%yourstats%>
+                      </center>
 
- </tr>
+                      <!--content start-->
 
-</table>
+                      <%content%>
 
+                      <!--content stop -->
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
 
+    <center>
+      <font size="1">
+        <a
+          href="javascript:centerPopup('<%action%>?printpage=terms.html','terms
 
-<center><font size=1>
+',600,500)"
+        >
+          <%termsconditions%>
+        </a>
 
+        <a
+          href="javascript:centerPopup('<%action%>?printpage=privacy.html','terms
 
+',600,500)"
+        >
+          <%privacy%>
+        </a>
 
-<a href="javascript:centerPopup('<%action%>?printpage=terms.html','terms
+        <a href="http://bbs.spamgourmet.com"><%discuss%>/<%support%></a>
 
-',600,500)">
+        <a href="http://bbs.spamgourmet.com/viewforum.php?f=5"><%whatsnew%></a>
 
+        <a href="<%action%>?printpage=faq.html"><%FAQ%></a>
 
-
-<%termsconditions%>
-
-
-
-</a>
-
-
-
-<a href="javascript:centerPopup('<%action%>?printpage=privacy.html','terms
-
-',600,500)">
-
-<%privacy%>
-
-
-
-</a> 
-
-
-
-
-
- <a href="http://bbs.spamgourmet.com"><%discuss%>/<%support%></a>
-
- <a href="http://bbs.spamgourmet.com/viewforum.php?f=5"><%whatsnew%></a>
-
- <a href="<%action%>?printpage=faq.html"><%FAQ%></a>
-
- <a href="<%action%>?printpage=team.html"><%team%></a>
-
-</font></center>
-
-</body></html>
-
+        <a href="<%action%>?printpage=team.html"><%team%></a>
+      </font>
+    </center>
+  </body>
+</html>

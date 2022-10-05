@@ -1,42 +1,45 @@
 <div align="center">
-<img src="/captcha/<%imagefilename%>" width="620" height="180" border="0">
-<p><%loginmsg%></p>
+  <img src="/captcha/<%imagefilename%>" width="620" height="180" border="0" />
+  <p><%loginmsg%></p>
 </div>
 
-<form name="newuserform" action="<%action%>" method="post" onSubmit="return checkNewUserForm(this);">
+<form
+  name="newuserform"
+  action="<%action%>"
+  method="post"
+  onSubmit="return checkNewUserForm(this);"
+>
+  <%typeimageword%>
 
-<%typeimageword%>   
+  <input type="text" name="imageword" size="30" maxlength="30" />
 
-<input type=text name="imageword" size=30 maxlength=30>
+  <input type="hidden" name="newuser" value="<%newuser%>" />
+  <input type="hidden" name="imagehash" value="<%imagehash%>" />
+  <input type="hidden" name="realemail" value="<%realemail%>" />
+  <input type="hidden" name="saverealemail" value="1" />
 
+  <div align="center">
+    <table>
+      <tr>
+        <td colspan="2"><%providepassword%></td>
+      </tr>
+      <tr>
+        <td><%newpass%></td>
+        <td><input type="password" name="newpass" size="10" onFocus="" /></td>
+      </tr>
+      <tr>
+        <td><%confirm%></td>
+        <td><input type="password" name="confirm" size="10" onFocus="" /></td>
+      </tr>
 
-<input type="hidden" name="newuser" value="<%newuser%>">
-<input type="hidden" name="imagehash" value="<%imagehash%>">
-<input type="hidden" name="realemail" value="<%realemail%>">
-<input type="hidden" name="saverealemail" value=1>
-
-<div align="center">
-<table>
-
-<tr><td colspan=2>
-<%providepassword%>
-</td></tr>
-<tr><td>
-
-<%newpass%>
-
-</td><td><input type=password name="newpass" size=10 onFocus=""></td></tr>
-<tr><td>
-
-<%confirm%>
-
-</td><td><input type=password name="confirm" size=10 onFocus=""></td></tr>
-
-<tr><td colspan=2 align="center"><input type="submit" value="<%go%>"></td></tr>
-</table>
-<p>
-<a href="/contact.html"><%cannotreadimage%></a>
-</p>
-
-</div>
+      <tr>
+        <td colspan="2" align="center">
+          <input type="submit" value="<%go%>" />
+        </td>
+      </tr>
+    </table>
+    <p>
+      <a href="/contact.html"><%cannotreadimage%></a>
+    </p>
+  </div>
 </form>
