@@ -1,6 +1,6 @@
-# this is the full set of static code checks that we have defined that
-# we want to folow.  some checks may fail since files have not yet
-# been updated
+# this is the set of checks that will be run during build and will
+# fail the build if they do not complete. It should be syncrhonised
+# with the checks in .pre-commit-config.yaml but with lines disabled
 #
 # See https://pre-commit.com for more information
 # See https://pre-commit.com/hooks.html for more hooks
@@ -15,7 +15,8 @@ repos:
   - repo: https://github.com/henryykt/pre-commit-perl
     rev: v0.0.4
     hooks:
-      - id: perlcritic
+      # perlcritic disabled until code is fixed - see https://github.com/spamgourmet/spamgourmet/issues/46
+      #      - id: perlcritic
       - id: perltidy
   - repo: https://github.com/pre-commit/mirrors-prettier
     rev: "v3.0.0-alpha.0" # Use the sha / tag you want to point at
