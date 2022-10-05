@@ -1,80 +1,129 @@
 <script language="JavaScript">
-
-function checkEditExemplar(theform) {
-  if (theform.word.value != '' && theform.word.value != null) {
-    if (theform.theword.value.toLowerCase() != theform.word.value.toLowerCase()) {
-      alert('<%canonlychangecase%>');
-      theform.word.value = theform.theword.value;
-      theform.word.focus();
-      return false;
-    }
-    if (theform.theusername.value.toLowerCase() != theform.username.value.toLowerCase()) {
-      alert('<%canonlychangecase%>');
-      theform.username.value = theform.theusername.value;
-      theform.username.focus();
-      return false;
-    }
-
-//    if (theform.currentprefix != null && theform.currentprefix != '') {
-//      if (theform.adrprefix.value != theform.currentprefix.value) {
-//        theform.adrprefix.focus();
-//        return confirm('<%prefixmismatch%>');
-//      }
-//    }
-    if (theform.adrprefix.value != null && theform.adrprefix.value != '') {
-      if (theform.number.value == null || theform.number.value == '') {
-        alert('<%numberrequiredforprefix%>');
-        theform.number.focus();
+  function checkEditExemplar(theform) {
+    if (theform.word.value != "" && theform.word.value != null) {
+      if (
+        theform.theword.value.toLowerCase() != theform.word.value.toLowerCase()
+      ) {
+        alert("<%canonlychangecase%>");
+        theform.word.value = theform.theword.value;
+        theform.word.focus();
         return false;
       }
-    }
-    if (theform.domain.value == null || theform.domain.value == '') {
-      alert('<%domainisrequired%>');
-      theform.domain.focus();
-      return false;
-    }
-    var match = false;
-    var i = 0;
-    var domain = theform.domain.value;
-    for (i = 0; i < theform.domainlist.length && match == false; i++) {
-      if (domain.toLowerCase() == theform.domainlist[i].value.toLowerCase()) {
-        match = true;
+      if (
+        theform.theusername.value.toLowerCase() !=
+        theform.username.value.toLowerCase()
+      ) {
+        alert("<%canonlychangecase%>");
+        theform.username.value = theform.theusername.value;
+        theform.username.focus();
+        return false;
       }
-     }
-    if (match == false) {
-      return confirm('<%domainnotinlist%>');
+
+      //    if (theform.currentprefix != null && theform.currentprefix != '') {
+      //      if (theform.adrprefix.value != theform.currentprefix.value) {
+      //        theform.adrprefix.focus();
+      //        return confirm('<%prefixmismatch%>');
+      //      }
+      //    }
+      if (theform.adrprefix.value != null && theform.adrprefix.value != "") {
+        if (theform.number.value == null || theform.number.value == "") {
+          alert("<%numberrequiredforprefix%>");
+          theform.number.focus();
+          return false;
+        }
+      }
+      if (theform.domain.value == null || theform.domain.value == "") {
+        alert("<%domainisrequired%>");
+        theform.domain.focus();
+        return false;
+      }
+      var match = false;
+      var i = 0;
+      var domain = theform.domain.value;
+      for (i = 0; i < theform.domainlist.length && match == false; i++) {
+        if (domain.toLowerCase() == theform.domainlist[i].value.toLowerCase()) {
+          match = true;
+        }
+      }
+      if (match == false) {
+        return confirm("<%domainnotinlist%>");
+      }
     }
+    return true;
   }
-  return true;
-}
 </script>
-<p align="center"><a href="<%action%>?advanced=1"><%returntoadvancedmode%></a></p>
-<form name="editexemplar" id="editexemplar" onsubmit="return checkEditExemplar(this);">
-<input type="hidden" name="currentprefix" id="currentprefix" value="<%currentprefix%>">
-<input type="hidden" name="theword" id="theword" value="<%theword%>">
-<input type="hidden" name="theuser" id="theusername" value="<%theusername%>">
-<table border="0" cellspacing="0" cellpadding="3">
-<tr>
-  <td colspan="2"><br><%editexemplar%></td>
-</tr>
-<tr>
-  <td colspan="2" align="center"><%prefixinput%><%word%> <input type="text" name="word" id="word" maxlength="20" value="<%theword%>"> . <%number%> <input type="text" size="6" name="number" id="number" maxlength="20" value="<%theNumber%>"> . <%user%> <input type="text" size="6" name="username" id="username" maxlength="20" value="<%username%>"> @ <input type="text" name="domain" value="<%thedomain%>">
-<br>
-<br><select name="domainlist" onChange="this.form.domain.value=this.form.domainlist[this.form.domainlist.selectedIndex].value;">
-      <%domainoptions%>
-    </select>
-  </td>
-</tr>
-<tr>
-  <td colspan="2" align="center">
-    <input type="submit" value="<%go%>">
-  </td>
-</tr>
-</table>
+<p align="center">
+  <a href="<%action%>?advanced=1"><%returntoadvancedmode%></a>
+</p>
+<form
+  name="editexemplar"
+  id="editexemplar"
+  onsubmit="return checkEditExemplar(this);"
+>
+  <input
+    type="hidden"
+    name="currentprefix"
+    id="currentprefix"
+    value="<%currentprefix%>"
+  />
+  <input type="hidden" name="theword" id="theword" value="<%theword%>" />
+  <input
+    type="hidden"
+    name="theuser"
+    id="theusername"
+    value="<%theusername%>"
+  />
+  <table border="0" cellspacing="0" cellpadding="3">
+    <tr>
+      <td colspan="2"><br /><%editexemplar%></td>
+    </tr>
+    <tr>
+      <td colspan="2" align="center">
+        <%prefixinput%><%word%>
+        <input
+          type="text"
+          name="word"
+          id="word"
+          maxlength="20"
+          value="<%theword%>"
+        />
+        . <%number%>
+        <input
+          type="text"
+          size="6"
+          name="number"
+          id="number"
+          maxlength="20"
+          value="<%theNumber%>"
+        />
+        . <%user%>
+        <input
+          type="text"
+          size="6"
+          name="username"
+          id="username"
+          maxlength="20"
+          value="<%username%>"
+        />
+        @ <input type="text" name="domain" value="<%thedomain%>" />
+        <br />
+        <br /><select
+          name="domainlist"
+          onChange="this.form.domain.value=this.form.domainlist[this.form.domainlist.selectedIndex].value;"
+        >
+          <%domainoptions%>
+        </select>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2" align="center">
+        <input type="submit" value="<%go%>" />
+      </td>
+    </tr>
+  </table>
 
-<input type="hidden" name="editexemplar" value=<%disposable%>>
-<input type="hidden" name="myemails" value=1>
+  <input type="hidden" name="editexemplar" value="<%disposable%" />>
+  <input type="hidden" name="myemails" value="1" />
 </form>
-
 
 <p><%editexemplardescription%></p>

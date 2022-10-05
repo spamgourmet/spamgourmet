@@ -255,4 +255,3 @@ install_perl_modules
 configure_lighhttpd
 configure_website
 configure_sg_db_connection_and_data
-

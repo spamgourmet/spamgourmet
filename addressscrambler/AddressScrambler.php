@@ -37,4 +37,3 @@ $scrambled = _scramble("foo@bar.com", false);
 echo "<script language='JavaScript'>writeMailTo('$scrambled');</script>\n";
 
 ?>
-

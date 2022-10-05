@@ -1,5 +1,5 @@
 <%url%>
-Je hebt SpamGourmet gevraagd je e-mails voortaan door te sturen naar: 
+Je hebt SpamGourmet gevraagd je e-mails voortaan door te sturen naar:
 <%newaddress%>
 
 Je moet dit door een klik op onderstaande link bevestigen:
@@ -9,6 +9,6 @@ Je moet dit door een klik op onderstaande link bevestigen:
 
 * Indien dit niet werkt kun je dit mailtje ook beantwoorden (laat de URL ongewijzigd).
 
-Indien je dit mailtje onverwachts hebt ontvangen, kan dat alleen doordat iemand je e-mailadres 
-bij SpamGourmet heeft ingeschreven - en dan kun je vanzelfsprekend dit mailtje negeren en 
+Indien je dit mailtje onverwachts hebt ontvangen, kan dat alleen doordat iemand je e-mailadres
+bij SpamGourmet heeft ingeschreven - en dan kun je vanzelfsprekend dit mailtje negeren en
 verwijderen.

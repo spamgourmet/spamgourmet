@@ -30,7 +30,7 @@ $config->debug('outbound started') if $extradebug;
 
 # variables to be used by the main routine (don't change these)
 my (
- $delimiters,$headers,$inHeaders,$line,$msg,$subjecttext,%headerValues,%headerTokens, 
+ $delimiters,$headers,$inHeaders,$line,$msg,$subjecttext,%headerValues,%headerTokens,
  $from,$replyto,$to,$for,$fromdomain,$todomain,$forname,$allRecipients,
  %deliveryAddresses,$subfrom,$subreplyto,$fromname,$replytoname,$trusted,
  $disposable,$disposableID,$PublicHash,$PrivateHash,
@@ -39,7 +39,7 @@ my (
  $Prefix,$EmailID,$InitialCount,$Count,$UserID,$ExpireTime,
  $RealEmail,$SpamEmail,$Sender,$Features,$updatelog,$XHeader, $Hidden,
  $connected, $connectTries, $interval,$DefaultNumber,
- $RecThrottleTime, $RecThrottleCount, 
+ $RecThrottleTime, $RecThrottleCount,
  $SendThrottleTime, $SendThrottleCount
  );
 
@@ -108,7 +108,7 @@ $mailer = $config->getMailer();
 ## clean up the from, to, and for chunks, hopefully leaving just the addresses
 ($from, $fromname) = $util->getAddressAndDisplay($headerValues{'from'}, 1);
 ($replyto, $replytoname) = $util->getAddressAndDisplay($headerValues{'replyto'}, 1);
-    
+
 $allRecipients = $for . ',' . $headerValues{'to'} . ',' . $headerValues{'cc'};
 
 $config->debug("allrecips is $allRecipients") if $extradebug;
@@ -207,7 +207,7 @@ foreach $for (keys %deliveryAddresses) {
           $subfrom =~ s/\#/\@/;
           $msg =~ s/\Q$for\E/$subfrom/gmi; #try to get the whole redir address - probably won't work
 
-          $msg =~ s/\w+\.\w+\.$checkTo\.\w+\#//gmi; # focus on hash 
+          $msg =~ s/\w+\.\w+\.$checkTo\.\w+\#//gmi; # focus on hash
           $msg =~ s/\w+\.\w+\@$todomain/$subfrom/gmi; # and try to swap system domain for recip
 
           $msg =~ s/\Q$from\E/$disposable/gmi;
@@ -255,7 +255,7 @@ foreach $for (keys %deliveryAddresses) {
     } else {
       $config->debug("skipping an attempted send for disabled user: $musername ($UserID)");
     }
-    next; # move on to the next recipient 
+    next; # move on to the next recipient
   }
 
 }
@@ -328,4 +328,3 @@ sub sendMail {
   $$msgref =~ s/$XHeader// if $XHeader;
   $$msgref =~ s/$subjecttext//mi if $subjecttext; #now get rid of the subject text for the next iteration
 }
-

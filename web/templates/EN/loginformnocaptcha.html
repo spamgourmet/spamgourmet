@@ -1,37 +1,87 @@
-<form name="loginform" action="<%action%>" method="post" onSubmit="return checkLoginForm(this);">
-<table border="0" cellspacing="0" cellpadding="2">
-<tr><td colspan="3"><font color="#FFFFFF"><%login%></font></td></tr>
-<tr><td align="right"><font color="#FFFFFF"><%user%> </font></td>
-    <td><input tabindex="1" type=text name="user" size="8" onFocus="hastyped=true"></td>
-    <td rowspan="2" valign="middle" align="center">
-<input tabindex="3" type="submit" value="<%go%>">   <%remembermecheck%><br><%rememberme%>
-</td>
-</tr>
-<tr><td align="right"><font color="#FFFFFF"><%pass%> </font></td>
-    <td><input tabindex="2" type=password name="pass" size="8" onFocus="hastyped=true;"></td>
-</tr>
-<tr><td colspan="3" align="center"><a href="<%action%>?sendpasswordreset=1"><font color="#000000"><%forgotpassword%></font></a></td></tr>
+<form
+  name="loginform"
+  action="<%action%>"
+  method="post"
+  onSubmit="return checkLoginForm(this);"
+>
+  <table border="0" cellspacing="0" cellpadding="2">
+    <tr>
+      <td colspan="3"><font color="#FFFFFF"><%login%></font></td>
+    </tr>
+    <tr>
+      <td align="right"><font color="#FFFFFF"><%user%> </font></td>
+      <td>
+        <input
+          tabindex="1"
+          type="text"
+          name="user"
+          size="8"
+          onFocus="hastyped=true"
+        />
+      </td>
+      <td rowspan="2" valign="middle" align="center">
+        <input tabindex="3" type="submit" value="<%go%>" />
+        <%remembermecheck%><br /><%rememberme%>
+      </td>
+    </tr>
+    <tr>
+      <td align="right"><font color="#FFFFFF"><%pass%> </font></td>
+      <td>
+        <input
+          tabindex="2"
+          type="password"
+          name="pass"
+          size="8"
+          onFocus="hastyped=true;"
+        />
+      </td>
+    </tr>
+    <tr>
+      <td colspan="3" align="center">
+        <a href="<%action%>?sendpasswordreset=1"
+          ><font color="#000000"><%forgotpassword%></font></a
+        >
+      </td>
+    </tr>
 
-
-<tr><td colspan="3"><font color="#FFFFFF"><%createaccount%></font></td></tr>
-<tr><td align="right"><font color="#FFFFFF"><%newuser%> </font></td>
-    <td><input tabindex="4" type=text name="newuser" size="8" maxlength="20"></td>
-    <td rowspan="2" valign="middle">  <input tabindex="6" type="submit" value="<%go%>"></td>
-</tr>
-<tr><td align="right"><font color="#FFFFFF"><%email%> </font></td>
-    <td><input tabindex="5" type=text name="realemail" value="<%realemail%>" size="8" onFocus=""></td>
-</tr>
-<tr><td>
-
-<%newpass%>
-
-</td><td><input type=password name="newpass" size=10 onFocus=""></td></tr>
-<tr><td>
-
-<%confirm%>
-
-</td><td><input type=password name="confirm" size=10 onFocus=""></td></tr>
-
-
-</table>
+    <tr>
+      <td colspan="3"><font color="#FFFFFF"><%createaccount%></font></td>
+    </tr>
+    <tr>
+      <td align="right"><font color="#FFFFFF"><%newuser%> </font></td>
+      <td>
+        <input
+          tabindex="4"
+          type="text"
+          name="newuser"
+          size="8"
+          maxlength="20"
+        />
+      </td>
+      <td rowspan="2" valign="middle">
+        <input tabindex="6" type="submit" value="<%go%>" />
+      </td>
+    </tr>
+    <tr>
+      <td align="right"><font color="#FFFFFF"><%email%> </font></td>
+      <td>
+        <input
+          tabindex="5"
+          type="text"
+          name="realemail"
+          value="<%realemail%>"
+          size="8"
+          onFocus=""
+        />
+      </td>
+    </tr>
+    <tr>
+      <td><%newpass%></td>
+      <td><input type="password" name="newpass" size="10" onFocus="" /></td>
+    </tr>
+    <tr>
+      <td><%confirm%></td>
+      <td><input type="password" name="confirm" size="10" onFocus="" /></td>
+    </tr>
+  </table>
 </form>

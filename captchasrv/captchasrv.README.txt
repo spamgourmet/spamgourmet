@@ -1,4 +1,4 @@
-# Project spamgourmet 
+# Project spamgourmet
 # $Id: captchasrv.README.txt,v 1.1.1.1 2004/01/27 20:06:04 syskoll Exp $
 # Copyright (C) 2003 Frederic Mora -
 # The address is sg.rocks.syskoll
@@ -11,7 +11,7 @@ captchasrv, a CAPTCHA generator serving HTTP image requests
 
 The captchasrv program generates a CAPTCHA, i.e., a picture containing a word
 that a human being can easily read but that a spammer's OCR program
-could not. 
+could not.
 
 The captchasrv program is meant to be started as a daemon. It doesn't
 need root privileges.  It requires access to the convert exec (from
@@ -32,7 +32,7 @@ where:
   - someword is a string, called the quizword, to be embedded in the CAPTCHA image.
 
 For each HTTP request of the form above, the  program  generates a CAPTCHA image
-containing the quizword "someword" 
+containing the quizword "someword"
 
 | and saves it to a captcha image file with a random name. The file is
 | created in the browsable temp directory. Then the program sends the
@@ -107,9 +107,9 @@ steps involved:
 
 1. Generate a quizword. You can use the routines in the accompanying mkquizword.pl file.
 
-| 2. Generate the image by sending to the server a URL such as 
+| 2. Generate the image by sending to the server a URL such as
 | http://host:port/q=quizword
-| 
+|
 | 3. Save the resulting image name (e.g. capR7KFbA2L) and display the
 | captcha image on a user's browser with a URL such as
 | http://host/path/to/image/dir/capG9BLcA7Z.jpg

@@ -46,5 +46,3 @@ INSTALLATION NOTES
 	# make appropriate changes to ~/.forward
 	# edit index.pl and spameater.pl and set the configfile parameter to
 	# the full path the spamgourmet.config
-
-

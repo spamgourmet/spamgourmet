@@ -1,38 +1,58 @@
 <script type="text/javascript" src="stuff/tablesort.js"></script>
-         <table border="0" cellspacing="0">
-          <tr>
-           <td>
-            <img src="<%imageshost%>stuff/mom2.png" border="0" alt="mom" title="mom">
-           </td>
-           <td> 
-            <b><%message%></b><br>
-            <%yourdisposableaddresses%>   <br><a href="<%action%>?advanced=1"><%returntoadvancedmode%></a> <br><br>
-            <form name="searchform" action="<%action%>"><input type="hidden" name="myemails" value=1>         
-            <input type="hidden" name="randomnumber" value="<%randomnumber%>">
-            <input type="text" size=20 name="searchterms" value="<%searchterms%>" onFocus=""> 
-            <input type="submit" value="<%search%>">
-            <br><input type="checkbox" name="showHidden" value=1 <%showhidden%>><%showhiddenaddresses%>
-            </form>   
-           </td>
-          </tr>
-        </table>
-<table border="1" cellspacing="0" cellpadding="2" onclick="sortColumn(event)">
-<thead>
-
-
-       <tr>
-       <td valign="top" style="cursor:pointer;"><%word%><br><%clicktoedit%> </td>
-       <td valign="top" type="Number" style="cursor:pointer;"><%maxcount%> </td>
-       <td valign="top" type="Number" style="cursor:pointer;"><%remaining%> </td>
-       <td valign="top" type="Number" style="cursor:pointer;"><%forwarded%> </td>
-       <td valign="top" type="Number" style="cursor:pointer;"><%deleted%> </td>
-       <td valign="top" style="cursor:pointer;"><%created%> (UTC) </td>
-       <td valign="top" style="cursor:pointer;"><%fulladdress%> </td>
-       <td valign="top" style="cursor:pointer;"><%exclusivesender%> </td>
-       <td valign="top" style="cursor:pointer;"><%note%> </td>
-       </tr>
-  </thead><tbody>
-<%data%>
-</tbody>
+<table border="0" cellspacing="0">
+  <tr>
+    <td>
+      <img
+        src="<%imageshost%>stuff/mom2.png"
+        border="0"
+        alt="mom"
+        title="mom"
+      />
+    </td>
+    <td>
+      <b><%message%></b><br />
+      <%yourdisposableaddresses%> <br /><a href="<%action%>?advanced=1"
+        ><%returntoadvancedmode%></a
+      >
+      <br /><br />
+      <form name="searchform" action="<%action%>">
+        <input type="hidden" name="myemails" value="1" />
+        <input type="hidden" name="randomnumber" value="<%randomnumber%>" />
+        <input
+          type="text"
+          size="20"
+          name="searchterms"
+          value="<%searchterms%>"
+          onFocus=""
+        />
+        <input type="submit" value="<%search%>" />
+        <br /><input
+          type="checkbox"
+          name="showHidden"
+          value="1"
+          <%showhidden%
+        />><%showhiddenaddresses%>
+      </form>
+    </td>
+  </tr>
 </table>
-
+<table border="1" cellspacing="0" cellpadding="2" onclick="sortColumn(event)">
+  <thead>
+    <tr>
+      <td valign="top" style="cursor: pointer">
+        <%word%><br /><%clicktoedit%>
+      </td>
+      <td valign="top" type="Number" style="cursor: pointer"><%maxcount%></td>
+      <td valign="top" type="Number" style="cursor: pointer"><%remaining%></td>
+      <td valign="top" type="Number" style="cursor: pointer"><%forwarded%></td>
+      <td valign="top" type="Number" style="cursor: pointer"><%deleted%></td>
+      <td valign="top" style="cursor: pointer"><%created%> (UTC)</td>
+      <td valign="top" style="cursor: pointer"><%fulladdress%></td>
+      <td valign="top" style="cursor: pointer"><%exclusivesender%></td>
+      <td valign="top" style="cursor: pointer"><%note%></td>
+    </tr>
+  </thead>
+  <tbody>
+    <%data%>
+  </tbody>
+</table>

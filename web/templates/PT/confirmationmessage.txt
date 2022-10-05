@@ -3,7 +3,7 @@ Você solicitou para o Spamgourmet para encaminhar mensagens de e-mail para este
 Você deve confirmar. Para confirmar, por favor:
 
 
-* Clique no endereço (URL) 
+* Clique no endereço (URL)
 <%url%>
 (ou copie/cole na barra de endereços do seu navegador e pressione Enter)
 

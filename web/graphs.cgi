@@ -90,8 +90,8 @@ $st->fetch();
 $url2 .= "&title=avg%20spam%20$startDate%20->%20$lastSaturday";
 
 
-$sql = "SELECT Weekday, avg(NumDeleted) FROM Counter 
- WHERE CounterID > ? AND CounterID < ? 
+$sql = "SELECT Weekday, avg(NumDeleted) FROM Counter
+ WHERE CounterID > ? AND CounterID < ?
  GROUP BY WeekDay ORDER BY WeekDay;";
 $data1 = "&data1=[";
 $i=0;
@@ -150,7 +150,7 @@ while ($st->fetch()) {
   $st2->execute($CounterID);
   $st2->bind_columns(\%attr,\$NewUsers);
   $st2->fetch();
-  
+
   if ($i) {
     $dataspam .= ','; ##### MODIFIED
     $datausers .= ','; ##### MODIFIED
@@ -328,4 +328,3 @@ sub commify {
   $instr =~ s/(\d\d\d)(?=\d)(?!\d*\.)/$1,/g;
   return scalar reverse $instr;
 }
-

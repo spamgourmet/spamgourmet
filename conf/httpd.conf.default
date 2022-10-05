@@ -15,4 +15,3 @@
 	Allow from all
 	Options +ExecCGI
 </Directory>
-

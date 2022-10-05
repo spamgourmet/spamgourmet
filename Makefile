@@ -56,7 +56,11 @@ install-dev-deps: ## install dependencies needed for development (for Ubuntu)
 PRE_COMMIT = pipenv run pre-commit
 
 .PHONY: static-check
-static-check: ## runs all static code checks and code formatting rules
+static-check: ## runs all static code checks and code formatting rules - includes warnings that aren't in build
+	$(PRE_COMMIT) run --all-files
+
+.PHONY: static-check
+static-check-build: ## runs static checks for build - this must pass or build will fail
 	$(PRE_COMMIT) run --all-files
 
 pre-commit-autoupdate: ## update the modules of pre-commit to the latest available
