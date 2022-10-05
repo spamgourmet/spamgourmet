@@ -18,7 +18,7 @@ to build the docker container or
     make all
 
 to run the standard set of goals expected during development. If you
-have a container build then
+have a container built then
 
     make shell
 

@@ -16,11 +16,11 @@ docker-test: build-spamgourmet-clone docker-run-test
 # we export the index to ensure that we match code to be
 # committed and not files that might not get committed.
 .PHONY: docker-test
-docker-test: ## run tests in a docker container having checked that's built
+docker-test: ## (re)build docker container and run functional tests
 	@echo done
 
 .PHONY: docker-run-test
-docker-run-test: ## run tests in a docker container - N.B. does not update the container - prefer docker-test if that works
+docker-run-test: ## run functional tests only (assumes docker container was already built)
 	docker run $(DEV_MOUNT) -i spamgourmet-testenv make -C /code-live full-env-test
 
 .PHONY: docker-run-example
@@ -29,7 +29,7 @@ docker-run-example: ## run an example spameater call - N.B. does not update the 
 		-extradebug=5 -debugstderr=5 <   test/fixture/reject_wrong_domain.email
 
 .PHONY: build-spamgourmet-clone
-build-spamgourmet-clone: ## build spamgourmet into a docker container image - requires network
+build-spamgourmet-clone: ## (re)build docker container only - requires network
 	git checkout-index -f -a --prefix=spamgourmet-clone/code-export/
 	docker build --tag spamgourmet-testenv spamgourmet-clone
 	@RED='\033[0;31m' ; \
