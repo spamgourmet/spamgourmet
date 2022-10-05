@@ -1,4 +1,5 @@
 Make
+
 ####
 
 We're currently using GNU Make as the primary tool for builds. We're
@@ -28,19 +29,40 @@ allow you to test code you are working on.
 
 ## GitHub setup
 
+We use Git as our source code repository management system. This is quite
+powerful and sophisticated and so sometimes a little intimidating to start
+with. Despite that, what you need to contribute to spamgourmet will be quite
+simple. If you don't know git then this is likely a good place to start
+
+https://docs.github.com/en/get-started/using-git
+
+For any changes you make,
+
+When merging code please `git rebase` all of your changes from the latest
+version of our development branch just before committing. If you are merging to
+the develpment branch for yourself then please use `git merge --no-ff` to create
+exactly one empty merge commit with full documentation of the aim of the overall
+aim of the changes for a feature branch merge.
+
+For further discussion please see
+
+https://github.com/spamgourmet/spamgourmet/issues/45
+
+GitHub setup
+############
+
 Spamgourmet uses GitHub actions to run builds. Control for this is in
 `.github/workflows` in several files. These then call the main Makefile
 in every case. This is done to ensure that it is possible to run
 everything independently of GitHub.
 
-You can find the triggers for github in YML files in 
+You can find the triggers for github in YML files in
 
 .github/workflows/
 
 In order to maintain portability, the actions should not do anything
 complex but instead should call out to our Makefiles which should all
 required work.
-
 
 Docker Setup
 ############
@@ -51,7 +73,7 @@ images with different functions we have one image with all the code.
 
 The build definitions are all inside the
 
-  spamgourmet-clone
+spamgourmet-clone
 
 directory and match the way that a normal spamgourmet install would be
 built. All of this has the benefit of giving developers direct access
@@ -60,8 +82,8 @@ testing.
 
 If we change the way spamgourmet is deployed we expect this to change.
 
-
 TESTS
+
 #####
 
 One of the most important areas for development now for spamgourmet is
@@ -88,3 +110,25 @@ To run tests
 should rebuild and run the tests or the rebuild can be avoided with
 
     make docker-run-test
+
+Opinionated Formatting and Static Code Checking
+###############################################
+
+We use opinionated formatting and some static code quality
+checks. These run in GitHub and in order for a patch to be accepted
+into spamgourmet we'll need to get them to pass.
+
+For making a tiny, obvious change it's probably easiest to make the
+change and submit a patch. Watch the feedback after the build process
+and fix any problems that are reported until the build passes.
+
+If you are going to do more than a couple of lines of changes then
+it's very likely to be useful to set up the configuation locally to
+give you warnings before committing your code to git.
+
+1. get a python install on your system including pip
+2. install pre-commit - https://pre-commit.com/#install
+3. run
+
+pre-commit install
+
