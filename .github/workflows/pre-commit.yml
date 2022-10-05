@@ -9,6 +9,10 @@ jobs:
   pre-commit:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - uses: actions/setup-python@v2
-    - uses: pre-commit/action@v2.0.3
+      - uses: actions/checkout@v2
+      - name: install perltidy
+        run: sudo apt-get install -y perltidy
+      - uses: actions/setup-python@v2
+      - uses: pre-commit/action@v2.0.3
+        with:
+          extra_args: --config .pre-commit-config-build.yaml
