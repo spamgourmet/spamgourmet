@@ -122,3 +122,4 @@ tags
 #directory for exporting to when building docker container with spamgourmet-clone
 spamgourmet-clone/code-export
 conf/debug.txt
+**/BAK/*
