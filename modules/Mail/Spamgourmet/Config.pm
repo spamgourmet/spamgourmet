@@ -367,8 +367,13 @@ sub prepare {
   return $self->db->prepare($sql);
 }
 
-
-
+sub debugstderr {
+    my $self = shift;
+    if (@_) {
+        $self->{debugstderr} = shift;
+    }
+    return $self->{debugstderr};
+}
 
 sub debug {
   my $self = shift;
@@ -381,7 +386,14 @@ sub debug {
     print FILE $chunk;
     print FILE "\n";
     close FILE;
-    #print $chunk . "\n";
+  }
+  #FIXME: merge with previous lines - possibly switch to more standard debug?
+  if ($self->{'debugstderr'}) {
+    my $now = $self->formatNumDate(time());
+    my $file = $self->{'debugfilename'};
+    print STDERR "$now [$$]: ";
+    print STDERR $chunk;
+    print STDERR "\n";
   }
 }
 
