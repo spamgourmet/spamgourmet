@@ -38,7 +38,7 @@ build-spamgourmet-clone: ## (re)build docker container only - requires network
 		|| ( echo "\n  $${RED}UNCLEAN GIT WORKING DIRECTORY UNCLEAN$${NC} \n"; git status )
 
 .PHONY: full-env-test
-full-env-test: ## tests which require the full running spamgourmet environemnt - e.g. integration or functional tests
+full-env-test: ## tests which require the full running spamgourmet environment - e.g. integration or functional tests
 	./test/test-maileater.sh
 
 .PHONY: shell
