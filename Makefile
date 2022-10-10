@@ -52,3 +52,12 @@ test: ## tests which only require local programming environment - e.g. unit test
 .PHONY: install-dev-deps
 install-dev-deps: ## install dependencies needed for development (for Ubuntu)
 	sudo apt install docker.io git pipenv
+
+PRE_COMMIT = pipenv run pre-commit
+
+.PHONY: static-check
+static-check: ## runs all static code checks and code formatting rules
+	$(PRE_COMMIT) run --all-files
+
+pre-commit-autoupdate: ## update the modules of pre-commit to the latest available
+	$(PRE_COMMIT) autoupdate

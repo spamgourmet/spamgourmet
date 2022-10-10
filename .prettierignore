@@ -1,0 +1,4 @@
+web/templates/**/*.html
+addressscrambler/AddressScramblerHelperPrimitive.html
+sgmailto/SgMailtoDemo.html
+web/html/stuff/css/sg.css
