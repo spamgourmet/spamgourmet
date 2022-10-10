@@ -6,7 +6,7 @@ var scrambleOffset = 5;
 var c = new Array();
 c[32] = " ";
 c[33] = "!";
-c[34] = "\"";
+c[34] = '"';
 c[35] = "#";
 c[36] = "$";
 c[37] = "%";
@@ -105,10 +105,10 @@ function getAsciiCode(theChar) {
   var ret = 0;
   var match = false;
   while (i < 127 && match != true) {
-    if (c[i] == theChar) { 
+    if (c[i] == theChar) {
       ret = i;
     }
-    i ++;
+    i++;
   }
   return ret;
 }
@@ -121,12 +121,12 @@ function getCharacter(theCode) {
   return ret;
 }
 
-function _scramble(inText,inverse) {
+function _scramble(inText, inverse) {
   var i = 0;
   var outText = "";
   var currentCode = 0;
   var newCode = 0;
-  var newChar = '';
+  var newChar = "";
   var offset = scrambleOffset;
   if (inverse == true) {
     offset = offset * -1;
@@ -136,7 +136,7 @@ function _scramble(inText,inverse) {
     if (currentCode != 0) {
       newCode = currentCode + offset;
       if (newCode > 125) {
-        newCode = (newCode - 125) + 31;
+        newCode = newCode - 125 + 31;
       }
       if (newCode < 32) {
         newCode = 126 - (32 - newCode);
@@ -158,12 +158,12 @@ function _scramble(inText,inverse) {
 }
 
 function descrambleText(inText) {
-  var outText = _scramble(inText,true);
+  var outText = _scramble(inText, true);
   return outText;
 }
 
 function scrambleText(inText) {
-  var outText = _scramble(inText,false);
+  var outText = _scramble(inText, false);
   return outText;
 }
 
@@ -175,53 +175,94 @@ function writeDescrambledAddress(scrambledAddress) {
 
 function writeMailToWithClearDisplayText(scrambledAddress, text) {
   document.open();
-  document.write("<a href=\"mailto:" + descrambleText(scrambledAddress) + "\">" + text + "</a>");
+  document.write(
+    '<a href="mailto:' + descrambleText(scrambledAddress) + '">' + text + "</a>"
+  );
   document.close();
 }
 
 function writeMailToWithScrambledDisplayText(scrambledAddress, scrambledText) {
   document.open();
-  document.write("<a href=\"mailto:" + descrambleText(scrambledAddress) + "\">" + descrambleText(scrambledText) + "</a>");
+  document.write(
+    '<a href="mailto:' +
+      descrambleText(scrambledAddress) +
+      '">' +
+      descrambleText(scrambledText) +
+      "</a>"
+  );
   document.close();
 }
 
 function writeMailTo(scrambledAddress) {
   document.open();
-  document.write("<a href=\"mailto:" + descrambleText(scrambledAddress) + "\">" + descrambleText(scrambledAddress) + "</a>");
+  document.write(
+    '<a href="mailto:' +
+      descrambleText(scrambledAddress) +
+      '">' +
+      descrambleText(scrambledAddress) +
+      "</a>"
+  );
   document.close();
-
 }
 
-
 function getMailToWithClearDisplayText(scrambledAddress, text) {
-  return("<a href=\\\"mailto:" + descrambleText(scrambledAddress) + "\\\">" + text + "</a>");
+  return (
+    '<a href=\\"mailto:' +
+    descrambleText(scrambledAddress) +
+    '\\">' +
+    text +
+    "</a>"
+  );
 }
 
 function getMailTo(scrambledAddress) {
-  return("<a href=\\\"mailto:" + descrambleText(scrambledAddress) + "\\\">" + descrambleText(scrambledAddress) + "</a>");
+  return (
+    '<a href=\\"mailto:' +
+    descrambleText(scrambledAddress) +
+    '\\">' +
+    descrambleText(scrambledAddress) +
+    "</a>"
+  );
 }
 
 function getMailToCode(scrambledAddress) {
-  return ("<script language=\"JavaScript\">writeMailTo('" + scrambledAddress + "');</script>");
+  return (
+    '<script language="JavaScript">writeMailTo(\'' +
+    scrambledAddress +
+    "');</script>"
+  );
 }
 
 function getEscapedMailToCode(scrambledAddress) {
-  return ("&lt;script language=&quot;JavaScript&quot&gt;writeMailTo('" + scrambledAddress + "');&lt;/script&gt;");
+  return (
+    "&lt;script language=&quot;JavaScript&quot&gt;writeMailTo('" +
+    scrambledAddress +
+    "');&lt;/script&gt;"
+  );
 }
 
 function getMailToCodeWithClearDisplayText(scrambledAddress, text) {
-  return ("<script language=\"JavaScript\">writeMailToWithClearDisplayText('" + scrambledAddress + ",'" + text + "');</script>");
+  return (
+    '<script language="JavaScript">writeMailToWithClearDisplayText(\'' +
+    scrambledAddress +
+    ",'" +
+    text +
+    "');</script>"
+  );
 }
 
 function getEscapedMailToCodeWithClearDisplayText(scrambledAddress, text) {
-  return ("&lt;script language=&quot;JavaScript&quot&gt;writeMailToWithClearDisplayText('" + scrambledAddress + "','"+ text + "');&lt;/script&gt;");
+  return (
+    "&lt;script language=&quot;JavaScript&quot&gt;writeMailToWithClearDisplayText('" +
+    scrambledAddress +
+    "','" +
+    text +
+    "');&lt;/script&gt;"
+  );
 }
-
-
 
 function writeScrambledAddress(address) {
   document.open();
   document.write(scrambleText(address));
   document.close();
 }
-

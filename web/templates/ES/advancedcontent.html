@@ -1,50 +1,127 @@
-El modo avanzado es semejante al modo fácil, pero además puedes especificar remitentes de confianza, salvoconductos y prefijo.  Tambien puedes indicar que los salvoconductos sean imprescindibles o no necesarios; activar o desactivar el enmascaramiento de la dirección del remitente, y el registro en un diario de los mensajes "devorados"; Así mismo, puedes ver tus direcciones desechables, y modificar alguna de sus características. Si tienes declarados remitentes de confianza o prefijo, ésta será la página que verás cuando entres, al iniciar una sesión.
+El modo avanzado es semejante al modo fácil, pero además puedes especificar
+remitentes de confianza, salvoconductos y prefijo. Tambien puedes indicar que
+los salvoconductos sean imprescindibles o no necesarios; activar o desactivar el
+enmascaramiento de la dirección del remitente, y el registro en un diario de los
+mensajes "devorados"; Así mismo, puedes ver tus direcciones desechables, y
+modificar alguna de sus características. Si tienes declarados remitentes de
+confianza o prefijo, ésta será la página que verás cuando entres, al iniciar una
+sesión.
+<p></p>
 <p>
+  <b>Remitente(s) de confianza</b>: Aqui puedes añadir y quitar 'remitentes de
+  confianza', bien especificando un dominio o una simple dirección de correo. A
+  los remitentes de confianza se les permite enviar mensajes a cualesquiera de
+  tus desechables, sin que avance la cuenta de la dirección desechable.
+</p>
+
 <p>
-<b>Remitente(s) de confianza</b>: Aqui puedes añadir y quitar 'remitentes de confianza', bien especificando un dominio o una simple dirección de correo. A los remitentes de confianza se les permite enviar mensajes a cualesquiera de tus desechables, sin que avance la cuenta de la dirección desechable. 
+  Así, puedes apuntarte a una lista en que tú no confíes dando una desechable.
+  Entonces, si la lista te gusta, puedes volver aquí y añadir la dirección de
+  correo de envío de la lista como remitente de confianza (o remitente exclusivo
+  - ver más abajo). Si añades como de confianza un dominio, se aceptarán todos
+  los correos que provengan de direcciones de correo de ese dominio. Si añades
+  una dirección de correo, sólo esa dirección será de confianza.
+</p>
+
 <p>
-Así, puedes apuntarte a una lista en que tú no confíes dando una desechable. Entonces, si la lista te gusta, puedes volver aquí y añadir la dirección de correo de envío de la lista como remitente de confianza (o remitente exclusivo - ver más abajo). Si añades como de confianza un dominio, se aceptarán todos los correos que provengan de direcciones de correo de ese dominio. Si añades una dirección de correo, sólo esa dirección será de confianza. 
+  <b>Remitente(s) exclusivo(s)</b>: Semejante a un remitente de confianza pero
+  asociado a una desechable en particular. Cualquier mensaje enviado a dicha
+  desechable desde otra dirección que no sea la de un remitente exclusivo de
+  dicho desechable será devorada. Se pueden asignar remitentes exclusivos a una
+  desechable existente, y tambien pueden crearse desechables con un remitente
+  exclusivo asociado a la llegada del primer mensaje para dicho desechable. Pero
+  ... esto hay que usarlo con extrema atención, puesto que la dirección del
+  remitente del primer correo ¡puede no ser la dirección o remitente esperado!
+  Información detallada en la FAQ/PyR (Frequently Asked Questions / Preguntas y
+  Respuestas) ¡Léela!
+</p>
+
 <p>
-<b>Remitente(s) exclusivo(s)</b>: Semejante a un remitente de confianza pero asociado a una desechable en particular. Cualquier mensaje enviado a dicha desechable desde otra dirección que no sea la de un remitente exclusivo de dicho desechable será devorada. Se pueden asignar remitentes exclusivos a una desechable existente, y tambien pueden crearse desechables con un remitente exclusivo asociado a la llegada del primer mensaje para dicho desechable. Pero ... esto hay que usarlo con extrema atención, puesto que la dirección del remitente del primer correo ¡puede no ser la dirección o remitente esperado! Información detallada en la FAQ/PyR (Frequently Asked Questions / Preguntas y Respuestas) ¡Léela!
-<p>
-<b>Salvoconductos</b>: ayudan a controlar la creación de las direcciones desechables. Si tienes activado "Salvoconductos imprescindibles", <i>y</i> tienes añadido al menos uno, no se crea una desechable nueva (al llegar un mensaje para una desechable no existente), salvo que uno de los salvoconductos forme parte del nombre de la desechable. Por ejemplo, si tu nombre de usuario es 'vaquerodelspam', y tus salvoconductos incluyen: 'silla34' y 'soga', mensajes enviados a las siguientes direcciones crearán desechables nuevas (y son reenviados a tu dirección de reenvío):
+  <b>Salvoconductos</b>: ayudan a controlar la creación de las direcciones
+  desechables. Si tienes activado "Salvoconductos imprescindibles",
+  <i>y</i> tienes añadido al menos uno, no se crea una desechable nueva (al
+  llegar un mensaje para una desechable no existente), salvo que uno de los
+  salvoconductos forme parte del nombre de la desechable. Por ejemplo, si tu
+  nombre de usuario es 'vaquerodelspam', y tus salvoconductos incluyen:
+  'silla34' y 'soga', mensajes enviados a las siguientes direcciones crearán
+  desechables nuevas (y son reenviados a tu dirección de reenvío):
 </p>
 <p align="center">
-silla34decuero.3.vaquerodelspam@spamgourmet.com<br>
-LaSogasequemo.2.vaquerodelspam@spamgourmet.com<br>
-montadoenlasilla34.6.vaquerodelspam@spamgourmet.com<br>
+  silla34decuero.3.vaquerodelspam@spamgourmet.com<br />
+  LaSogasequemo.2.vaquerodelspam@spamgourmet.com<br />
+  montadoenlasilla34.6.vaquerodelspam@spamgourmet.com<br />
 </p>
-estas otras no sirven: 
+estas otras no sirven:
 <p align="center">
-coyote.20.vaquerodelspam@spamgourmet.com<br>
-espameoamuerte.*.vaquerodelspam@spamgourmet.com 
+  coyote.20.vaquerodelspam@spamgourmet.com<br />
+  espameoamuerte.*.vaquerodelspam@spamgourmet.com
 </p>
-<b>Enmascarar dirección de remitente</b>: Cuando esta activado, el sistema cambia la dirección de correo electronico del remitente de cada mensaje que recibas, de tal manera que, si contestas, tu contestación vaya primero a spamgourmet en vez de ir directamente al remitente. Spamgourmet sustituirá tu dirección de correo auténtica, para ocultarla, por la desechable correspondiente, y enviará el correo al destinatario (el remitente original).
+<b>Enmascarar dirección de remitente</b>: Cuando esta activado, el sistema
+cambia la dirección de correo electronico del remitente de cada mensaje que
+recibas, de tal manera que, si contestas, tu contestación vaya primero a
+spamgourmet en vez de ir directamente al remitente. Spamgourmet sustituirá tu
+dirección de correo auténtica, para ocultarla, por la desechable
+correspondiente, y enviará el correo al destinatario (el remitente original).
 <p>
-<b>Mostrar Direcciones Desechables</b>: Pulsando el botón "buscar desechables" puedes ver una tabla grande con todas tus desechables (para mostrarlas todas, deje en blanco el espacio). Siguiendo en la tabla el enlace del nombre de la dirección desechable, se puede modificar:
-<br>
-a) el número de mensajes restantes, y
-<br>
-b) si quieres, puedes especificar 'remitentes exclusivos' para a desechable. Puedes leer más sobre remitentes exclusivos en la FAQ -- es como tener un remitente de confianza para una desechable concreta.
-<p>
-O, si quieres, <a href="<%xmllink%>">haz click aquí para mostrar la lista entera en XML.</a>
-<p>
-<b>Prefijo</b>: Si eres <i>verdaderamente</i> paranoico, puedes especificar un 'prefijo' sin el cual mensajes que no provengan de remitentes de confianza no crearán nuevas desechables. Es como una contraseña (al estilo del salvoconducto) para crear desechables, que puedes cambiar de vez en cuando.
-<p>
-El prefijo no es parte integrante del nombre de la desechable. Por tanto, una vez que la desechable ha sido creada, cualquier mensaje sin prefijo o con cualquier otro prefijo será aceptado (conforme a las provisiones de remitentes de confianza y/o exclusivos).
+  <b>Mostrar Direcciones Desechables</b>: Pulsando el botón "buscar desechables"
+  puedes ver una tabla grande con todas tus desechables (para mostrarlas todas,
+  deje en blanco el espacio). Siguiendo en la tabla el enlace del nombre de la
+  dirección desechable, se puede modificar:
+  <br />
+  a) el número de mensajes restantes, y
+  <br />
+  b) si quieres, puedes especificar 'remitentes exclusivos' para a desechable.
+  Puedes leer más sobre remitentes exclusivos en la FAQ -- es como tener un
+  remitente de confianza para una desechable concreta.
 </p>
-<form action="<%action%>" method="post" onSubmit="return checkPrefixForm(this);"><p align="center">
-prefijo actual:
-
-<input type="text" name="prefix" value="<%prefix%>" maxlength=20> <input type="<%button%>" value="grabar prefijo" onClick="<%onClick%>">
-</p></form>
-
-Especificar un prefijo te da más control sobre sus desechables haciendo que spamgourmet requiera  que su prefijo actual esté presente para crear una nueva desechable que de otra manera sería creada. El formato de la dirección de correo de una desechable con prefijo es: 
-
-<p align="center">  <i>prefijo.loquesea.x.nombredeusuario</i>@spamgourmet.com</p>
 
 <p>
-Por tanto, si tu prefijo actual es 'cazavacas', especificarías desechable así: 
-<p align="center">cazavacas.paraladronesdecorreo.2.vaquerodelespam@spamgourmet.com</p>
+  O, si quieres,
+  <a href="<%xmllink%>">haz click aquí para mostrar la lista entera en XML.</a>
+</p>
 
-Si más adelante cambias tu prefijo a 'coyote', el prefijo 'cazavacas' no permitirá la creación de desechables nuevas, pero las desechables existentes continuarán funcionando. Si suprimes tu prefijo, las desechables se crearán conforme a las reglas normales, vengan o no los mensajes con prefijo.
+<p>
+  <b>Prefijo</b>: Si eres <i>verdaderamente</i> paranoico, puedes especificar un
+  'prefijo' sin el cual mensajes que no provengan de remitentes de confianza no
+  crearán nuevas desechables. Es como una contraseña (al estilo del
+  salvoconducto) para crear desechables, que puedes cambiar de vez en cuando.
+</p>
+
+<p>
+  El prefijo no es parte integrante del nombre de la desechable. Por tanto, una
+  vez que la desechable ha sido creada, cualquier mensaje sin prefijo o con
+  cualquier otro prefijo será aceptado (conforme a las provisiones de remitentes
+  de confianza y/o exclusivos).
+</p>
+<form
+  action="<%action%>"
+  method="post"
+  onSubmit="return checkPrefixForm(this);"
+>
+  <p align="center">
+    prefijo actual:
+
+    <input type="text" name="prefix" value="<%prefix%>" maxlength="20" />
+    <input type="<%button%>" value="grabar prefijo" onClick="<%onClick%>" />
+  </p>
+</form>
+
+Especificar un prefijo te da más control sobre sus desechables haciendo que
+spamgourmet requiera que su prefijo actual esté presente para crear una nueva
+desechable que de otra manera sería creada. El formato de la dirección de correo
+de una desechable con prefijo es:
+
+<p align="center"><i>prefijo.loquesea.x.nombredeusuario</i>@spamgourmet.com</p>
+
+<p>
+  Por tanto, si tu prefijo actual es 'cazavacas', especificarías desechable así:
+</p>
+
+<p align="center">
+  cazavacas.paraladronesdecorreo.2.vaquerodelespam@spamgourmet.com
+</p>
+
+Si más adelante cambias tu prefijo a 'coyote', el prefijo 'cazavacas' no
+permitirá la creación de desechables nuevas, pero las desechables existentes
+continuarán funcionando. Si suprimes tu prefijo, las desechables se crearán
+conforme a las reglas normales, vengan o no los mensajes con prefijo.

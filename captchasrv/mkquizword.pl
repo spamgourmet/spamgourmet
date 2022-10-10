@@ -1,6 +1,6 @@
 #! /usr/bin/perl -w
 #################################################################
-# Project spamgourmet 
+# Project spamgourmet
 # $Id: mkquizword.pl,v 1.1.1.1 2004/01/27 20:13:04 syskoll Exp $
 # Copyright (C) 2003 Frederic Mora -
 # The address is sg.rocks.syskoll
@@ -10,7 +10,7 @@
 #
 
 # This file contains two routines, mkquizworddict and mkquizwordhex.
-# It includes a test main that invokes these routines. Usage: 
+# It includes a test main that invokes these routines. Usage:
 # mkquiword.pl (no arguments)
 
 ### Subroutine: mkquizworddict
@@ -26,31 +26,33 @@ use File::Basename;
 
 sub mkquizworddict {
 
-  ##########
-  # Constant section - Personnalize here
-  ## Installation dir of this program - Used to find data files in same dir as this scrupt
-  *InstallDir=\ dirname(__FILE__);;
-  ## Dictionary file (1 word per line)
-  *DictFn=\ "$InstallDir/dictionary";
-  #
-  ########## End of constants
+    ##########
+    # Constant section - Personnalize here
+    ## Installation dir of this program - Used to find data files in same dir as this scrupt
+    *InstallDir = \dirname(__FILE__);
+    ## Dictionary file (1 word per line)
+    *DictFn = \ "$InstallDir/dictionary";
+    #
+    ########## End of constants
 
-  open DICT, $DictFn or die "Cannot read $DictFn: $!";
-  seek DICT, 0, 2; # Go to end of file
-  my $DictLn = tell DICT;
-  while (eof DICT) {
-    seek DICT, int(rand($DictLn - 10)), 0; # Go to a random position in dict file
-    next if (eof DICT);
-    $quizword=<DICT>; # Skip the 1st word we read, because we 
-    $quizword=<DICT>; # might start reading in the middle of a word
-  }
+    open DICT, $DictFn or die "Cannot read $DictFn: $!";
+    seek DICT, 0, 2;    # Go to end of file
+    my $DictLn = tell DICT;
+    while ( eof DICT ) {
+        seek DICT, int( rand( $DictLn - 10 ) ),
+            0;          # Go to a random position in dict file
+        next if ( eof DICT );
+        $quizword = <DICT>;    # Skip the 1st word we read, because we
+        $quizword = <DICT>;    # might start reading in the middle of a word
+    }
 
-  chomp $quizword;
-  # Append a 3-digit int (100-999) to the quizword
-  $quizword .= int(rand(899) + 100);
-  close DICT;
+    chomp $quizword;
 
-  return $quizword;
+    # Append a 3-digit int (100-999) to the quizword
+    $quizword .= int( rand(899) + 100 );
+    close DICT;
+
+    return $quizword;
 }
 
 ### Subroutine: mkquizwordhex
@@ -58,19 +60,19 @@ sub mkquizworddict {
 # Returns: quizword string
 ###
 sub mkquizwordhex {
-  my $nbr = 0x100000 + int(rand(0xefffff)); # Range 0x100000 to  0xffffff
-  return sprintf "%lx", $nbr;  # Return hex value of $nbr
+    my $nbr = 0x100000 + int( rand(0xefffff) );  # Range 0x100000 to  0xffffff
+    return sprintf "%lx", $nbr;                  # Return hex value of $nbr
 }
 
 #### Test main - Call with 1 argument, the name of the image to generate
 ###  (should be writeable!)
 #### Usage: mkcaptcha.pl image.gif
 
-srand; # Random number initialization
-my $loops=10;
+srand;    # Random number initialization
+my $loops = 10;
 print "Calling both quizword generation routines $loops times\n";
 print "Hex   \t From dictionary\n";
-  for (my $i = 0;$i < $loops; $i++) {
-      print mkquizwordhex() . " \t " . mkquizworddict() . "\n";
-    }
+for ( my $i = 0; $i < $loops; $i++ ) {
+    print mkquizwordhex() . " \t " . mkquizworddict() . "\n";
+}
 exit 0;

@@ -18,5 +18,3 @@
   <!ELEMENT ExclusiveSender (#PCDATA)>
   <!ELEMENT Hidden (#PCDATA)>
   <!ELEMENT Note (#PCDATA)>
-
-

@@ -21,7 +21,9 @@ source sg-server-config.sh
 ###       part of the DKIM DNS record (or should be)
 ##########################################################################
 
-apt-get update; apt-get upgrade -y ; apt-get autoremove
+apt-get update
+apt-get upgrade -y
+apt-get autoremove
 apt-get install -y openssl
 
 DKIM_PRIVKEY_FILE=/etc/ssl/private/dkim.pem
@@ -35,17 +37,16 @@ DKIM_PUBKEY_GIVEN=dkim.public
 if [ -e "$DKIM_PRIVKEY_GIVEN" ]; then
   echo "installing supplied  DKIM key"
   cp "$DKIM_PRIVKEY_GIVEN" "$DKIM_PRIVKEY_FILE"
-  cp "$DKIM_PUBKEY_GIVEN"  "$DKIM_PUBKEY_FILE"
+  cp "$DKIM_PUBKEY_GIVEN" "$DKIM_PUBKEY_FILE"
 elif [ -e "$DKIM_PRIVKEY_FILE" ]; then
   echo "skipping DKIM key creation as the file already exists"
 else
   # adapted from https://www.mailhardener.com/kb/how-to-create-a-dkim-record-with-openssl
   openssl genrsa -out "$DKIM_PRIVKEY_FILE" 2048
-  openssl rsa -in "$DKIM_PRIVKEY_FILE" -pubout -outform pem >"$DKIM_PUBKEY_FILE"
+  openssl rsa -in "$DKIM_PRIVKEY_FILE" -pubout -outform pem > "$DKIM_PUBKEY_FILE"
 fi
 
-if [ -e "$DOMAIN_PRIVKEY_FILE" ]
-then
+if [ -e "$DOMAIN_PRIVKEY_FILE" ]; then
   echo "skipping SSL certificate creation as the file already exists"
 else
   # after https://stackoverflow.com/questions/10175812/how-to-generate-a-self-signed-ssl-certificate-using-openssl

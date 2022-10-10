@@ -1,3 +1,4 @@
+web/graphs.cgi
 web/templates/**/*.html
 addressscrambler/AddressScramblerHelperPrimitive.html
 sgmailto/SgMailtoDemo.html

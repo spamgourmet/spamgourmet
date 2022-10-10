@@ -9,11 +9,13 @@ cd $SCRIPT_BASE_DIR
 
 # must install exim4 and lighttpd so I can have /etc/exim4 and Debian-exim group
 # and /etc/lighttpd
-apt-get update; apt-get upgrade -y ; apt-get autoremove
+apt-get update
+apt-get upgrade -y
+apt-get autoremove
 apt-get install -y exim4 lighttpd
 
 mkdir -p /etc/cron.daily
-cat <<-EOF >/etc/cron.daily/provision-sg-certs.sh
+cat <<- EOF > /etc/cron.daily/provision-sg-certs.sh
 #!/bin/bash
 # exim certificates
 cp /etc/ssl/certs/$DOMAIN.crt   /etc/exim4/exim.crt

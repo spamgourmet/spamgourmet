@@ -20,11 +20,12 @@ my $configfile = "/path/to/spamgourmet.config";
 
 use vars qw {$config $extradebug $debugstderr};
 
-$config = Mail::Spamgourmet::Config->new(configfile=>$configfile,mode=>0);
+$config
+    = Mail::Spamgourmet::Config->new( configfile => $configfile, mode => 0 );
 
 $config->debugstderr($debugstderr);
 $config->debug('spameater started') if $extradebug;
 
-my $user_store = Mail::Spamgourmet::UserStore->new(config=>$config);
+my $user_store = Mail::Spamgourmet::UserStore->new( config => $config );
 
 $user_store->setup_test_user("junk")

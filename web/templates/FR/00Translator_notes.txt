@@ -1,6 +1,6 @@
 TRANSLATOR'S NOTES:
 
-* About apostrophes: Many dialogs are displayed using Javascript functions. These functions are of the form 
+* About apostrophes: Many dialogs are displayed using Javascript functions. These functions are of the form
 SomeFunction('some string')
 Note that the string parameter is delimited by "single quotes" a.k.a. apostrophes. This means that the string should NOT contain an apostrophe.
 
@@ -26,4 +26,3 @@ sender: expéditeur
 trusted sender: expéditeur autorisé
 watchword: mot-clé
 watchword enforcement: protection par mot-clé
-

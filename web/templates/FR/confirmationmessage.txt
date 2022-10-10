@@ -28,4 +28,3 @@ You must confirm. To confirm, either:
 
 If you received this message unexpectedly, it's because someone entered your
 address in spamgourmet by mistake.
-
