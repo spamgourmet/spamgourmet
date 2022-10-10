@@ -26,7 +26,7 @@ sub new {
 sub setup_test_user {
     my $self = shift; 
     my $now = time();
-    my $activeLC="EN";
+    my $activeLocale="EN";
 
     # first set up the user
    
@@ -59,7 +59,7 @@ sub create_email_address {
     my $now = time();
 
     # now use the ID to ensure that the user has an appropriate
-    # protected addres.
+    # protected address.
 
     my $sql = "INSERT INTO Emails
        (UserID,Word,InitialCount,Count,TimeAdded,Address,PrivateHash,Sender)

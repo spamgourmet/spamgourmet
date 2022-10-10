@@ -26,11 +26,10 @@ should get you a shell inside a docker container with all of
 spamgourmet set up and with all of the spamgourmet code visible to
 allow you to test code you are working on.
 
-GitHub setup
-############
+## GitHub setup
 
 Spamgourmet uses GitHub actions to run builds. Control for this is in
-.github/workflows in several files. These then call the main Makefile
+`.github/workflows` in several files. These then call the main Makefile
 in every case. This is done to ensure that it is possible to run
 everything independently of GitHub.
 
@@ -56,7 +55,7 @@ The build definitions are all inside the
 
 directory and match the way that a normal spamgourmet install would be
 built. All of this has the benefit of giving developers direct access
-to an environemtn that matches approximately production and allows
+to an environment that matches approximately production and allows
 testing.
 
 If we change the way spamgourmet is deployed we expect this to change.
