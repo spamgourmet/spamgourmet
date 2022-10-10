@@ -33,7 +33,7 @@ sub setup_test_user {
     my $sql = "INSERT INTO Users (UserName,RealEmail,Password,TimeAdded,IPAddress,LanguageCode,SessionToken,LastCommand)
            VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
     my $st = $self->{'config'}->db->prepare($sql);
-    $st->execute("test", 'testprotected@example.org', "dud-password", $now, 0, $activeLC, "junktoken", $now);
+    $st->execute("test", 'testprotected@example.org', "dud-password", $now, 0, $activeLocale, "junktoken", $now);
 
     $self->create_email_address("test")
 }
