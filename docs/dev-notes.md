@@ -80,3 +80,11 @@ perl script to create testing data
 data. If you want to ad a new test you probably have to both add the
 test and add functions called from this script to create data for your
 test.
+
+To run tests
+
+    make docker-test
+
+should rebuild and run the tests or the rebuild can be avoided with
+
+    make docker-run-test

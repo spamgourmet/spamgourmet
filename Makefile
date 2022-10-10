@@ -13,8 +13,6 @@ help: ## list all goals in makefile with brief docmentation
 all: build-spamgourmet-clone test docker-run-test ## standard goal to run which should do all the expected developer things
 
 docker-test: build-spamgourmet-clone docker-run-test
-# we export the index to ensure that we match code to be
-# committed and not files that might not get committed.
 .PHONY: docker-test
 docker-test: ## (re)build docker container and run functional tests
 	@echo done
@@ -30,6 +28,8 @@ docker-run-example: ## run an example spameater call - N.B. does not update the 
 
 .PHONY: build-spamgourmet-clone
 build-spamgourmet-clone: ## (re)build docker container only - requires network
+# Export from the index to ensure that we match code to be committed
+# and not files that are not included in the repository.
 	git checkout-index -f -a --prefix=spamgourmet-clone/code-export/
 	docker build --tag spamgourmet-testenv spamgourmet-clone
 	@RED='\033[0;31m' ; \
@@ -44,6 +44,11 @@ full-env-test: ## tests which require the full running spamgourmet environment -
 .PHONY: shell
 shell: ## start interactive shell inside docker container
 	docker run $(DEV_MOUNT) -w /code-live -ti spamgourmet-testenv /bin/bash
+
 .PHONY: test
 test: ## tests which only require local programming environment - e.g. unit tests
 	@echo "there are no tests so you can't prove it isn't working"
+
+.PHONY: install-dev-deps
+install-dev-deps: ## install dependencies needed for development (for Ubuntu)
+	sudo apt install docker.io git pipenv

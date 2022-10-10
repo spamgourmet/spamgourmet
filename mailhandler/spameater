@@ -27,17 +27,19 @@ use Mail::Spamgourmet::Config;
 #use Mail::Spamgourmet::Util;
 #use Mail::Spamgourmet::MessageIdChecker;
 
-####################### path to config file #######################
+use vars qw {$config $util $mailer $checker $extradebug $debugstderr};
+
+############ configuration section to be edited locally ############
 
 my $configfile = "/path/to/spamgourmet.config";
 
-##################### try not to edit anything below ##############
+$extradebug //= 0;
+$debugstderr //= 0;
 
-use vars qw {$config $util $mailer $checker $extradebug $debugstderr};
+################### end of configuration section ###################
+
 $config = Mail::Spamgourmet::Config->new(configfile=>$configfile,mode=>0);
 
-$extradebug //= 1;
-$debugstderr //= 0;
 
 $config->debugstderr($debugstderr);
 $config->debug('spameater started') if $extradebug;
@@ -801,7 +803,7 @@ sub setCount {  # (databasehandle,UserID,messagetype)
   }
   $config->db->do($sql);
 
-# and the User & Email counter, if propriate
+# and the User & Email counter, if apropriate
   if ($UserID) {
     my $now = time();
     if ($throttleTime < $now - $config->getRecThrottleInterval()) {
