@@ -128,7 +128,5 @@ give you warnings before committing your code to git.
 
 1. get a python install on your system including pip
 2. install pre-commit - https://pre-commit.com/#install
-3. run
-
-pre-commit install
+3. run `pre-commit install`
 
