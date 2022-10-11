@@ -93,7 +93,7 @@ sub new {
         if $self->{'query'}->cookie('token');
 
     $hashCode = $self->{'query'}->param('hc');
-    $hashCode = $self->{'query'}->param('cec') if !$hashCode;
+    $hashCode = $self->{'query'}->param('cec')                if !$hashCode;
     $hashCode = $self->{'query'}->param('confirmemailchange') if !$hashCode;
 
     if ( $self->{'query'}->param('logout') ) {
@@ -368,7 +368,7 @@ sub login {
                 $st->execute($User);
             }
         }
-        else {                     # login based on $hashcode
+        else {    # login based on $hashcode
             $sql = "SELECT UserID FROM Users WHERE PendingHashCode = ?";
             $st  = $self->{'config'}->db->prepare($sql);
             $st->execute($hashCode);
@@ -483,8 +483,9 @@ sub login {
                     )
                 {
 
-                    if ( $self->{'query'}->param('languageCode')
-                        && ($self->{'query'}->param('languageCode') ne $dbLC )
+                    if ($self->{'query'}->param('languageCode')
+                        && (
+                            $self->{'query'}->param('languageCode') ne $dbLC )
                         )
                     {
                         $sql
@@ -664,9 +665,8 @@ sub newuser {
             $self->{'loginmsg'}
                 = $self->{'dialogs'}->get( 'loggedinas', 'user', $u );
 
-            my ($sec,  $min,  $hour, $mday, $mon,
-                $year, $wday, $yday, $isdst
-            ) = localtime(time);
+            my ( $sec, $min, $hour, $mday, $mon, $year, $wday, $yday, $isdst )
+                = localtime(time);
             $mon++;
             $year = int($year);
             $year += 1900 if $year < 1900;
@@ -833,7 +833,7 @@ sub encrypt {
     return ( $instr, $md5 );
 }
 
-sub encryptMD5 {                       # really weak - don't use for passwords
+sub encryptMD5 {    # really weak - don't use for passwords
     my $instr = shift;
     return substr( md5_hex($instr), 22, 32 );
 }

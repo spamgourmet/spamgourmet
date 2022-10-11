@@ -223,7 +223,7 @@ sub LaunchPeriodicCleanup {
             # Check age of all files in dir
             while ( defined( $file = readdir(DIR) ) ) {
                 next unless -f $file;
-                $sb = stat($file);     # Grab time creation info on this file
+                $sb    = stat($file);   # Grab time creation info on this file
                 $ftime = scalar $sb->mtime;
 
                 # If file older than ScrubAge, delete it

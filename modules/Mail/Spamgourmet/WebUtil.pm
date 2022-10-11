@@ -61,10 +61,10 @@ sub formatNumDate {
         #      $day = "PM";
         #      $hour = $hour - 12 if $hour > 12;
         #    }
-        $Mons  = "0$Mons"  unless ( $Mons > 9 );
-        $Mdays = "0$Mdays" unless ( $Mdays > 9 );
-        $hour  = "0$hour"  unless ( $hour > 9 );
-        $min   = "0$min"   unless ( $min > 9 );
+        $Mons     = "0$Mons"  unless ( $Mons > 9 );
+        $Mdays    = "0$Mdays" unless ( $Mdays > 9 );
+        $hour     = "0$hour"  unless ( $hour > 9 );
+        $min      = "0$min"   unless ( $min > 9 );
         $DateTime = "$Years-$Mons-$Mdays $hour:$min";
     }
     return $DateTime;

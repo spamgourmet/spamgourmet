@@ -574,11 +574,11 @@ sub getMyUpdateForm {
             'editexemplar',      $session->getDialog('editexemplar'),
             'delete',            $session->getDialog('delete'),
             'deleteareyousure',  $session->getDialog('deleteareyousure'),
-            'numforwarded', $NumForwarded, 'numdeleted', $NumDeleted,
-            'timeadded',    $TimeAdded,
-            'randomnumber', $r,           'count', $Count, 'sender', $Sender,
-            'searchterms',  $searchterms, 'note',  $Note,
-            'ishidden', $isHidden, 'isnothidden', $isNotHidden, 'showhidden',
+            'numforwarded',      $NumForwarded, 'numdeleted', $NumDeleted,
+            'timeadded',         $TimeAdded,
+            'randomnumber',      $r, 'count', $Count, 'sender', $Sender,
+            'searchterms',       $searchterms, 'note', $Note,
+            'ishidden',  $isHidden, 'isnothidden', $isNotHidden, 'showhidden',
             $showHidden, 'returnwithoutsaving',
             $session->getDialog('returnwithoutsaving')
         );
@@ -666,7 +666,7 @@ sub getEditExemplarForm {
     elsif ( $localpart =~ /(.+)[$delimiters](.+)/ ) {
         ( $mprefix, $mword, $mcount, $musername ) = ( '', $1, '', $2 );
     }
-    $mword = $Word if !$mword;
+    $mword     = $Word                   if !$mword;
     $musername = $session->getUserName() if !$musername;
 
     $page = $pagemaker->new(
@@ -968,7 +968,7 @@ sub myemails {
                 $Hidden  = $session->param('hidden');
                 $Note    = $session->param('note');
                 $Count   = int($Count);
-                $Count   = 0 if ( !$Count || $Count < 1 );
+                $Count   = 0  if ( !$Count || $Count < 1 );
                 $Count   = 20 if $Count > 20;
                 $EmailID = int($EmailID);
                 $EmailID = 0 if !$EmailID;
@@ -1569,10 +1569,10 @@ sub mainPage {
                 while ($emlData) {
                     $chunksize
                         = length($emlData) > 84 ? 85 : length($emlData);
-                    $chunk = substr( $emlData, 0,  $chunksize );
-                    $time  = substr( $chunk,   0,  10 );
+                    $chunk = substr( $emlData, 0, $chunksize );
+                    $time  = substr( $chunk,   0, 10 );
                     $date  = $util->formatNumDate($time);
-                    $from  = substr( $chunk,   10, 55 );
+                    $from  = substr( $chunk, 10, 55 );
                     $from =~ s/\s*$//;
                     $for = substr( $chunk, 65, 20 );
                     $for =~ s/\s*$//;
@@ -1871,8 +1871,8 @@ sub doUpdates {
         }
         if ( defined( $session->param('defaultnumber') ) ) {
             my $dn = $session->param('defaultnumber') * 1;
-            $dn = 1  if $dn < 1;
-            $dn = 20 if $dn > 20;
+            $dn  = 1  if $dn < 1;
+            $dn  = 20 if $dn > 20;
             $sql = "UPDATE Users SET DefaultNumber = ? WHERE UserID = ?;";
             $st  = $config->db->prepare($sql);
             $st->execute( $dn, $UserID );

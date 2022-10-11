@@ -1,4 +1,5 @@
 Make
+
 ####
 
 We're currently using GNU Make as the primary tool for builds. We're
@@ -83,6 +84,7 @@ testing.
 If we change the way spamgourmet is deployed we expect this to change.
 
 TESTS
+
 #####
 
 One of the most important areas for development now for spamgourmet is

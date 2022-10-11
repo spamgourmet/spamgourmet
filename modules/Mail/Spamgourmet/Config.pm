@@ -422,14 +422,14 @@ sub formatNumDate {
             = localtime($DateTime);
         $Years = $Years + 1900;
         $Mons  = int( $Mons + 1 );
-        $Mons  = "0$Mons" unless ( $Mons > 9 );
+        $Mons  = "0$Mons"  unless ( $Mons > 9 );
         $Mdays = "0$Mdays" unless ( $Mdays > 9 );
         if ($dateOnly) {
             $DateTime = "$Years-$Mons-$Mdays";
         }
         else {
-            $hour = "0$hour" unless ( $hour > 9 );
-            $min  = "0$min"  unless ( $min > 9 );
+            $hour     = "0$hour" unless ( $hour > 9 );
+            $min      = "0$min"  unless ( $min > 9 );
             $DateTime = "$Years-$Mons-$Mdays $hour:$min";
         }
     }

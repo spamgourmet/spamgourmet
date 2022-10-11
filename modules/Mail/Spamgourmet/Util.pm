@@ -106,7 +106,7 @@ sub getNumberFromString {
     my $self    = shift;
     my $str     = shift;
     my $default = shift;
-    $default = 3 if !$default;                 #default default of 3
+    $default = 3 if !$default;    #default default of 3
     return $default if !$str && $str ne '0';
     if (   $str =~ /^\d*$/
         || $str eq '*'

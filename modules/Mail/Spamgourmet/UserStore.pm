@@ -24,9 +24,9 @@ sub new {
 }
 
 sub setup_test_user {
-    my $self     = shift;
-    my $now      = time();
-    my $activeLocale="EN";
+    my $self         = shift;
+    my $now          = time();
+    my $activeLocale = "EN";
 
     # first set up the user
 

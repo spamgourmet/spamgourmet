@@ -86,7 +86,7 @@ sub cleanup {
         if ( $nowtime > $ftime + $stateCheckPeriod ) {
 
             #$self->{'config'}->debug("in cleanup routine");
-            opendir( DIR, $dir );                # open the temp dir
+            opendir( DIR, $dir );    # open the temp dir
             my $file = '';
             while ( defined( $file = readdir(DIR) ) ) {
 
