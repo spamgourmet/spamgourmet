@@ -1,5 +1,5 @@
 In order to make it maximally easy to work on spamgourmet we are using static
-code checking and opinionated. The primary tool of choice for this is
+code checking and opinionated formatting. The primary tool of choice for this is
 `pre-commit` which allows us to run all of the static checks both just before
 committing in git, manually over all the files on demand and also in our
 automate builds system (currently GitHub actions)

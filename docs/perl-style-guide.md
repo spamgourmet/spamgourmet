@@ -22,8 +22,8 @@ maintainability. Many Perl modules which used to be great seem to have lost
 their maintainers.
 
 Using a library is normally better for maintenance than rolling our own code,
-however please look through our discussion about libraries and if you want to
+however please look through our [discussion][issue-14] about libraries and if you want to
 use a new one, please mention it there, preferably after making some
 investigation to see if the library is still accepting bug fixes.
 
-https://github.com/spamgourmet/spamgourmet/issues/44
+[issue-14]: https://github.com/spamgourmet/spamgourmet/issues/44
