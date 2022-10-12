@@ -1,4 +1,5 @@
-# this is the set of checks that will be run during build and will
+---
+# This is the set of checks that will be run during build and will
 # fail the build if they do not complete. It should be syncrhonised
 # with the checks in .pre-commit-config.yaml but with lines disabled
 #
@@ -15,7 +16,8 @@ repos:
   - repo: https://github.com/henryykt/pre-commit-perl
     rev: v0.0.4
     hooks:
-      # perlcritic disabled until code is fixed - see https://github.com/spamgourmet/spamgourmet/issues/46
+      # perlcritic disabled until code is fixed -
+      # see https://github.com/spamgourmet/spamgourmet/issues/46
       #      - id: perlcritic
       - id: perltidy
   - repo: https://github.com/pre-commit/mirrors-prettier
