@@ -1,3 +1,5 @@
+# Static Code Checks
+
 In order to make it maximally easy to work on spamgourmet we are using static
 code checking and opinionated formatting. The primary tool of choice for this is
 `pre-commit` which allows us to run all of the static checks both just before
@@ -22,7 +24,7 @@ lines.
 Pre-Commit
 ##########
 
-Learn about pre-commit at https://pre-commit.com/
+Learn about pre-commit at <https://pre-commit.com/>
 
 There are two configuration files used to drive pre-commit
 
