@@ -4,12 +4,12 @@ name: Spamgourmet Overall Test
 on:
   pull_request:
     branches:
-        - master
-        - devel
+      - master
+      - devel
   push:
-    branches: 
-        - master
-        - devel
+    branches:
+      - master
+      - devel
 
 jobs:
   build:

@@ -3,9 +3,9 @@ name: Docker Image CI
 
 on:
   push:
-    branches: 
-        - master
-        - tested
+    branches:
+      - master
+      - tested
 
 jobs:
   build:

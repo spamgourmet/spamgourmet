@@ -4,12 +4,12 @@ name: pre-commit
 on:
   pull_request:
     branches:
-        - master
-        - devel
+      - master
+      - devel
   push:
-    branches: 
-        - master
-        - devel
+    branches:
+      - master
+      - devel
 
 jobs:
   pre-commit:
