@@ -2,12 +2,14 @@
 name: Spamgourmet Overall Test
 
 on:
-  push:
-    branches:
-      - master
-      - mdd-initial-test-setup
   pull_request:
-    branches: [master]
+    branches:
+        - master
+        - devel
+  push:
+    branches: 
+        - master
+        - devel
 
 jobs:
   build:
