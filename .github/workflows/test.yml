@@ -26,6 +26,6 @@ jobs:
         run: docker pull perl:5.30.3-slim-threaded-buster
       - name: Docker Layer Caching
         uses: satackey/action-docker-layer-caching@v0.0.11
-        cotinue-on-error: true
+        continue-on-error: true
       - name: Run the tests
         run: make docker-test
