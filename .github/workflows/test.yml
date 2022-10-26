@@ -16,9 +16,16 @@ on:
 
 jobs:
   build:
+    # hardwire new ubuntu until GitHub updates to 22.04 in December
+    # see https://github.com/actions/runner-images/issues/6399
     runs-on: ubuntu-22.04
 
     steps:
       - uses: actions/checkout@v2
+      - name: prep docker
+        run: docker pull perl:5.30.3-slim-threaded-buster
+      - name: Docker Layer Caching
+        uses: satackey/action-docker-layer-caching@v0.0.11
+        cotinue-on-error: true
       - name: Run the tests
-        run: make test
+        run: make docker-test
