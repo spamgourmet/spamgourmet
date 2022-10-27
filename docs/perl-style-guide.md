@@ -1,3 +1,5 @@
+# Perl Style Guide
+
 Spamgourmet contains a bunch of old Perl code written in a different era when
 Perl was very much an experimental lingua-franca of new web services.
 
@@ -21,9 +23,10 @@ Use of other libraries needs to be considered with some care to ensure
 maintainability. Many Perl modules which used to be great seem to have lost
 their maintainers.
 
-Using a library is normally better for maintenance than rolling our own code,
-however please look through our [discussion][issue-14] about libraries and if you want to
-use a new one, please mention it there, preferably after making some
-investigation to see if the library is still accepting bug fixes.
+Using a library is normally better for maintenance than rolling our
+own code, however please look through our [discussion][issue-14] about
+libraries and if you want to use a new one, please mention it there,
+preferably after making some investigation to see if the library is
+still accepting bug fixes.
 
 [issue-14]: https://github.com/spamgourmet/spamgourmet/issues/44

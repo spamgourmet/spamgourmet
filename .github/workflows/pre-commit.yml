@@ -1,18 +1,27 @@
+---
 name: pre-commit
 
 on:
+  schedule:
+    - cron: "43 03 24 * *"
+
   pull_request:
+    branches:
+      - master
+      - devel
   push:
-    branches: [main]
+    branches:
+      - master
+      - devel
 
 jobs:
   pre-commit:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: install perltidy
         run: sudo apt-get install -y perltidy
       - uses: actions/setup-python@v2
-      - uses: pre-commit/action@v2.0.3
+      - uses: pre-commit/action@v3.0.0
         with:
           extra_args: --all-files --config .pre-commit-config-build.yaml

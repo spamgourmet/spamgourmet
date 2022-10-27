@@ -1,6 +1,7 @@
-# this is the full set of static code checks that we have defined that
-# we want to folow.  some checks may fail since files have not yet
-# been updated
+---
+# This is the full set of static code checks that we have defined that
+# we want to folow. Some checks here may fail since files have not yet
+# been updated.
 #
 # See https://pre-commit.com for more information
 # See https://pre-commit.com/hooks.html for more hooks
@@ -12,13 +13,15 @@ repos:
       - id: end-of-file-fixer
       - id: check-yaml
       - id: check-added-large-files
+
   - repo: https://github.com/henryykt/pre-commit-perl
     rev: v0.0.4
     hooks:
       - id: perlcritic
       - id: perltidy
+
   - repo: https://github.com/pre-commit/mirrors-prettier
-    rev: "v3.0.0-alpha.0" # Use the sha / tag you want to point at
+    rev: "v3.0.0-alpha.1" # Use the sha / tag you want to point at
     hooks:
       - id: prettier
         additional_dependencies:
@@ -26,3 +29,14 @@ repos:
           - "@prettier/plugin-xml@0.12.0"
           - "prettier-plugin-sh@0.11.0"
           - "prettier-plugin-java@1.6.2"
+
+  - repo: https://github.com/adrienverge/yamllint.git
+    rev: v1.28.0
+    hooks:
+      - id: yamllint
+
+  - repo: https://github.com/igorshubovych/markdownlint-cli
+    rev: v0.32.2
+    hooks:
+      - id: markdownlint
+        args: [--fix]

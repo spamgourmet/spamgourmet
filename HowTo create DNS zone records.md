@@ -1,6 +1,6 @@
 # HowTo: SPF/DKIM/DMARC DNS zone records set-up
 
-# for spamgourmet clones
+for spamgourmet clones
 
 ## Prerequisites
 
