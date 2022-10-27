@@ -37,7 +37,7 @@ oneTimeTearDown() {
 
 setUp() {
   export SENDMAIL_OUT
-  SENDMAIL_OUT="$(mktemp -d "$SHUNIT_TMPDIR")"
+  SENDMAIL_OUT="$(mktemp -p "$SHUNIT_TMPDIR")"
 
   if [ -e sendmail ]; then
     echo "sendmail not disabled ; aborting"
@@ -94,4 +94,4 @@ testMailEaterShouldRejectExceededCount() {
 # shellcheck disable=SC1091
 # Load shUnit2
 . /usr/bin/shunit2
-SENDMAIL_OUT="$(mktemp -d "$SHUNIT_TMPDIR")"
+SENDMAIL_OUT="$(mktemp -p "$SHUNIT_TMPDIR")"
