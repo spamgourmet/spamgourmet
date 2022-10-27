@@ -61,7 +61,7 @@ static-check: ## runs all static code checks and code formatting rules - include
 
 .PHONY: static-check
 static-check-build: ## runs static checks for build - this must pass or build will fail
-	$(PRE_COMMIT) run --all-files
+	$(PRE_COMMIT) run --all-files --config .pre-commit-config-build.yaml
 
 pre-commit-autoupdate: ## update the modules of pre-commit to the latest available
 	$(PRE_COMMIT) autoupdate
