@@ -3,7 +3,7 @@
 echo '========================= spamgourmet server installation start'
 source sg-server-config.sh
 
-cd $SCRIPT_BASE_DIR
+cd "$SCRIPT_BASE_DIR" || exit 72
 
 function exim4_packages {
   echo '##########################################################################'
@@ -27,7 +27,7 @@ function exim4_setup {
   sed -i "s/dc_other_hostnames=.*$/dc_other_hostnames='$DOMAIN'/" /etc/exim4/update-exim4.conf.conf
   sed -i "s/dc_local_interfaces=.*$/dc_local_interfaces='$IPADDRESS'/" /etc/exim4/update-exim4.conf.conf
   sed -i "s/dc_readhost=.*$/dc_readhost=''/" /etc/exim4/update-exim4.conf.conf
-  sed -i "s/dc_relay_domains=.*$/dc_relay_domains='ob."$DOMAIN"'/" /etc/exim4/update-exim4.conf.conf
+  sed -i "s/dc_relay_domains=.*$/dc_relay_domains='ob.$DOMAIN'/" /etc/exim4/update-exim4.conf.conf
   sed -i "s/dc_minimaldns=.*$/dc_minimaldns='false'/" /etc/exim4/update-exim4.conf.conf
   sed -i "s/dc_relay_nets=.*$/dc_relay_nets=''/" /etc/exim4/update-exim4.conf.conf
   sed -i "s/dc_smarthost=.*$/dc_smarthost=''/" /etc/exim4/update-exim4.conf.conf

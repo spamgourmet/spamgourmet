@@ -17,10 +17,18 @@ repos:
   - repo: https://github.com/henryykt/pre-commit-perl
     rev: v0.0.4
     hooks:
+      - id: perltidy
       # perlcritic disabled until code is fixed -
       # see https://github.com/spamgourmet/spamgourmet/issues/46
       #      - id: perlcritic
-      - id: perltidy
+
+  - repo: https://github.com/koalaman/shellcheck-precommit
+    rev: v0.8.0
+    hooks:
+      - id: shellcheck
+        args:
+          - "--external-sources"
+          - "--format=gcc"
 
   - repo: https://github.com/pre-commit/mirrors-prettier
     rev: "v3.0.0-alpha.0" # Use the sha / tag you want to point at

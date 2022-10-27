@@ -1,3 +1,4 @@
+#!/bin/bash
 # SHUNIT tests for spamgourmet
 #
 # these tests are designed to test the full functionality of the
@@ -35,7 +36,8 @@ oneTimeTearDown() {
 }
 
 setUp() {
-  export SENDMAIL_OUT=$(tempfile -d $SHUNIT_TMPDIR)
+  export SENDMAIL_OUT
+  SENDMAIL_OUT="$(mktemp -d "$SHUNIT_TMPDIR")"
 
   if [ -e sendmail ]; then
     echo "sendmail not disabled ; aborting"
@@ -59,7 +61,7 @@ setUp() {
 tearDown() {
   rm /usr/sbin/sendmail
   if [ -z "$SHTEST_DONT_CLEAN_UP" ]; then
-    rm $SENDMAIL_OUT
+    rm "$SENDMAIL_OUT"
   fi
 }
 
@@ -89,6 +91,7 @@ testMailEaterShouldRejectExceededCount() {
   assertFalse "malformatted email accepted" "[ -s $SENDMAIL_OUT ]"
 }
 
+# shellcheck disable=SC1091
 # Load shUnit2
 . /usr/bin/shunit2
-SENDMAIL_OUT=$(tempfile -d $SHUNIT_TMPDIR)
+SENDMAIL_OUT="$(mktemp -d "$SHUNIT_TMPDIR")"

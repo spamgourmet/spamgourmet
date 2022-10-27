@@ -3,7 +3,7 @@
 echo '========================= spamgourmet server installation start'
 source sg-server-config.sh
 
-cd $SCRIPT_BASE_DIR
+cd "$SCRIPT_BASE_DIR" || exit 72
 
 function mysql_packages {
   echo '##########################################################################'

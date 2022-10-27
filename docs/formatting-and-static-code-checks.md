@@ -48,6 +48,22 @@ in the build until we
 [clean up existing warnings](https://github.com/spamgourmet/spamgourmet/issues/46).
 See pre-commit above for more details.
 
+## Shell scripting and Make
+
+Shell code is largely used in build and deployment of spamgourmet.
+
+- please make sure your scripts pass shellcheck - this will be
+  introduced as a static check.
+
+Generally shell scripts should be short, simple and easy to
+manage. Consider breaking up bigger ones into smaller reusable units.
+
+One place we use scripts is inside Makefiles and in Dockerfiles. The
+scripts inside these are more difficult to maintain because they have
+two levels of quoting and variable input. Please use a single line
+command and break the actual script out into a separate file which you
+call from the Makefile.
+
 ## Other Code
 
 We default to [prettier](https://prettier.io/) for opinionated formatting -

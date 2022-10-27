@@ -5,7 +5,7 @@ echo '### set up automated provisioning for exim4 and lighttpd'
 echo '##########################################################################'
 source sg-server-config.sh
 
-cd $SCRIPT_BASE_DIR
+cd "$SCRIPT_BASE_DIR" || exit 72
 
 # must install exim4 and lighttpd so I can have /etc/exim4 and Debian-exim group
 # and /etc/lighttpd

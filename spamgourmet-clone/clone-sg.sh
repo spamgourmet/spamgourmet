@@ -3,8 +3,9 @@ echo '##########################################################################
 echo '### Start Setup of Spamgourmet Clone'
 echo '##########################################################################'
 
-export SCRIPT_BASE_DIR=$(dirname "$(readlink -f "$0")")
-cd $SCRIPT_BASE_DIR
+export SCRIPT_BASE_DIR
+SCRIPT_BASE_DIR="$(dirname "$(readlink -f "$0")")"
+cd "$SCRIPT_BASE_DIR" || exit 72
 
 # this is a hack to allow installation in a situation where there isn't a proper init and packages complain about a lack of a runlevel
 if [ "$RUNLEVEL" = "" ]; then

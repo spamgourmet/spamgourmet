@@ -3,7 +3,7 @@
 echo '========================= spamgourmet server installation start'
 source sg-server-config.sh
 
-cd $SCRIPT_BASE_DIR
+cd "$SCRIPT_BASE_DIR" || exit 72
 
 function mandatory_packages {
   echo '##########################################################################'
@@ -25,31 +25,32 @@ function download_spamgourmet {
   git clone https://github.com/spamgourmet/spamgourmet.git code
 }
 
+# shellcheck disable=SC2013
 function customize_spamgourmet {
   (
-    cd code
+    cd code || exit 72
     OLDIFS=$IFS
     IFS=$'\n'
     for f in $(grep -rl /path/to/modules .); do
-      sed -i 's/\/path\/to\/modules/\/usr\/local\/lib\/spamgourmet\/modules/g' $f
+      sed -i 's/\/path\/to\/modules/\/usr\/local\/lib\/spamgourmet\/modules/g' "$f"
     done
     for f in $(grep -rl /path/to/spamgourmet.config .); do
-      sed -i 's/\/path\/to\/spamgourmet.config/\/etc\/spamgourmet\/spamgourmet.config/g' $f
+      sed -i 's/\/path\/to\/spamgourmet.config/\/etc\/spamgourmet\/spamgourmet.config/g' "$f"
     done
     for f in $(grep -rl %imagefilename% .); do
-      sed -i 's/http:\/\/captcha.spamgourmet.com/https:\/\/'$DOMAIN'\/captcha/g' $f
+      sed -i 's/http:\/\/captcha.spamgourmet.com/https:\/\/'$DOMAIN'\/captcha/g' "$f"
     done
     for f in $(grep -rl /path/to/outbound.log .); do
-      sed -i 's/\/path\/to\/outbound.log/\/var\/log\/spamgourmet\/outbound.log/g' $f
+      sed -i 's/\/path\/to\/outbound.log/\/var\/log\/spamgourmet\/outbound.log/g' "$f"
     done
     for f in $(grep -rl /path/to/debug.txt .); do
-      sed -i 's/\/path\/to\/debug.txt/\/var\/log\/spamgourmet\/spamgourmet.config/g' $f
+      sed -i 's/\/path\/to\/debug.txt/\/var\/log\/spamgourmet\/spamgourmet.config/g' "$f"
     done
     for f in $(grep -rl /home/mora/src/spamgourmet/captcha .); do
-      sed -i 's/\/home\/mora\/src\/spamgourmet\/captcha/\/usr\/local\/lib\/spamgourmet\/captchasrv/g' $f
+      sed -i 's/\/home\/mora\/src\/spamgourmet\/captcha/\/usr\/local\/lib\/spamgourmet\/captchasrv/g' "$f"
     done
     for f in $(grep -rl /tmp/sg/captcha .); do
-      sed -i 's/\/tmp\/sg\/captcha/\/var\/www-spamgourmet\/captcha/g' $f
+      sed -i 's/\/tmp\/sg\/captcha/\/var\/www-spamgourmet\/captcha/g' "$f"
     done
     IFS=$OLDIFS
   )
@@ -71,7 +72,7 @@ function install_spamgourmet {
   echo '### move stuff where it belongs'
   echo '##########################################################################'
   (
-    cd code
+    cd code || exit 72
     cp -R captchasrv mailhandler modules /usr/local/lib/spamgourmet
     cp -R web/graphs.cgi web/html/* web/templates /var/www-spamgourmet
     cp conf/spamgourmet.config /etc/spamgourmet
@@ -115,7 +116,7 @@ function install_perl_modules {
   wget https://cpan.metacpan.org/authors/id/I/IL/ILYAZ/modules/Math-Pari-2.03052103.tar.gz
   tar xzf Math-Pari-2.03052103.tar.gz
   (
-    cd Math-Pari-2.03052103/
+    cd Math-Pari-2.03052103/ || exit 72
     PERL_MM_USE_DEFAULT=1 perl Makefile.PL
     make
     make install
@@ -123,7 +124,7 @@ function install_perl_modules {
   wget https://cpan.metacpan.org/authors/id/V/VI/VIPUL/Crypt-Random-1.54.tar.gz
   tar xzf Crypt-Random-1.54.tar.gz
   (
-    cd Crypt-Random-1.54
+    cd Crypt-Random-1.54 || exit 72
     perl Makefile.PL
     make
     make install
@@ -167,21 +168,21 @@ function configure_website {
   echo '##########################################################################'
   sed -i 's/"index.php", "index.html"/"index.pl", "index.php", "index.html"/' /etc/lighttpd/lighttpd.conf
 
-  sed -i "s/'example.com' => 1,/'"$DOMAIN"' => 1,/" /etc/spamgourmet/spamgourmet.config
-  sed -i "s/'example.net' => 1/'"$DOMAIN"' => 1/" /etc/spamgourmet/spamgourmet.config
-  sed -i "s/\$admindomain = 'example.com';$/\$admindomain = '"$DOMAIN"';/" /etc/spamgourmet/spamgourmet.config
+  sed -i "s/'example.com' => 1,/'$DOMAIN' => 1,/" /etc/spamgourmet/spamgourmet.config
+  sed -i "s/'example.net' => 1/'$DOMAIN' => 1/" /etc/spamgourmet/spamgourmet.config
+  sed -i "s/\$admindomain = 'example.com';$/\$admindomain = '$DOMAIN';/" /etc/spamgourmet/spamgourmet.config
   sed -i "s/\$dbstring = 'DBI:mysql:database=dbname;host=localhost';/\$dbstring = 'DBI:mysql:database=sg;host=localhost';/" /etc/spamgourmet/spamgourmet.config
   sed -i "s/\$dbuser = 'dbuser';/\$dbuser = 'sguser';/" /etc/spamgourmet/spamgourmet.config
-  sed -i "s/dbpassword = 'dbpassword';/dbpassword = '"$MARIADBINTERACTIVEPWD"';/" /etc/spamgourmet/spamgourmet.config
+  sed -i "s/dbpassword = 'dbpassword';/dbpassword = '$MARIADBINTERACTIVEPWD';/" /etc/spamgourmet/spamgourmet.config
   sed -i "s/debugfilename = '\/var\/log\/spamgourmet\/spamgourmet.config';/debugfilename = '\/var\/log\/spamgourmet\/spamgourmet.log';/" /etc/spamgourmet/spamgourmet.config
   sed -i "s/webapproot = '\/path\/to\/web\/'/webapproot = '\/var\/www-spamgourmet\/'/" /etc/spamgourmet/spamgourmet.config
   sed -i "s/webtemplatedir = '\/path\/to\/templates\/';/webtemplatedir = '\/var\/www-spamgourmet\/templates\/';/" /etc/spamgourmet/spamgourmet.config
-  sed -i "s/secretphrase = 'a very secret phrase';/secretphrase = '"$SECRETPHRASE"';/" /etc/spamgourmet/spamgourmet.config
-  sed -i "s/mailhost = 'localhost';/mailhost = '"$DOMAIN"';\n  \$obmailhost = 'ob."$DOMAIN"';/" /etc/spamgourmet/spamgourmet.config
+  sed -i "s/secretphrase = 'a very secret phrase';/secretphrase = '$SECRETPHRASE';/" /etc/spamgourmet/spamgourmet.config
+  sed -i "s/mailhost = 'localhost';/mailhost = '$DOMAIN';\n  \$obmailhost = 'ob.$DOMAIN';/" /etc/spamgourmet/spamgourmet.config
   #sed -i "s/obmailhost = 'ob.example.com';/obmailhost = 'ob."$DOMAIN"';/" /etc/spamgourmet/spamgourmet.config
-  sed -i "s/adminemail = 'admin@example.com';/adminemail = '"$ADMINEMAIL"';/" /etc/spamgourmet/spamgourmet.config
-  sed -i "s/otherdomainemail = 'spameater@example.com';/otherdomainemail = '"$OTHERDOMAINEMAIL"';\n\  \$normalURL = '';\n  \$secureURL = '';/" /etc/spamgourmet/spamgourmet.config
-  sed -i "s/numberofeatenmessagestolog = 3;/numberofeatenmessagestolog = "$EATENLOGCOUNT";/" /etc/spamgourmet/spamgourmet.config
+  sed -i "s/adminemail = 'admin@example.com';/adminemail = '$ADMINEMAIL';/" /etc/spamgourmet/spamgourmet.config
+  sed -i "s/otherdomainemail = 'spameater@example.com';/otherdomainemail = '$OTHERDOMAINEMAIL';\n\  \$normalURL = '';\n  \$secureURL = '';/" /etc/spamgourmet/spamgourmet.config
+  sed -i "s/numberofeatenmessagestolog = 3;/numberofeatenmessagestolog = $EATENLOGCOUNT;/" /etc/spamgourmet/spamgourmet.config
 
   sed -i 's/server.document-root        = "\/var\/www\/html"/server.document-root        = "\/var\/www-spamgourmet"/' /etc/lighttpd/lighttpd.conf
 

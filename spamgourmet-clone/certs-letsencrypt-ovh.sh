@@ -28,6 +28,7 @@ LETSENCRYPT_OVH_APPKEY=GI9hY8855QKIbxOI
 LETSENCRYPT_OVH_APPSECRET=f8jbdYCcWUFdNcIZLreq19QT6ywMy2VK
 LETSENCRYPT_OVH_CONSUMERKEY=57dKujv5O3krms5kwah7D0hFNIFL6uR2
 
+# shellcheck disable=SC1091
 [ -e certs-letsencrypt-ovh-secrets ] && . certs-letsencrypt-ovh-secrets
 
 echo "##########################################################################"
@@ -35,7 +36,7 @@ echo "### configure dehydrated for $DOMAIN with DNS managed by OVH"
 echo "##########################################################################"
 apt-get install -y git python3-pip dehydrated
 mkdir -p /var/lib/dehydrated/hooks
-cd /var/lib/dehydrated/
+cd /var/lib/dehydrated/ || exit 72
 git clone https://github.com/rbeuque74/letsencrypt-ovh-hook hooks/ovh
 pip install -r hooks/ovh/requirements.txt
 cp hooks/ovh/ovh.conf.dist ./ovh.conf
